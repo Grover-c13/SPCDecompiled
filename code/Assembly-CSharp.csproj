@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{087FD6F3-26F5-4BE3-97F7-67F24618D56F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Assembly-CSharp</RootNamespace>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="TextMeshPro-1.0.55.56.0b11">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\TextMeshPro-1.0.55.56.0b11.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\System.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlphaWarheadButtonUnlocker.cs" />
+    <Compile Include="AlphaWarheadDetonationController.cs" />
+    <Compile Include="AmbientSoundPlayer.cs" />
+    <Compile Include="AmmoBox.cs" />
+    <Compile Include="AnimationController.cs" />
+    <Compile Include="AntiFaker\AntiFakeCommands.cs" />
+    <Compile Include="AWSoundController.cs" />
+    <Compile Include="A_Href.cs" />
+    <Compile Include="BanPlayer.cs" />
+    <Compile Include="BlastDoor.cs" />
+    <Compile Include="BottomPickerItem.cs" />
+    <Compile Include="BreakingCardSFX.cs" />
+    <Compile Include="ButtonWallAdjuster.cs" />
+    <Compile Include="CCTV_Camera.cs" />
+    <Compile Include="CharacterClassManager.cs" />
+    <Compile Include="ChatController.cs" />
+    <Compile Include="CheckpointKiller.cs" />
+    <Compile Include="ChopperAutostart.cs" />
+    <Compile Include="Class.cs" />
+    <Compile Include="ClassPresetChooser.cs" />
+    <Compile Include="ClipLanguageReplacer.cs" />
+    <Compile Include="ConfigFile.cs" />
+    <Compile Include="ConnInfoButton.cs" />
+    <Compile Include="ConnInfoCanceler.cs" />
+    <Compile Include="ConnInfoCloser.cs" />
+    <Compile Include="ControlPanelLights.cs" />
+    <Compile Include="Credits.cs" />
+    <Compile Include="CreditText.cs" />
+    <Compile Include="CursorManager.cs" />
+    <Compile Include="CustomNetworkManager.cs" />
+    <Compile Include="DecalDestroyer.cs" />
+    <Compile Include="DetectorBlink.cs" />
+    <Compile Include="DetectorController.cs" />
+    <Compile Include="DisableUselessComponents.cs" />
+    <Compile Include="Dissonance\AspChildControlTypeAttribute.cs" />
+    <Compile Include="Dissonance\AspDataFieldAttribute.cs" />
+    <Compile Include="Dissonance\AspDataFieldsAttribute.cs" />
+    <Compile Include="Dissonance\AspMethodPropertyAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcActionAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcActionSelectorAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcAreaAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcAreaMasterLocationFormatAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcAreaPartialViewLocationFormatAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcAreaViewLocationFormatAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcControllerAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcDisplayTemplateAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcEditorTemplateAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcMasterAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcMasterLocationFormatAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcModelTypeAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcPartialViewAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcPartialViewLocationFormatAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcSuppressViewErrorAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcTemplateAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcViewAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcViewComponentAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcViewComponentViewAttribute.cs" />
+    <Compile Include="Dissonance\AspMvcViewLocationFormatAttribute.cs" />
+    <Compile Include="Dissonance\AspRequiredAttributeAttribute.cs" />
+    <Compile Include="Dissonance\AspTypePropertyAttribute.cs" />
+    <Compile Include="Dissonance\AssertionConditionAttribute.cs" />
+    <Compile Include="Dissonance\AssertionConditionType.cs" />
+    <Compile Include="Dissonance\AssertionMethodAttribute.cs" />
+    <Compile Include="Dissonance\BaseTypeRequiredAttribute.cs" />
+    <Compile Include="Dissonance\CanBeNullAttribute.cs" />
+    <Compile Include="Dissonance\CannotApplyEqualityOperatorAttribute.cs" />
+    <Compile Include="Dissonance\CollectionAccessAttribute.cs" />
+    <Compile Include="Dissonance\CollectionAccessType.cs" />
+    <Compile Include="Dissonance\ContractAnnotationAttribute.cs" />
+    <Compile Include="Dissonance\HtmlAttributeValueAttribute.cs" />
+    <Compile Include="Dissonance\HtmlElementAttributesAttribute.cs" />
+    <Compile Include="Dissonance\ImplicitUseKindFlags.cs" />
+    <Compile Include="Dissonance\ImplicitUseTargetFlags.cs" />
+    <Compile Include="Dissonance\InstantHandleAttribute.cs" />
+    <Compile Include="Dissonance\Integrations\UNet_HLAPI\Demo\HlapiPlayerController.cs" />
+    <Compile Include="Dissonance\Integrations\UNet_HLAPI\HlapiClient.cs" />
+    <Compile Include="Dissonance\Integrations\UNet_HLAPI\HlapiCommsNetwork.cs" />
+    <Compile Include="Dissonance\Integrations\UNet_HLAPI\HlapiConn.cs" />
+    <Compile Include="Dissonance\Integrations\UNet_HLAPI\HlapiPlayer.cs" />
+    <Compile Include="Dissonance\Integrations\UNet_HLAPI\HlapiServer.cs" />
+    <Compile Include="Dissonance\InvokerParameterNameAttribute.cs" />
+    <Compile Include="Dissonance\ItemCanBeNullAttribute.cs" />
+    <Compile Include="Dissonance\ItemNotNullAttribute.cs" />
+    <Compile Include="Dissonance\LinqTunnelAttribute.cs" />
+    <Compile Include="Dissonance\LocalizationRequiredAttribute.cs" />
+    <Compile Include="Dissonance\MacroAttribute.cs" />
+    <Compile Include="Dissonance\MeansImplicitUseAttribute.cs" />
+    <Compile Include="Dissonance\MustUseReturnValueAttribute.cs" />
+    <Compile Include="Dissonance\NoEnumerationAttribute.cs" />
+    <Compile Include="Dissonance\NoReorderAttribute.cs" />
+    <Compile Include="Dissonance\NotifyPropertyChangedInvocatorAttribute.cs" />
+    <Compile Include="Dissonance\NotNullAttribute.cs" />
+    <Compile Include="Dissonance\PathReferenceAttribute.cs" />
+    <Compile Include="Dissonance\ProvidesContextAttribute.cs" />
+    <Compile Include="Dissonance\PublicAPIAttribute.cs" />
+    <Compile Include="Dissonance\PureAttribute.cs" />
+    <Compile Include="Dissonance\RazorDirectiveAttribute.cs" />
+    <Compile Include="Dissonance\RazorHelperCommonAttribute.cs" />
+    <Compile Include="Dissonance\RazorImportNamespaceAttribute.cs" />
+    <Compile Include="Dissonance\RazorInjectionAttribute.cs" />
+    <Compile Include="Dissonance\RazorLayoutAttribute.cs" />
+    <Compile Include="Dissonance\RazorSectionAttribute.cs" />
+    <Compile Include="Dissonance\RazorWriteLiteralMethodAttribute.cs" />
+    <Compile Include="Dissonance\RazorWriteMethodAttribute.cs" />
+    <Compile Include="Dissonance\RazorWriteMethodParameterAttribute.cs" />
+    <Compile Include="Dissonance\RegexPatternAttribute.cs" />
+    <Compile Include="Dissonance\SourceTemplateAttribute.cs" />
+    <Compile Include="Dissonance\StringFormatMethodAttribute.cs" />
+    <Compile Include="Dissonance\TerminatesProgramAttribute.cs" />
+    <Compile Include="Dissonance\UsedImplicitlyAttribute.cs" />
+    <Compile Include="Dissonance\ValueProviderAttribute.cs" />
+    <Compile Include="Dissonance\XamlItemBindingOfItemsControlAttribute.cs" />
+    <Compile Include="Dissonance\XamlItemsControlAttribute.cs" />
+    <Compile Include="Door.cs" />
+    <Compile Include="DoorOpenTrigger.cs" />
+    <Compile Include="ElectroMagnets.cs" />
+    <Compile Include="ElevatorController.cs" />
+    <Compile Include="ElevatorDoor.cs" />
+    <Compile Include="Embargo.cs" />
+    <Compile Include="EnvMapAnimator.cs" />
+    <Compile Include="Escape.cs" />
+    <Compile Include="ExamplesController.cs" />
+    <Compile Include="ExampleWheelController.cs" />
+    <Compile Include="ExplosionCameraShake.cs" />
+    <Compile Include="ExtinguishableFire.cs" />
+    <Compile Include="FallDamage.cs" />
+    <Compile Include="FootstepSync.cs" />
+    <Compile Include="GameConsole\Console.cs" />
+    <Compile Include="GameMenu.cs" />
+    <Compile Include="GameMenuButton.cs" />
+    <Compile Include="GammaSlider.cs" />
+    <Compile Include="GFXSettings.cs" />
+    <Compile Include="GrenadeInstance.cs" />
+    <Compile Include="GrenadeManager.cs" />
+    <Compile Include="GunAim.cs" />
+    <Compile Include="GunShoot.cs" />
+    <Compile Include="Handcuffs.cs" />
+    <Compile Include="HandPart.cs" />
+    <Compile Include="HintManager.cs" />
+    <Compile Include="HitboxIdentity.cs" />
+    <Compile Include="Hitmarker.cs" />
+    <Compile Include="HorrorSoundController.cs" />
+    <Compile Include="HostItemSpawner.cs" />
+    <Compile Include="ImageGenerator.cs" />
+    <Compile Include="Intercom.cs" />
+    <Compile Include="Interface079.cs" />
+    <Compile Include="InterfaceColorAdjuster.cs" />
+    <Compile Include="Inventory.cs" />
+    <Compile Include="InventoryDisplay.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="KillTrigger.cs" />
+    <Compile Include="Kino\AnalogGlitch.cs" />
+    <Compile Include="Kino\DigitalGlitch.cs" />
+    <Compile Include="LeverButton.cs" />
+    <Compile Include="LiftIdentity.cs" />
+    <Compile Include="LightBlink.cs" />
+    <Compile Include="Locker.cs" />
+    <Compile Include="LureSubjectContainer.cs" />
+    <Compile Include="MainMenuCamera.cs" />
+    <Compile Include="MainMenuScript.cs" />
+    <Compile Include="MapScroll.cs" />
+    <Compile Include="MaterialLanguageReplacer.cs" />
+    <Compile Include="Medkit.cs" />
+    <Compile Include="MenuAnimator.cs" />
+    <Compile Include="MenuMusicManager.cs" />
+    <Compile Include="MicroHID_GFX.cs" />
+    <Compile Include="MovingStatus.cs" />
+    <Compile Include="MTFRespawn.cs" />
+    <Compile Include="MusicManager.cs" />
+    <Compile Include="MusicSlider.cs" />
+    <Compile Include="NetManagerValueSetter.cs" />
+    <Compile Include="NGSS_ContactShadows.cs" />
+    <Compile Include="NGSS_Directional.cs" />
+    <Compile Include="NGSS_NoiseTexture.cs" />
+    <Compile Include="NicknameSync.cs" />
+    <Compile Include="NineTailedFoxUnits.cs" />
+    <Compile Include="NoammoTrigger.cs" />
+    <Compile Include="Noclip.cs" />
+    <Compile Include="Offset.cs" />
+    <Compile Include="OneOhSixContainer.cs" />
+    <Compile Include="Outside.cs" />
+    <Compile Include="ParticleCollision.cs" />
+    <Compile Include="ParticleExamples.cs" />
+    <Compile Include="ParticleMenu.cs" />
+    <Compile Include="Pickup.cs" />
+    <Compile Include="PickupTrigger.cs" />
+    <Compile Include="PlayButton.cs" />
+    <Compile Include="PlayerArms.cs" />
+    <Compile Include="PlayerInteract.cs" />
+    <Compile Include="PlayerManager.cs" />
+    <Compile Include="PlayerStats.cs" />
+    <Compile Include="PlyMovementSync.cs" />
+    <Compile Include="PocketDimensionGenerator.cs" />
+    <Compile Include="PocketDimensionTeleport.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="PositionTrigger.cs" />
+    <Compile Include="ProjectorInitializer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryProcessor.cs" />
+    <Compile Include="Radio.cs" />
+    <Compile Include="RadioDisplay.cs" />
+    <Compile Include="RadioInitializator.cs" />
+    <Compile Include="Ragdoll.cs" />
+    <Compile Include="RagdollManager.cs" />
+    <Compile Include="RandomItemSpawner.cs" />
+    <Compile Include="RandomSeedSync.cs" />
+    <Compile Include="RangeAudioSource.cs" />
+    <Compile Include="RemoteAdminBehaviour.cs" />
+    <Compile Include="RemoteAdmin\Ban.cs" />
+    <Compile Include="RemoteAdmin\Chooser.cs" />
+    <Compile Include="RemoteAdmin\Forceclass.cs" />
+    <Compile Include="RemoteAdmin\Login.cs" />
+    <Compile Include="RemoteAdmin\PasswordHolder.cs" />
+    <Compile Include="RemoteAdmin\PlayerInspector.cs" />
+    <Compile Include="RemoteAdmin\PlayerRecord.cs" />
+    <Compile Include="RemoteAdmin\PlayersMonitor.cs" />
+    <Compile Include="ResolutionButton.cs" />
+    <Compile Include="ResolutionManager.cs" />
+    <Compile Include="ResolutionText.cs" />
+    <Compile Include="Rid.cs" />
+    <Compile Include="RoomManager.cs" />
+    <Compile Include="Rotate.cs" />
+    <Compile Include="RoundStart.cs" />
+    <Compile Include="RoundSummary.cs" />
+    <Compile Include="Scp049PlayerScript.cs" />
+    <Compile Include="Scp049_2PlayerScript.cs" />
+    <Compile Include="Scp079PlayerScript.cs" />
+    <Compile Include="Scp106PlayerScript.cs" />
+    <Compile Include="Scp173PlayerScript.cs" />
+    <Compile Include="Scp294.cs" />
+    <Compile Include="Scp457PlayerScript.cs" />
+    <Compile Include="Scp914.cs" />
+    <Compile Include="Scp914Grabber.cs" />
+    <Compile Include="Scp914_Controller.cs" />
+    <Compile Include="ScpInterfaces.cs" />
+    <Compile Include="Searching.cs" />
+    <Compile Include="SensitivitySlider.cs" />
+    <Compile Include="SensSlider.cs" />
+    <Compile Include="ServerConsole.cs" />
+    <Compile Include="ServerFilters.cs" />
+    <Compile Include="ServerInfo.cs" />
+    <Compile Include="ServerListManager.cs" />
+    <Compile Include="ServerStatic.cs" />
+    <Compile Include="ServerTime.cs" />
+    <Compile Include="ShockGrenade.cs" />
+    <Compile Include="shooter.cs" />
+    <Compile Include="ShootingRange.cs" />
+    <Compile Include="SignBlink.cs" />
+    <Compile Include="Skybox.cs" />
+    <Compile Include="SmokeGrenade.cs" />
+    <Compile Include="SpawnpointManager.cs" />
+    <Compile Include="SpeakerIcon.cs" />
+    <Compile Include="Spectator.cs" />
+    <Compile Include="SpectatorCamera.cs" />
+    <Compile Include="StartScreen.cs" />
+    <Compile Include="SteamManager.cs" />
+    <Compile Include="SteamServerManager.cs" />
+    <Compile Include="Team.cs" />
+    <Compile Include="TeslaGate.cs" />
+    <Compile Include="TeslaTrigger.cs" />
+    <Compile Include="TextChat.cs" />
+    <Compile Include="TextLanguageReplacer.cs" />
+    <Compile Include="TextMessage.cs" />
+    <Compile Include="TextureAnimator.cs" />
+    <Compile Include="TextureMaterialLanguage.cs" />
+    <Compile Include="TMPro\Examples\Benchmark01.cs" />
+    <Compile Include="TMPro\Examples\Benchmark01_UGUI.cs" />
+    <Compile Include="TMPro\Examples\Benchmark02.cs" />
+    <Compile Include="TMPro\Examples\Benchmark03.cs" />
+    <Compile Include="TMPro\Examples\Benchmark04.cs" />
+    <Compile Include="TMPro\Examples\CameraController.cs" />
+    <Compile Include="TMPro\Examples\ObjectSpin.cs" />
+    <Compile Include="TMPro\Examples\ShaderPropAnimator.cs" />
+    <Compile Include="TMPro\Examples\SimpleScript.cs" />
+    <Compile Include="TMPro\Examples\SkewTextExample.cs" />
+    <Compile Include="TMPro\Examples\TeleType.cs" />
+    <Compile Include="TMPro\Examples\TextConsoleSimulator.cs" />
+    <Compile Include="TMPro\Examples\TextMeshProFloatingText.cs" />
+    <Compile Include="TMPro\Examples\TextMeshSpawner.cs" />
+    <Compile Include="TMPro\Examples\TMPro_InstructionOverlay.cs" />
+    <Compile Include="TMPro\Examples\TMP_ExampleScript_01.cs" />
+    <Compile Include="TMPro\Examples\TMP_FrameRateCounter.cs" />
+    <Compile Include="TMPro\Examples\TMP_TextEventCheck.cs" />
+    <Compile Include="TMPro\Examples\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="TMPro\Examples\TMP_TextSelector_A.cs" />
+    <Compile Include="TMPro\Examples\TMP_TextSelector_B.cs" />
+    <Compile Include="TMPro\Examples\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="TMPro\Examples\VertexColorCycler.cs" />
+    <Compile Include="TMPro\Examples\VertexJitter.cs" />
+    <Compile Include="TMPro\Examples\VertexShakeA.cs" />
+    <Compile Include="TMPro\Examples\VertexShakeB.cs" />
+    <Compile Include="TMPro\Examples\VertexZoom.cs" />
+    <Compile Include="TMPro\Examples\WarpTextExample.cs" />
+    <Compile Include="TMPro\TMP_DigitValidator.cs" />
+    <Compile Include="TMPro\TMP_TextEventHandler.cs" />
+    <Compile Include="ToggleableLight.cs" />
+    <Compile Include="TutorialManager.cs" />
+    <Compile Include="TutorialUnlocker.cs" />
+    <Compile Include="UBER_applyLightForDeferred.cs" />
+    <Compile Include="UBER_DeferredParams.cs" />
+    <Compile Include="UBER_ExampleObjectParams.cs" />
+    <Compile Include="UBER_Global.cs" />
+    <Compile Include="UBER_GlobalParams.cs" />
+    <Compile Include="UBER_MaterialPreset.cs" />
+    <Compile Include="UBER_MaterialPresetCollection.cs" />
+    <Compile Include="UBER_MaterialPresetCollectionReference.cs" />
+    <Compile Include="UBER_MaterialProp.cs" />
+    <Compile Include="UBER_MouseOrbit_DynamicDistance.cs" />
+    <Compile Include="UBER_PresetParamSection.cs" />
+    <Compile Include="UBER_RGBA_ByteArray.cs" />
+    <Compile Include="UnityEngine\PostProcessing\AmbientOcclusionComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\AmbientOcclusionModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\AntialiasingModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\BloomComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\BloomModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\BuiltinDebugViewsComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\BuiltinDebugViewsModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ChromaticAberrationComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ChromaticAberrationModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ColorGradingComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ColorGradingCurve.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ColorGradingModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\DepthOfFieldComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\DepthOfFieldModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\DitheringComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\DitheringModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\EyeAdaptationComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\EyeAdaptationModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\FogComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\FogModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\FxaaComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\GetSetAttribute.cs" />
+    <Compile Include="UnityEngine\PostProcessing\GrainComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\GrainModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\GraphicsUtils.cs" />
+    <Compile Include="UnityEngine\PostProcessing\MaterialFactory.cs" />
+    <Compile Include="UnityEngine\PostProcessing\MinAttribute.cs" />
+    <Compile Include="UnityEngine\PostProcessing\MotionBlurComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\MotionBlurModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingBehaviour.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingComponentBase.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingComponentCommandBuffer.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingComponentRenderTexture.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingContext.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\PostProcessingProfile.cs" />
+    <Compile Include="UnityEngine\PostProcessing\RenderTextureFactory.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ScreenSpaceReflectionComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\ScreenSpaceReflectionModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\TaaComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\TrackballAttribute.cs" />
+    <Compile Include="UnityEngine\PostProcessing\TrackballGroupAttribute.cs" />
+    <Compile Include="UnityEngine\PostProcessing\UserLutComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\UserLutModel.cs" />
+    <Compile Include="UnityEngine\PostProcessing\VignetteComponent.cs" />
+    <Compile Include="UnityEngine\PostProcessing\VignetteModel.cs" />
+    <Compile Include="Unity\GeneratedNetworkCode.cs" />
+    <Compile Include="UserMainInterface.cs" />
+    <Compile Include="VeryHighPerformance.cs" />
+    <Compile Include="VideoRepairer.cs" />
+    <Compile Include="VolumetricLight.cs" />
+    <Compile Include="VolumetricLightRenderer.cs" />
+    <Compile Include="WarningAwawke.cs" />
+    <Compile Include="WeaponCamera.cs" />
+    <Compile Include="WeaponManager.cs" />
+    <Compile Include="YAxisInventer.cs" />
+    <Compile Include="YRotSpine.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
