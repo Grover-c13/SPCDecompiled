@@ -33,7 +33,7 @@ public class RadioInitializator : NetworkBehaviour
 					component.SetRelationship();
 					string playerId = gameObject.GetComponent<HlapiPlayer>().PlayerId;
 					VoicePlayback component2 = component.mySource.GetComponent<VoicePlayback>();
-					bool flag = component.mySource.spatialBlend == 0f && component2.Priority != ChannelPriority.None && component.ShouldBeVisible(base.gameObject);
+					bool flag = component.mySource.spatialBlend == 0f && component2.Priority != ChannelPriority.None && (component.ShouldBeVisible(base.gameObject) || Intercom.host.speaker == gameObject);
 					if (RadioInitializator.names.Contains(playerId))
 					{
 						int index = RadioInitializator.names.IndexOf(playerId);

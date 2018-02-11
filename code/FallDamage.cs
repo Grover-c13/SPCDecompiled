@@ -19,7 +19,24 @@ public class FallDamage : NetworkBehaviour
 
 	private void CalculateGround()
 	{
-		bool flag = Physics.Raycast(base.transform.position, Vector3.down, this.groundMaxDistance, this.groundMask);
+		RaycastHit raycastHit;
+		bool flag = Physics.Raycast(new Ray(base.transform.position, Vector3.down), out raycastHit, this.groundMaxDistance, this.groundMask);
+		if (flag && this.zone != raycastHit.transform.root.name)
+		{
+			this.zone = raycastHit.transform.root.name;
+			if (this.zone.Contains("Heavy"))
+			{
+				SoundtrackManager.singleton.mainIndex = 1;
+			}
+			else if (this.zone.Contains("Out"))
+			{
+				SoundtrackManager.singleton.mainIndex = 2;
+			}
+			else
+			{
+				SoundtrackManager.singleton.mainIndex = 0;
+			}
+		}
 		if (flag != this.isGrounded)
 		{
 			this.isGrounded = flag;
@@ -155,6 +172,8 @@ public class FallDamage : NetworkBehaviour
 	public AnimationCurve damageOverDistance;
 
 	private CharacterClassManager ccm;
+
+	public string zone;
 
 	private static int kCmdCmdFall = -1476756283;
 

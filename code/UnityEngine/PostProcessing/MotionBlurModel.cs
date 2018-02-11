@@ -45,8 +45,8 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 360f)]
 			public float shutterAngle;
 
-			[Range(4f, 32f)]
 			[Tooltip("The amount of sample points, which affects quality and performances.")]
+			[Range(4f, 32f)]
 			public int sampleCount;
 
 			[Range(0f, 1f)]

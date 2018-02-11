@@ -19,11 +19,11 @@ public class TextLanguageReplacer : MonoBehaviour
 
 	private MenuMusicManager mng;
 
-	[SerializeField]
 	[Multiline]
+	[SerializeField]
 	public string polishVersion;
 
-	[SerializeField]
 	[Multiline]
+	[SerializeField]
 	public string englishVersion;
 }

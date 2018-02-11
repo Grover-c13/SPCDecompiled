@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1B1E08C9-3B0E-4004-A3C4-ABE144EC87C3}</ProjectGuid>
+    <ProjectGuid>{48545FA3-0337-4D35-8CA5-426AB765E633}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -265,7 +265,6 @@
     <Compile Include="MicroHID_GFX.cs" />
     <Compile Include="MovingStatus.cs" />
     <Compile Include="MTFRespawn.cs" />
-    <Compile Include="MusicManager.cs" />
     <Compile Include="MusicSlider.cs" />
     <Compile Include="NetManagerValueSetter.cs" />
     <Compile Include="NGSS_ContactShadows.cs" />
@@ -303,7 +302,6 @@
     <Compile Include="RagdollManager.cs" />
     <Compile Include="RandomItemSpawner.cs" />
     <Compile Include="RandomSeedSync.cs" />
-    <Compile Include="RangeAudioSource.cs" />
     <Compile Include="RemoteAdminBehaviour.cs" />
     <Compile Include="RemoteAdmin\Ban.cs" />
     <Compile Include="RemoteAdmin\Chooser.cs" />
@@ -347,6 +345,7 @@
     <Compile Include="SignBlink.cs" />
     <Compile Include="Skybox.cs" />
     <Compile Include="SmokeGrenade.cs" />
+    <Compile Include="SoundtrackManager.cs" />
     <Compile Include="SpawnpointManager.cs" />
     <Compile Include="SpeakerIcon.cs" />
     <Compile Include="Spectator.cs" />

@@ -20,7 +20,7 @@ public class HorrorSoundController : NetworkBehaviour
 	{
 		if (base.isLocalPlayer)
 		{
-			if (this.cmng.curClass < 0)
+			if (this.cmng.curClass < 0 || this.cmng.curClass == 2)
 			{
 				return;
 			}
@@ -50,6 +50,10 @@ public class HorrorSoundController : NetworkBehaviour
 			if (list2.Count == 0)
 			{
 				this.cooldown -= Time.deltaTime;
+				if (this.cooldown < 0f && !TutorialManager.status)
+				{
+					SoundtrackManager.singleton.StopOverlay(0);
+				}
 				return;
 			}
 			if (this.cooldown < 0f)
@@ -69,6 +73,7 @@ public class HorrorSoundController : NetworkBehaviour
 					{
 						this.horrorSoundSource.PlayOneShot(this.sounds[j].clip);
 						this.cooldown = 20f;
+						SoundtrackManager.singleton.PlayOverlay(0);
 						return;
 					}
 				}

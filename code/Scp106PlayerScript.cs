@@ -615,8 +615,8 @@ public class Scp106PlayerScript : NetworkBehaviour
 
 	public GameObject screamsPrefab;
 
-	[SyncVar(hook = "SetPortalPosition")]
 	[Header("Portal")]
+	[SyncVar(hook = "SetPortalPosition")]
 	public Vector3 portalPosition;
 
 	public GameObject portalPrefab;

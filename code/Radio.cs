@@ -8,6 +8,7 @@ public class Radio : NetworkBehaviour
 {
 	private void Start()
 	{
+		base.InvokeRepeating("UpdateClass", 0.3f, 0.3f);
 		this.ccm = base.GetComponent<CharacterClassManager>();
 		this.noiseSource = GameObject.Find("RadioNoiseSound").GetComponent<AudioSource>();
 		if (base.isLocalPlayer)
@@ -16,7 +17,6 @@ public class Radio : NetworkBehaviour
 			this.inv = base.GetComponent<Inventory>();
 		}
 		this.icon = base.GetComponentInChildren<SpeakerIcon>();
-		base.InvokeRepeating("UpdateClass", 0f, 0.3f);
 	}
 
 	public void UpdateClass()

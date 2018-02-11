@@ -14,6 +14,10 @@ public class MTFRespawn : NetworkBehaviour
 
 	private void Update()
 	{
+		if (TutorialManager.status)
+		{
+			return;
+		}
 		if (base.name != "Host" || !base.isLocalPlayer)
 		{
 			return;

@@ -19,6 +19,10 @@ public class ImageGenerator : MonoBehaviour
 		this.GeneratorTask_RemoveDoubledDoorPoints();
 		this.map.SetPixels(this.copy);
 		this.map.Apply();
+		if (this.entrRooms != null)
+		{
+			this.entrRooms.parent = null;
+		}
 		return true;
 	}
 
@@ -27,6 +31,7 @@ public class ImageGenerator : MonoBehaviour
 		if (this.height == -1001)
 		{
 			Transform transform = GameObject.Find("Root_Checkpoint").transform;
+			this.entrRooms = GameObject.Find("EntranceRooms").transform;
 			for (int i = 0; i < this.map.height; i++)
 			{
 				for (int j = 0; j < this.map.width; j++)
@@ -284,6 +289,8 @@ public class ImageGenerator : MonoBehaviour
 	private Vector3 offset;
 
 	public float y_offset;
+
+	private Transform entrRooms;
 
 	public ImageGenerator.RoomsOfType[] roomsOfType;
 

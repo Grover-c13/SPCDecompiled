@@ -63,12 +63,12 @@ public class Intercom : NetworkBehaviour
 
 	private IEnumerator FindHost()
 	{
-		while (this.host == null)
+		while (Intercom.host == null)
 		{
 			GameObject h = GameObject.Find("Host");
 			if (h != null)
 			{
-				this.host = h.GetComponent<Intercom>();
+				Intercom.host = h.GetComponent<Intercom>();
 			}
 			yield return new WaitForFixedUpdate();
 		}
@@ -148,13 +148,13 @@ public class Intercom : NetworkBehaviour
 		}
 		for (;;)
 		{
-			if (this.host != null)
+			if (Intercom.host != null)
 			{
-				if (this.AllowToSpeak() && this.host.speaker == null)
+				if (this.AllowToSpeak() && Intercom.host.speaker == null)
 				{
 					this.CallCmdSetTransmit(base.gameObject);
 				}
-				if (!this.AllowToSpeak() && this.host.speaker == base.gameObject)
+				if (!this.AllowToSpeak() && Intercom.host.speaker == base.gameObject)
 				{
 					yield return new WaitForSeconds(1f);
 					if (!this.AllowToSpeak())
@@ -392,7 +392,7 @@ public class Intercom : NetworkBehaviour
 	[SyncVar(hook = "SetSpeaker")]
 	public GameObject speaker;
 
-	private Intercom host;
+	public static Intercom host;
 
 	public GameObject start_sound;
 
