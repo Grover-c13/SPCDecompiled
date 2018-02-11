@@ -72,7 +72,7 @@ public class SoundtrackManager : MonoBehaviour
 					if (Physics.Raycast(new Ray(this.player.transform.position, (item.transform.position - _camera.position).normalized), out hit, 20f, this.mask))
 					{
 						Transform root = hit.collider.transform.root;
-						if (root.tag == "Player" && Vector3.Dot(_camera.forward, (_camera.position - item.transform.position).normalized) < -0.65f)
+						if (root.tag == "Player")
 						{
 							int curClass = root.GetComponent<CharacterClassManager>().curClass;
 							if (ccm.klasy[Mathf.Clamp(curClass, 0, ccm.klasy.Length - 1)].team != Team.SCP)
