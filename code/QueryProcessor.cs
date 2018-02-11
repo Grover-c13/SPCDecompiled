@@ -142,19 +142,17 @@ public class QueryProcessor : NetworkBehaviour
 			});
 			foreach (NetworkConnection networkConnection3 in NetworkServer.connections)
 			{
-				foreach (string text5 in text3.Split(new char[]
+				foreach (string a2 in text3.Split(new char[]
 				{
 					';'
 				}))
 				{
-					MonoBehaviour.print(text5);
-					if (text5 == networkConnection3.address)
+					if (a2 == networkConnection3.address)
 					{
 						GameObject gameObject2 = GameConsole.Console.FindConnectedRoot(networkConnection3);
 						if (gameObject2 != null)
 						{
 							base.GetComponent<CharacterClassManager>().SetPlayersClass(classid, gameObject2);
-							MonoBehaviour.print(gameObject2.GetComponent<NicknameSync>().myNick);
 						}
 					}
 				}

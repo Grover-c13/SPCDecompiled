@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Kino
 {
+	[ExecuteInEditMode]
 	[AddComponentMenu("Kino Image Effects/Analog Glitch")]
 	[RequireComponent(typeof(Camera))]
-	[ExecuteInEditMode]
 	public class AnalogGlitch : MonoBehaviour
 	{
 		public float scanLineJitter
@@ -75,16 +75,16 @@ namespace Kino
 			Graphics.Blit(source, destination, this._material);
 		}
 
-		[SerializeField]
 		[Range(0f, 1f)]
+		[SerializeField]
 		private float _scanLineJitter;
 
-		[Range(0f, 1f)]
 		[SerializeField]
+		[Range(0f, 1f)]
 		private float _verticalJump;
 
-		[Range(0f, 1f)]
 		[SerializeField]
+		[Range(0f, 1f)]
 		private float _horizontalShake;
 
 		[Range(0f, 1f)]

@@ -11,13 +11,13 @@ public class PocketDimensionGenerator : MonoBehaviour
 		{
 			this.pdtps.Add(item);
 		}
-		for (int j = 0; j < 2; j++)
-		{
-			this.SetRandomTeleport(PocketDimensionTeleport.PDTeleportType.Exit);
-		}
 		foreach (PocketDimensionTeleport pocketDimensionTeleport in this.pdtps)
 		{
 			pocketDimensionTeleport.SetType(PocketDimensionTeleport.PDTeleportType.Killer);
+		}
+		for (int j = 0; j < 2; j++)
+		{
+			this.SetRandomTeleport(PocketDimensionTeleport.PDTeleportType.Exit);
 		}
 	}
 

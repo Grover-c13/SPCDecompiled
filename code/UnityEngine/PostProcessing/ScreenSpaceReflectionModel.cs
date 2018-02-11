@@ -48,8 +48,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("How far away from the maxDistance to begin fading SSR.")]
 			public float fadeDistance;
 
-			[Tooltip("Amplify Fresnel fade out. Increase if floor reflections look good close to the surface and bad farther 'under' the floor.")]
 			[Range(0f, 1f)]
+			[Tooltip("Amplify Fresnel fade out. Increase if floor reflections look good close to the surface and bad farther 'under' the floor.")]
 			public float fresnelFade;
 
 			[Range(0.1f, 10f)]
@@ -82,8 +82,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Typical thickness of columns, walls, furniture, and other objects that reflection rays might pass behind.")]
 			public float widthModifier;
 
-			[Range(0.1f, 8f)]
 			[Tooltip("Blurriness of reflections.")]
+			[Range(0.1f, 8f)]
 			public float reflectionBlur;
 
 			[Tooltip("Enable for a performance gain in scenes where most glossy objects are horizontal, like floors, water, and tables. Leave on for scenes with glossy vertical objects.")]

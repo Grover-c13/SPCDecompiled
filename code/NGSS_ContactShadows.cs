@@ -2,8 +2,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[ImageEffectAllowedInSceneView]
 [ExecuteInEditMode]
+[ImageEffectAllowedInSceneView]
 public class NGSS_ContactShadows : MonoBehaviour
 {
 	private Camera mCamera

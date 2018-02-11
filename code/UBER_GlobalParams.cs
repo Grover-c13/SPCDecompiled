@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-[ExecuteInEditMode]
 [AddComponentMenu("UBER/Global Params")]
+[ExecuteInEditMode]
 public class UBER_GlobalParams : MonoBehaviour
 {
 	private void Update()

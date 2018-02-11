@@ -38,14 +38,6 @@ public class PlayerStats : NetworkBehaviour
 		}
 		if (!flag)
 		{
-			foreach (LiftIdentity liftIdentity in UnityEngine.Object.FindObjectsOfType<LiftIdentity>())
-			{
-				if (liftIdentity.InArea(base.transform.position))
-				{
-					flag = true;
-					break;
-				}
-			}
 		}
 		if (flag)
 		{

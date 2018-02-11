@@ -2,8 +2,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(Light))]
 [ExecuteInEditMode]
+[RequireComponent(typeof(Light))]
 public class NGSS_Directional : MonoBehaviour
 {
 	private void OnDestroy()

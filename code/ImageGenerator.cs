@@ -6,18 +6,19 @@ public class ImageGenerator : MonoBehaviour
 {
 	public bool GenerateMap(int seed)
 	{
+		base.GetComponent<PocketDimensionGenerator>().GenerateMap(seed);
 		string empty = string.Empty;
 		UnityEngine.Random.InitState(seed);
 		this.map = this.maps[UnityEngine.Random.Range(0, this.maps.Length)];
 		this.InitEntrance();
 		this.copy = this.map.GetPixels();
 		this.GeneratorTask_CheckRooms();
+		this.GeneratorTask_RemoveNotRequired();
 		this.GeneratorTask_SetRooms();
 		this.GeneratorTask_Cleanup();
 		this.GeneratorTask_RemoveDoubledDoorPoints();
 		this.map.SetPixels(this.copy);
 		this.map.Apply();
-		base.GetComponent<PocketDimensionGenerator>().GenerateMap(seed);
 		return true;
 	}
 
@@ -114,6 +115,37 @@ public class ImageGenerator : MonoBehaviour
 					if (colorMap.color == pixel)
 					{
 						this.PlaceRoom(new Vector2((float)j, (float)i) + colorMap.centerOffset, colorMap);
+					}
+				}
+			}
+		}
+	}
+
+	private void GeneratorTask_RemoveNotRequired()
+	{
+		foreach (ImageGenerator.ColorMap colorMap in this.colorMap)
+		{
+			bool flag = false;
+			while (!flag)
+			{
+				int num = 0;
+				foreach (ImageGenerator.Room room in this.roomsOfType[(int)colorMap.type].roomsOfType)
+				{
+					num += room.room.Count;
+				}
+				if (num <= this.roomsOfType[(int)colorMap.type].amount)
+				{
+					break;
+				}
+				flag = true;
+				for (int i = 0; i < this.roomsOfType[(int)colorMap.type].roomsOfType.Count; i++)
+				{
+					if (!this.roomsOfType[(int)colorMap.type].roomsOfType[i].required && this.roomsOfType[(int)colorMap.type].roomsOfType[i].room.Count > 0)
+					{
+						this.roomsOfType[(int)colorMap.type].roomsOfType[i].room[0].SetActive(false);
+						this.roomsOfType[(int)colorMap.type].roomsOfType[i].room.RemoveAt(0);
+						flag = false;
+						break;
 					}
 				}
 			}

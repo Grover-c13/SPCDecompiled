@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{087FD6F3-26F5-4BE3-97F7-67F24618D56F}</ProjectGuid>
+    <ProjectGuid>{1B1E08C9-3B0E-4004-A3C4-ABE144EC87C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -214,8 +214,6 @@
     <Compile Include="Door.cs" />
     <Compile Include="DoorOpenTrigger.cs" />
     <Compile Include="ElectroMagnets.cs" />
-    <Compile Include="ElevatorController.cs" />
-    <Compile Include="ElevatorDoor.cs" />
     <Compile Include="Embargo.cs" />
     <Compile Include="EnvMapAnimator.cs" />
     <Compile Include="Escape.cs" />
@@ -252,7 +250,8 @@
     <Compile Include="Kino\AnalogGlitch.cs" />
     <Compile Include="Kino\DigitalGlitch.cs" />
     <Compile Include="LeverButton.cs" />
-    <Compile Include="LiftIdentity.cs" />
+    <Compile Include="Lift.cs" />
+    <Compile Include="LiftChecker.cs" />
     <Compile Include="LightBlink.cs" />
     <Compile Include="Locker.cs" />
     <Compile Include="LureSubjectContainer.cs" />

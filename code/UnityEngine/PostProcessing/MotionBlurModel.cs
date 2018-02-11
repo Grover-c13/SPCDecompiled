@@ -45,12 +45,12 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 360f)]
 			public float shutterAngle;
 
-			[Tooltip("The amount of sample points, which affects quality and performances.")]
 			[Range(4f, 32f)]
+			[Tooltip("The amount of sample points, which affects quality and performances.")]
 			public int sampleCount;
 
-			[Tooltip("The strength of multiple frame blending. The opacity of preceding frames are determined from this coefficient and time differences.")]
 			[Range(0f, 1f)]
+			[Tooltip("The strength of multiple frame blending. The opacity of preceding frames are determined from this coefficient and time differences.")]
 			public float frameBlending;
 		}
 	}

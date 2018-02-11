@@ -52,9 +52,10 @@ public class Scp173PlayerScript : NetworkBehaviour
 		if (base.isLocalPlayer && this.iAm173)
 		{
 			this.allowMove = true;
-			foreach (Scp173PlayerScript scp173PlayerScript in UnityEngine.Object.FindObjectsOfType<Scp173PlayerScript>())
+			foreach (GameObject gameObject in PlayerManager.singleton.players)
 			{
-				if (!scp173PlayerScript.sameClass && scp173PlayerScript.LookFor173())
+				Scp173PlayerScript component = gameObject.GetComponent<Scp173PlayerScript>();
+				if (!component.sameClass && component.LookFor173())
 				{
 					this.cooldown = 10;
 					this.allowMove = false;

@@ -58,18 +58,27 @@ public class PlayerInteract : NetworkBehaviour
 			}
 			else if (raycastHit.transform.CompareTag("ElevatorButton"))
 			{
-				this.UseElevator(raycastHit.transform.name);
+				foreach (Lift lift in UnityEngine.Object.FindObjectsOfType<Lift>())
+				{
+					foreach (Lift.Elevator elevator in lift.elevators)
+					{
+						if (this.ChckDis(elevator.door.transform.position))
+						{
+							this.CallCmdUseElevator(lift.transform.gameObject);
+						}
+					}
+				}
 			}
 			else if (raycastHit.transform.CompareTag("294"))
 			{
 				Inventory component = base.GetComponent<Inventory>();
 				if (component.curItem == 17)
 				{
-					for (int j = 0; j < component.items.Count; j++)
+					for (int l = 0; l < component.items.Count; l++)
 					{
-						if (component.items[j].id == 17)
+						if (component.items[l].id == 17)
 						{
-							component.items.RemoveAt(j);
+							component.items.RemoveAt(l);
 							this.CallCmdUse294(raycastHit.transform.name);
 							component.NetworkcurItem = -1;
 							break;
@@ -88,24 +97,6 @@ public class PlayerInteract : NetworkBehaviour
 		}
 	}
 
-	public void UseElevator(string id)
-	{
-		LiftIdentity[] array = UnityEngine.Object.FindObjectsOfType<LiftIdentity>();
-		foreach (LiftIdentity liftIdentity in array)
-		{
-			if (liftIdentity.identity == id)
-			{
-				this.CallCmdUseLift(liftIdentity.gameObject, id);
-			}
-		}
-	}
-
-	[Command(channel = 4)]
-	private void CmdUseLift(GameObject ply, string id)
-	{
-		ply.GetComponent<LiftIdentity>().Toggle();
-	}
-
 	[Command(channel = 4)]
 	private void CmdChange914_State(string label)
 	{
@@ -113,6 +104,18 @@ public class PlayerInteract : NetworkBehaviour
 		if (this.ChckDis(gameObject.transform.position))
 		{
 			gameObject.GetComponentInParent<Scp914>().IncrementState();
+		}
+	}
+
+	[Command(channel = 4)]
+	private void CmdUseElevator(GameObject elevator)
+	{
+		foreach (Lift.Elevator elevator2 in elevator.GetComponent<Lift>().elevators)
+		{
+			if (this.ChckDis(elevator2.door.transform.position))
+			{
+				elevator.GetComponent<Lift>().UseLift();
+			}
 		}
 	}
 
@@ -235,6 +238,7 @@ public class PlayerInteract : NetworkBehaviour
 			if (component.curClass == 3)
 			{
 				component.SetPlayersClass(2, gameObject);
+				gameObject.GetComponent<Scp106PlayerScript>().CallRpcAnnounceContaining();
 			}
 		}
 		yield break;
@@ -290,16 +294,6 @@ public class PlayerInteract : NetworkBehaviour
 	{
 	}
 
-	protected static void InvokeCmdCmdUseLift(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkServer.active)
-		{
-			Debug.LogError("Command CmdUseLift called on client.");
-			return;
-		}
-		((PlayerInteract)obj).CmdUseLift(reader.ReadGameObject(), reader.ReadString());
-	}
-
 	protected static void InvokeCmdCmdChange914_State(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
@@ -308,6 +302,16 @@ public class PlayerInteract : NetworkBehaviour
 			return;
 		}
 		((PlayerInteract)obj).CmdChange914_State(reader.ReadString());
+	}
+
+	protected static void InvokeCmdCmdUseElevator(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			Debug.LogError("Command CmdUseElevator called on client.");
+			return;
+		}
+		((PlayerInteract)obj).CmdUseElevator(reader.ReadGameObject());
 	}
 
 	protected static void InvokeCmdCmdSwitchAWButton(NetworkBehaviour obj, NetworkReader reader)
@@ -370,28 +374,6 @@ public class PlayerInteract : NetworkBehaviour
 		((PlayerInteract)obj).CmdUse294(reader.ReadString());
 	}
 
-	public void CallCmdUseLift(GameObject ply, string id)
-	{
-		if (!NetworkClient.active)
-		{
-			Debug.LogError("Command function CmdUseLift called on server.");
-			return;
-		}
-		if (base.isServer)
-		{
-			this.CmdUseLift(ply, id);
-			return;
-		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdUseLift);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(ply);
-		networkWriter.Write(id);
-		base.SendCommandInternal(networkWriter, 4, "CmdUseLift");
-	}
-
 	public void CallCmdChange914_State(string label)
 	{
 		if (!NetworkClient.active)
@@ -411,6 +393,27 @@ public class PlayerInteract : NetworkBehaviour
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
 		networkWriter.Write(label);
 		base.SendCommandInternal(networkWriter, 4, "CmdChange914_State");
+	}
+
+	public void CallCmdUseElevator(GameObject elevator)
+	{
+		if (!NetworkClient.active)
+		{
+			Debug.LogError("Command function CmdUseElevator called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdUseElevator(elevator);
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdUseElevator);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		networkWriter.Write(elevator);
+		base.SendCommandInternal(networkWriter, 4, "CmdUseElevator");
 	}
 
 	public void CallCmdSwitchAWButton(string label)
@@ -590,9 +593,9 @@ public class PlayerInteract : NetworkBehaviour
 
 	static PlayerInteract()
 	{
-		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdUseLift, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdUseLift));
-		PlayerInteract.kCmdCmdChange914_State = -1072213689;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdChange914_State, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdChange914_State));
+		PlayerInteract.kCmdCmdUseElevator = 339400830;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdUseElevator, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdUseElevator));
 		PlayerInteract.kCmdCmdSwitchAWButton = -710673229;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdSwitchAWButton, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdSwitchAWButton));
 		PlayerInteract.kCmdCmdDetonateWarhead = -151679759;
@@ -630,9 +633,9 @@ public class PlayerInteract : NetworkBehaviour
 
 	private Inventory inv;
 
-	private static int kCmdCmdUseLift = -1048709477;
+	private static int kCmdCmdChange914_State = -1072213689;
 
-	private static int kCmdCmdChange914_State;
+	private static int kCmdCmdUseElevator;
 
 	private static int kCmdCmdSwitchAWButton;
 
