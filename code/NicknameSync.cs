@@ -12,7 +12,7 @@ public class NicknameSync : NetworkBehaviour
 		if (base.isLocalPlayer)
 		{
 			string n = string.Empty;
-			if (SteamManager.Initialized)
+			if (!ServerStatic.isDedicated && SteamManager.Initialized)
 			{
 				n = ((SteamFriends.GetPersonaName() != null) ? SteamFriends.GetPersonaName() : "Player");
 			}

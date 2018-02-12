@@ -11,6 +11,10 @@ public class PlayerStats : NetworkBehaviour
 	{
 		this.ccm = base.GetComponent<CharacterClassManager>();
 		this.ui = UserMainInterface.singleton;
+		if (PlayerStats.lifts.Length == 0)
+		{
+			PlayerStats.lifts = UnityEngine.Object.FindObjectsOfType<Lift>();
+		}
 	}
 
 	public float GetHealthPercent()
@@ -38,6 +42,14 @@ public class PlayerStats : NetworkBehaviour
 		}
 		if (!flag)
 		{
+			foreach (Lift lift in PlayerStats.lifts)
+			{
+				GameObject gameObject;
+				if (lift.InRange(base.transform.position, out gameObject))
+				{
+					flag = true;
+				}
+			}
 		}
 		if (flag)
 		{
@@ -132,6 +144,16 @@ public class PlayerStats : NetworkBehaviour
 		{
 			NetworkManager.singleton.StopClient();
 		}
+	}
+
+	static PlayerStats()
+	{
+		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerStats), PlayerStats.kCmdCmdSelfDeduct, new NetworkBehaviour.CmdDelegate(PlayerStats.InvokeCmdCmdSelfDeduct));
+		PlayerStats.kCmdCmdTesla = -1109720487;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerStats), PlayerStats.kCmdCmdTesla, new NetworkBehaviour.CmdDelegate(PlayerStats.InvokeCmdCmdTesla));
+		PlayerStats.kRpcRpcRoundrestart = 907411477;
+		NetworkBehaviour.RegisterRpcDelegate(typeof(PlayerStats), PlayerStats.kRpcRpcRoundrestart, new NetworkBehaviour.CmdDelegate(PlayerStats.InvokeRpcRpcRoundrestart));
+		NetworkCRC.RegisterBehaviour("PlayerStats", 0);
 	}
 
 	private void UNetVersion()
@@ -243,16 +265,6 @@ public class PlayerStats : NetworkBehaviour
 		this.SendRPCInternal(networkWriter, 7, "RpcRoundrestart");
 	}
 
-	static PlayerStats()
-	{
-		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerStats), PlayerStats.kCmdCmdSelfDeduct, new NetworkBehaviour.CmdDelegate(PlayerStats.InvokeCmdCmdSelfDeduct));
-		PlayerStats.kCmdCmdTesla = -1109720487;
-		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerStats), PlayerStats.kCmdCmdTesla, new NetworkBehaviour.CmdDelegate(PlayerStats.InvokeCmdCmdTesla));
-		PlayerStats.kRpcRpcRoundrestart = 907411477;
-		NetworkBehaviour.RegisterRpcDelegate(typeof(PlayerStats), PlayerStats.kRpcRpcRoundrestart, new NetworkBehaviour.CmdDelegate(PlayerStats.InvokeRpcRpcRoundrestart));
-		NetworkCRC.RegisterBehaviour("PlayerStats", 0);
-	}
-
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)
 	{
 		if (forceAll)
@@ -301,6 +313,8 @@ public class PlayerStats : NetworkBehaviour
 	private UserMainInterface ui;
 
 	private CharacterClassManager ccm;
+
+	private static Lift[] lifts = new Lift[0];
 
 	private static int kCmdCmdSelfDeduct = -2147454163;
 

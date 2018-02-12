@@ -40,8 +40,8 @@ namespace UnityEngine.PostProcessing
 		[Serializable]
 		public struct IntensitySettings
 		{
-			[Range(0f, 2f)]
 			[Tooltip("Nonphysical multiplier for the SSR reflections. 1.0 is physically based.")]
+			[Range(0f, 2f)]
 			public float reflectionMultiplier;
 
 			[Range(0f, 1000f)]
@@ -82,8 +82,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Typical thickness of columns, walls, furniture, and other objects that reflection rays might pass behind.")]
 			public float widthModifier;
 
-			[Tooltip("Blurriness of reflections.")]
 			[Range(0.1f, 8f)]
+			[Tooltip("Blurriness of reflections.")]
 			public float reflectionBlur;
 
 			[Tooltip("Enable for a performance gain in scenes where most glossy objects are horizontal, like floors, water, and tables. Leave on for scenes with glossy vertical objects.")]

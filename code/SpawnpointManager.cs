@@ -43,24 +43,30 @@ public class SpawnpointManager : MonoBehaviour
 				int num5 = UnityEngine.Random.Range(0, array5.Length);
 				result = array5[num5];
 			}
+			else
+			{
+				GameObject[] array6 = GameObject.FindGameObjectsWithTag("SP_173");
+				int num6 = UnityEngine.Random.Range(0, array6.Length);
+				result = array6[num6];
+			}
 		}
 		if (@class.team == Team.MTF)
 		{
-			GameObject[] array6 = GameObject.FindGameObjectsWithTag("SP_MTF");
-			int num6 = UnityEngine.Random.Range(0, array6.Length);
-			result = array6[num6];
-		}
-		if (@class.team == Team.RSC)
-		{
-			GameObject[] array7 = GameObject.FindGameObjectsWithTag("SP_RSC");
+			GameObject[] array7 = GameObject.FindGameObjectsWithTag("SP_MTF");
 			int num7 = UnityEngine.Random.Range(0, array7.Length);
 			result = array7[num7];
 		}
-		if (@class.team == Team.CHI)
+		if (@class.team == Team.RSC)
 		{
-			GameObject[] array8 = GameObject.FindGameObjectsWithTag("SP_CI");
+			GameObject[] array8 = GameObject.FindGameObjectsWithTag("SP_RSC");
 			int num8 = UnityEngine.Random.Range(0, array8.Length);
 			result = array8[num8];
+		}
+		if (@class.team == Team.CHI)
+		{
+			GameObject[] array9 = GameObject.FindGameObjectsWithTag("SP_CI");
+			int num9 = UnityEngine.Random.Range(0, array9.Length);
+			result = array9[num9];
 		}
 		return result;
 	}

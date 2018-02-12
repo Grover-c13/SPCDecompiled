@@ -43,6 +43,7 @@ public class PlyMovementSync : NetworkBehaviour
 
 	private void Start()
 	{
+		this.plyCam = base.GetComponent<Scp049PlayerScript>().plyCam.transform;
 		this.speedhack = base.GetComponent<AntiFakeCommands>();
 		this.ccm = base.GetComponent<CharacterClassManager>();
 		base.InvokeRepeating("LocalPlayerTeam", 1f, 10f);
@@ -100,6 +101,7 @@ public class PlyMovementSync : NetworkBehaviour
 			this.CallRpcMoveBack(this.position);
 		}
 		this.NetworkrotX = x;
+		this.plyCam.transform.localRotation = Quaternion.Euler(x, 0f, 0f);
 	}
 
 	[ClientRpc]
@@ -315,6 +317,8 @@ public class PlyMovementSync : NetworkBehaviour
 	public bool iAm173;
 
 	private Vector3 prevPos;
+
+	private Transform plyCam;
 
 	private static int kCmdCmdSyncData = -1186400596;
 

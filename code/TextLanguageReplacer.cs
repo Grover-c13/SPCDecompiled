@@ -23,7 +23,7 @@ public class TextLanguageReplacer : MonoBehaviour
 	[SerializeField]
 	public string polishVersion;
 
-	[Multiline]
 	[SerializeField]
+	[Multiline]
 	public string englishVersion;
 }

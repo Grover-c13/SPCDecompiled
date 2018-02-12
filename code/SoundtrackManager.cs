@@ -67,19 +67,25 @@ public class SoundtrackManager : MonoBehaviour
 			{
 				foreach (GameObject item in PlayerManager.singleton.players)
 				{
-					Debug.DrawRay(_camera.position, (item.transform.position - _camera.position).normalized, Color.red, 10f);
-					RaycastHit hit;
-					if (Physics.Raycast(new Ray(this.player.transform.position, (item.transform.position - _camera.position).normalized), out hit, 20f, this.mask))
+					try
 					{
-						Transform root = hit.collider.transform.root;
-						if (root.tag == "Player")
+						RaycastHit raycastHit;
+						if (Physics.Raycast(new Ray(this.player.transform.position, (item.transform.position - _camera.position).normalized), out raycastHit, 20f, this.mask))
 						{
-							int curClass = root.GetComponent<CharacterClassManager>().curClass;
-							if (ccm.klasy[Mathf.Clamp(curClass, 0, ccm.klasy.Length - 1)].team != Team.SCP)
+							Transform root = raycastHit.collider.transform.root;
+							if (root.tag == "Player")
 							{
-								foundSomeone = true;
+								MonoBehaviour.print("Found someone!");
+								int curClass = root.GetComponent<CharacterClassManager>().curClass;
+								if (ccm.klasy[Mathf.Clamp(curClass, 0, ccm.klasy.Length - 1)].team != Team.SCP)
+								{
+									foundSomeone = true;
+								}
 							}
 						}
+					}
+					catch
+					{
 					}
 					yield return new WaitForEndOfFrame();
 				}

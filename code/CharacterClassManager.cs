@@ -53,6 +53,7 @@ public class CharacterClassManager : NetworkBehaviour
 		this.scp079 = base.GetComponent<Scp079PlayerScript>();
 		this.scp106 = base.GetComponent<Scp106PlayerScript>();
 		this.scp173 = base.GetComponent<Scp173PlayerScript>();
+		this.scp096 = base.GetComponent<Scp096PlayerScript>();
 		this.forceClass = ConfigFile.GetInt("server_forced_class", -1);
 		this.ciPercentage = (float)ConfigFile.GetInt("ci_on_start_percent", 10);
 		base.StartCoroutine("Init");
@@ -187,8 +188,8 @@ public class CharacterClassManager : NetworkBehaviour
 		}
 	}
 
-	[Client]
 	[Command]
+	[Client]
 	public void CmdSuicide(PlayerStats.HitInfo hitInfo)
 	{
 		if (!NetworkClient.active)
@@ -874,6 +875,8 @@ public class CharacterClassManager : NetworkBehaviour
 	private Scp106PlayerScript scp106;
 
 	private Scp173PlayerScript scp173;
+
+	private Scp096PlayerScript scp096;
 
 	private LureSubjectContainer lureSpj;
 

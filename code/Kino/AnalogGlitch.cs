@@ -75,20 +75,20 @@ namespace Kino
 			Graphics.Blit(source, destination, this._material);
 		}
 
-		[SerializeField]
 		[Range(0f, 1f)]
+		[SerializeField]
 		private float _scanLineJitter;
 
 		[SerializeField]
 		[Range(0f, 1f)]
 		private float _verticalJump;
 
-		[SerializeField]
 		[Range(0f, 1f)]
+		[SerializeField]
 		private float _horizontalShake;
 
-		[SerializeField]
 		[Range(0f, 1f)]
+		[SerializeField]
 		private float _colorDrift;
 
 		[SerializeField]

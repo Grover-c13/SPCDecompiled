@@ -67,12 +67,12 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 1f)]
 			public float intensity;
 
-			[Tooltip("Smoothness of the vignette borders.")]
 			[Range(0.01f, 1f)]
+			[Tooltip("Smoothness of the vignette borders.")]
 			public float smoothness;
 
-			[Tooltip("Lower values will make a square-ish vignette.")]
 			[Range(0f, 1f)]
+			[Tooltip("Lower values will make a square-ish vignette.")]
 			public float roundness;
 
 			[Tooltip("A black and white mask to use as a vignette.")]

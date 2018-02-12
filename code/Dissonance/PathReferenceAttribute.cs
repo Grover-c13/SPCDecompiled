@@ -9,7 +9,7 @@ namespace Dissonance
 		{
 		}
 
-		public PathReferenceAttribute([PathReference, NotNull] string basePath)
+		public PathReferenceAttribute([NotNull, PathReference] string basePath)
 		{
 			this.BasePath = basePath;
 		}
