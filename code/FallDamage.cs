@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class FallDamage : NetworkBehaviour
 {
+	public FallDamage()
+	{
+	}
+
 	private void Start()
 	{
 		this.ccm = base.GetComponent<CharacterClassManager>();

@@ -5,6 +5,10 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class YAxisInventer : MonoBehaviour
 {
+	public YAxisInventer()
+	{
+	}
+
 	private void Start()
 	{
 		this.toggle.isOn = (PlayerPrefs.GetInt("y_invert", 0) == 1);

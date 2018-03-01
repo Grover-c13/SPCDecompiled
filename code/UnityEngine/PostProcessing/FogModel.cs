@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class FogModel : PostProcessingModel
 	{
+		public FogModel()
+		{
+		}
+
 		public FogModel.Settings settings
 		{
 			get

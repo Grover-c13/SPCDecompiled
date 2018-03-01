@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Rid : MonoBehaviour
 {
+	public Rid()
+	{
+	}
+
 	private void Start()
 	{
 		this.id = base.GetComponentInChildren<MeshRenderer>().material.mainTexture.name;

@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class PlyMovementSync : NetworkBehaviour
 {
+	public PlyMovementSync()
+	{
+	}
+
 	private void FixedUpdate()
 	{
 		if (base.isLocalPlayer && !this.iAm173)

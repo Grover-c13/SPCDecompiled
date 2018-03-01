@@ -6,6 +6,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class DitheringModel : PostProcessingModel
 	{
+		public DitheringModel()
+		{
+		}
+
 		public DitheringModel.Settings settings
 		{
 			get

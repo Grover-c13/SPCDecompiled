@@ -6,6 +6,10 @@ using UnityEngine.Networking;
 
 public class Radio : NetworkBehaviour
 {
+	public Radio()
+	{
+	}
+
 	private void Start()
 	{
 		base.InvokeRepeating("UpdateClass", 0.3f, 0.3f);
@@ -492,6 +496,10 @@ public class Radio : NetworkBehaviour
 	[Serializable]
 	public class VoiceInfo
 	{
+		public VoiceInfo()
+		{
+		}
+
 		public bool IsDead()
 		{
 			return !this.isSCP && !this.isAliveHuman;
@@ -505,6 +513,10 @@ public class Radio : NetworkBehaviour
 	[Serializable]
 	public class RadioPreset
 	{
+		public RadioPreset()
+		{
+		}
+
 		public string label;
 
 		public string powerText;

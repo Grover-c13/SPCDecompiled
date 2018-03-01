@@ -10,6 +10,10 @@ namespace GameConsole
 {
 	public class Console : MonoBehaviour
 	{
+		public Console()
+		{
+		}
+
 		public List<Console.Log> GetAllLogs()
 		{
 			return this.logs;
@@ -736,6 +740,10 @@ namespace GameConsole
 		[Serializable]
 		public class CommandHint
 		{
+			public CommandHint()
+			{
+			}
+
 			public string name;
 
 			public string shortDesc;

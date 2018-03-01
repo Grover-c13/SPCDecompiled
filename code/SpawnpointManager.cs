@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SpawnpointManager : MonoBehaviour
 {
+	public SpawnpointManager()
+	{
+	}
+
 	public GameObject GetRandomPosition(int classID)
 	{
 		GameObject result = null;
@@ -19,54 +23,48 @@ public class SpawnpointManager : MonoBehaviour
 		}
 		if (@class.team == Team.SCP)
 		{
-			if (@class.fullName == "SCP-173")
+			if (classID == 3)
 			{
-				GameObject[] array2 = GameObject.FindGameObjectsWithTag("SP_173");
+				GameObject[] array2 = GameObject.FindGameObjectsWithTag("SP_106");
 				int num2 = UnityEngine.Random.Range(0, array2.Length);
 				result = array2[num2];
 			}
-			else if (@class.fullName == "SCP-106")
+			else if (classID == 5)
 			{
-				GameObject[] array3 = GameObject.FindGameObjectsWithTag("SP_106");
+				GameObject[] array3 = GameObject.FindGameObjectsWithTag("SP_049");
 				int num3 = UnityEngine.Random.Range(0, array3.Length);
 				result = array3[num3];
 			}
-			else if (@class.fullName == "SCP-049")
+			else if (classID == 7)
 			{
-				GameObject[] array4 = GameObject.FindGameObjectsWithTag("SP_049");
+				GameObject[] array4 = GameObject.FindGameObjectsWithTag("SP_079");
 				int num4 = UnityEngine.Random.Range(0, array4.Length);
 				result = array4[num4];
 			}
-			else if (@class.fullName == "SCP-079")
-			{
-				GameObject[] array5 = GameObject.FindGameObjectsWithTag("SP_079");
-				int num5 = UnityEngine.Random.Range(0, array5.Length);
-				result = array5[num5];
-			}
 			else
 			{
-				GameObject[] array6 = GameObject.FindGameObjectsWithTag("SP_173");
-				int num6 = UnityEngine.Random.Range(0, array6.Length);
-				result = array6[num6];
+				GameObject[] array5 = GameObject.FindGameObjectsWithTag("SP_173");
+				int num5 = UnityEngine.Random.Range(0, array5.Length);
+				result = array5[num5];
 			}
 		}
 		if (@class.team == Team.MTF)
 		{
-			GameObject[] array7 = GameObject.FindGameObjectsWithTag("SP_MTF");
-			int num7 = UnityEngine.Random.Range(0, array7.Length);
-			result = array7[num7];
+			GameObject[] array6 = GameObject.FindGameObjectsWithTag("SP_MTF");
+			int num6 = UnityEngine.Random.Range(0, array6.Length);
+			result = array6[num6];
 		}
 		if (@class.team == Team.RSC)
 		{
-			GameObject[] array8 = GameObject.FindGameObjectsWithTag("SP_RSC");
-			int num8 = UnityEngine.Random.Range(0, array8.Length);
-			result = array8[num8];
+			GameObject[] array7 = GameObject.FindGameObjectsWithTag("SP_RSC");
+			int num7 = UnityEngine.Random.Range(0, array7.Length);
+			result = array7[num7];
 		}
 		if (@class.team == Team.CHI)
 		{
-			GameObject[] array9 = GameObject.FindGameObjectsWithTag("SP_CI");
-			int num9 = UnityEngine.Random.Range(0, array9.Length);
-			result = array9[num9];
+			GameObject[] array8 = GameObject.FindGameObjectsWithTag("SP_CI");
+			int num8 = UnityEngine.Random.Range(0, array8.Length);
+			result = array8[num8];
 		}
 		return result;
 	}

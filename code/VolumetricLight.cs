@@ -1,11 +1,41 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Light))]
 public class VolumetricLight : MonoBehaviour
 {
-	public event Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> CustomRenderEvent;
+	public VolumetricLight()
+	{
+	}
+
+	public event Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> CustomRenderEvent
+	{
+		add
+		{
+			Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> action = this.CustomRenderEvent;
+			Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> action2;
+			do
+			{
+				action2 = action;
+				action = Interlocked.CompareExchange<Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4>>(ref this.CustomRenderEvent, (Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4>)Delegate.Combine(action2, value), action);
+			}
+			while (action != action2);
+		}
+		remove
+		{
+			Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> action = this.CustomRenderEvent;
+			Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> action2;
+			do
+			{
+				action2 = action;
+				action = Interlocked.CompareExchange<Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4>>(ref this.CustomRenderEvent, (Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4>)Delegate.Remove(action2, value), action);
+			}
+			while (action != action2);
+		}
+	}
 
 	public Light Light
 	{
@@ -328,6 +358,9 @@ public class VolumetricLight : MonoBehaviour
 		float f = Vector3.Dot(base.transform.forward, (Camera.current.transform.position - this._light.transform.position).normalized);
 		return Mathf.Acos(f) * 57.29578f <= (this._light.spotAngle + 3f) * 0.5f;
 	}
+
+	[CompilerGenerated]
+	private Action<VolumetricLightRenderer, VolumetricLight, CommandBuffer, Matrix4x4> CustomRenderEvent;
 
 	private Light _light;
 

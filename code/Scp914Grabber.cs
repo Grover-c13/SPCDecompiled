@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Scp914Grabber : MonoBehaviour
 {
+	public Scp914Grabber()
+	{
+	}
+
 	private void OnTriggerEnter(Collider other)
 	{
 		this.observes.Add(other);

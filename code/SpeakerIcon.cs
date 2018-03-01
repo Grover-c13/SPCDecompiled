@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class SpeakerIcon : MonoBehaviour
 {
+	public SpeakerIcon()
+	{
+	}
+
 	private void Start()
 	{
 		this.img = base.GetComponentInChildren<RawImage>();

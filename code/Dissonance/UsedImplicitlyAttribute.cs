@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -23,8 +24,38 @@ namespace Dissonance
 			this.TargetFlags = targetFlags;
 		}
 
-		public ImplicitUseKindFlags UseKindFlags { get; private set; }
+		public ImplicitUseKindFlags UseKindFlags
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<UseKindFlags>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<UseKindFlags>k__BackingField = value;
+			}
+		}
 
-		public ImplicitUseTargetFlags TargetFlags { get; private set; }
+		public ImplicitUseTargetFlags TargetFlags
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<TargetFlags>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<TargetFlags>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private ImplicitUseKindFlags <UseKindFlags>k__BackingField;
+
+		[CompilerGenerated]
+		private ImplicitUseTargetFlags <TargetFlags>k__BackingField;
 	}
 }

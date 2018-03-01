@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class SimpleScript : MonoBehaviour
 	{
+		public SimpleScript()
+		{
+		}
+
 		private void Start()
 		{
 			this.m_textMeshPro = base.gameObject.AddComponent<TextMeshPro>();

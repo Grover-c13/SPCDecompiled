@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class ButtonWallAdjuster : MonoBehaviour
 {
+	public ButtonWallAdjuster()
+	{
+	}
+
 	public void Adjust()
 	{
 		if (this.adjusted)

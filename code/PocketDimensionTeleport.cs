@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class PocketDimensionTeleport : MonoBehaviour
 {
+	public PocketDimensionTeleport()
+	{
+	}
+
 	public void SetType(PocketDimensionTeleport.PDTeleportType t)
 	{
 		this.type = t;

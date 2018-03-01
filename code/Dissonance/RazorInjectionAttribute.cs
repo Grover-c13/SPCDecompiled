@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -12,9 +13,39 @@ namespace Dissonance
 		}
 
 		[NotNull]
-		public string Type { get; private set; }
+		public string Type
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Type>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Type>k__BackingField = value;
+			}
+		}
 
 		[NotNull]
-		public string FieldName { get; private set; }
+		public string FieldName
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<FieldName>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<FieldName>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private string <Type>k__BackingField;
+
+		[CompilerGenerated]
+		private string <FieldName>k__BackingField;
 	}
 }

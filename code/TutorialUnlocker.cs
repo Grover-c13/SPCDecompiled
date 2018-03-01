@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class TutorialUnlocker : MonoBehaviour
 {
+	public TutorialUnlocker()
+	{
+	}
+
 	private void Start()
 	{
 		for (int i = 0; i < Mathf.Clamp(PlayerPrefs.GetInt("TutorialProgress", 1), 1, this.buttons.Length); i++)

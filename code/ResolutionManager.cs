@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ResolutionManager : MonoBehaviour
 {
+	public ResolutionManager()
+	{
+	}
+
 	private bool FindResolution(Resolution res)
 	{
 		foreach (ResolutionManager.ResolutionPreset resolutionPreset in ResolutionManager.presets)
@@ -31,10 +35,21 @@ public class ResolutionManager : MonoBehaviour
 		ResolutionManager.RefreshScreen();
 	}
 
+	private void OnLevelWasLoaded(int level)
+	{
+		ResolutionManager.RefreshScreen();
+	}
+
 	public static void RefreshScreen()
 	{
 		ResolutionManager.presets[ResolutionManager.preset].SetResolution();
-		UnityEngine.Object.FindObjectOfType<ResolutionText>().txt.text = ResolutionManager.presets[ResolutionManager.preset].width + " × " + ResolutionManager.presets[ResolutionManager.preset].height;
+		try
+		{
+			UnityEngine.Object.FindObjectOfType<ResolutionText>().txt.text = ResolutionManager.presets[ResolutionManager.preset].width + " × " + ResolutionManager.presets[ResolutionManager.preset].height;
+		}
+		catch
+		{
+		}
 	}
 
 	public static void ChangeResolution(int id)
@@ -50,6 +65,11 @@ public class ResolutionManager : MonoBehaviour
 			PlayerPrefs.SetInt("SavedResolutionSet", ResolutionManager.preset);
 		}
 		ResolutionManager.RefreshScreen();
+	}
+
+	static ResolutionManager()
+	{
+		// Note: this type is marked as 'beforefieldinit'.
 	}
 
 	public static bool fullscreen;

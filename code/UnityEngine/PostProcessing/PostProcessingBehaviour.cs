@@ -4,13 +4,17 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine.PostProcessing
 {
-	[ImageEffectAllowedInSceneView]
-	[ExecuteInEditMode]
-	[AddComponentMenu("Effects/Post-Processing Behaviour", -1)]
 	[RequireComponent(typeof(Camera))]
+	[ImageEffectAllowedInSceneView]
 	[DisallowMultipleComponent]
+	[AddComponentMenu("Effects/Post-Processing Behaviour", -1)]
+	[ExecuteInEditMode]
 	public class PostProcessingBehaviour : MonoBehaviour
 	{
+		public PostProcessingBehaviour()
+		{
+		}
+
 		private void OnEnable()
 		{
 			this.m_CommandBuffers = new Dictionary<Type, KeyValuePair<CameraEvent, CommandBuffer>>();

@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class Embargo : MonoBehaviour
 {
+	public Embargo()
+	{
+	}
+
 	private void Start()
 	{
 		this.txt = base.GetComponent<Text>();

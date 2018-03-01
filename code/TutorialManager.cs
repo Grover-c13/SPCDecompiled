@@ -8,6 +8,10 @@ using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
+	public TutorialManager()
+	{
+	}
+
 	private void Awake()
 	{
 		string name = SceneManager.GetActiveScene().name;
@@ -64,14 +68,14 @@ public class TutorialManager : MonoBehaviour
 		}
 		if (TutorialManager.curlog != -1 && this.timeToNext <= 0f)
 		{
-			this.timeToNext = ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? this.logs[TutorialManager.curlog].duration_en : this.logs[TutorialManager.curlog].duration_pl);
-			if (this.logs[TutorialManager.curlog].clip_pl != null)
+			this.timeToNext = this.logs[TutorialManager.curlog].duration_en;
+			if (this.logs[TutorialManager.curlog].clip_en != null)
 			{
-				this.src.PlayOneShot((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? this.logs[TutorialManager.curlog].clip_en : this.logs[TutorialManager.curlog].clip_pl);
+				this.src.PlayOneShot(this.logs[TutorialManager.curlog].clip_en);
 			}
 			if (this.logs[TutorialManager.curlog].duration_en > 0f)
 			{
-				this.txt.text = ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? this.logs[TutorialManager.curlog].content_en : this.logs[TutorialManager.curlog].content_pl);
+				this.txt.text = TranslationReader.Get("Tutorial_" + TutorialManager.levelID.ToString("00"), TutorialManager.curlog);
 			}
 		}
 	}
@@ -247,6 +251,11 @@ public class TutorialManager : MonoBehaviour
 		Application.Quit();
 	}
 
+	static TutorialManager()
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+	}
+
 	public static bool status;
 
 	public static int levelID;
@@ -274,23 +283,24 @@ public class TutorialManager : MonoBehaviour
 	[Serializable]
 	public class TutorialScene
 	{
+		public TutorialScene()
+		{
+		}
+
 		public List<TutorialManager.Log> logs = new List<TutorialManager.Log>();
 	}
 
 	[Serializable]
 	public class Log
 	{
-		[Multiline]
-		public string content_pl;
+		public Log()
+		{
+		}
 
 		[Multiline]
 		public string content_en;
 
-		public AudioClip clip_pl;
-
 		public AudioClip clip_en;
-
-		public float duration_pl;
 
 		public float duration_en;
 

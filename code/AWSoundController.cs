@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class AWSoundController : MonoBehaviour
 {
+	public AWSoundController()
+	{
+	}
+
 	private void Awake()
 	{
 		this.a_source = base.GetComponents<AudioSource>()[0];

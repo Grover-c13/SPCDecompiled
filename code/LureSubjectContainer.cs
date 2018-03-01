@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class LureSubjectContainer : NetworkBehaviour
 {
+	public LureSubjectContainer()
+	{
+	}
+
 	public void SetState(bool b)
 	{
 		this.NetworkallowContain = b;

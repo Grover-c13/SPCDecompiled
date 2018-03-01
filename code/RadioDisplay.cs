@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class RadioDisplay : MonoBehaviour
 {
+	public RadioDisplay()
+	{
+	}
+
 	private void Start()
 	{
 		base.InvokeRepeating("ChangeImg", 1f, 0.5f);

@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public abstract class PostProcessingComponentBase
 	{
+		protected PostProcessingComponentBase()
+		{
+		}
+
 		public virtual DepthTextureMode GetCameraFlags()
 		{
 			return DepthTextureMode.None;

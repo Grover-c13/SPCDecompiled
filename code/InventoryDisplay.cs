@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class InventoryDisplay : MonoBehaviour
 {
+	public InventoryDisplay()
+	{
+	}
+
 	public void SetDescriptionByID(int id)
 	{
 		if (id == -1)
@@ -15,9 +19,8 @@ public class InventoryDisplay : MonoBehaviour
 		}
 		else if (this.items.Count > id)
 		{
-			bool flag = PlayerPrefs.GetString("langver", "en") == "pl";
-			string text = (!flag) ? this.items[id].description : this.items[id].descriptionPL;
-			string text2 = (!flag) ? this.items[id].label : this.items[id].labelPL;
+			string text = TranslationReader.Get("Inventory", this.items[id].id).Replace("\\n", Environment.NewLine);
+			string label = this.items[id].label;
 			this.description.text = text;
 			this.hoveredID = id;
 		}

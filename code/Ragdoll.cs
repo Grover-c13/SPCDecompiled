@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class Ragdoll : NetworkBehaviour
 {
+	public Ragdoll()
+	{
+	}
+
 	public void SetOwner(Ragdoll.Info s)
 	{
 		this.Networkowner = s;

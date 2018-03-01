@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class MTFRespawn : NetworkBehaviour
 {
+	public MTFRespawn()
+	{
+	}
+
 	private void Start()
 	{
 		this.minMtfTimeToRespawn = ConfigFile.GetInt("minimum_MTF_time_to_spawn", 200);
@@ -334,8 +338,8 @@ public class MTFRespawn : NetworkBehaviour
 
 	public float CI_Percent = 20f;
 
-	[Range(2f, 15f)]
 	[Space(10f)]
+	[Range(2f, 15f)]
 	public int maxRespawnAmount = 15;
 
 	public float timeToNextRespawn;

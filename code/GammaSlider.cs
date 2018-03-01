@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class GammaSlider : MonoBehaviour
 {
+	public GammaSlider()
+	{
+	}
+
 	private void Start()
 	{
 		if (this.slider != null)

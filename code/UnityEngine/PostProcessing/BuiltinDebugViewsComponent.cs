@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine.Rendering;
 
 namespace UnityEngine.PostProcessing
 {
 	public sealed class BuiltinDebugViewsComponent : PostProcessingComponentCommandBuffer<BuiltinDebugViewsModel>
 	{
+		public BuiltinDebugViewsComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -159,6 +164,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _DepthScale = Shader.PropertyToID("_DepthScale");
 
 			internal static readonly int _TempRT = Shader.PropertyToID("_TempRT");
@@ -185,11 +195,51 @@ namespace UnityEngine.PostProcessing
 
 		private class ArrowArray
 		{
-			public Mesh mesh { get; private set; }
+			public ArrowArray()
+			{
+			}
 
-			public int columnCount { get; private set; }
+			public Mesh mesh
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<mesh>k__BackingField;
+				}
+				[CompilerGenerated]
+				private set
+				{
+					this.<mesh>k__BackingField = value;
+				}
+			}
 
-			public int rowCount { get; private set; }
+			public int columnCount
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<columnCount>k__BackingField;
+				}
+				[CompilerGenerated]
+				private set
+				{
+					this.<columnCount>k__BackingField = value;
+				}
+			}
+
+			public int rowCount
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<rowCount>k__BackingField;
+				}
+				[CompilerGenerated]
+				private set
+				{
+					this.<rowCount>k__BackingField = value;
+				}
+			}
 
 			public void BuildMesh(int columns, int rows)
 			{
@@ -239,6 +289,15 @@ namespace UnityEngine.PostProcessing
 				GraphicsUtils.Destroy(this.mesh);
 				this.mesh = null;
 			}
+
+			[CompilerGenerated]
+			private Mesh <mesh>k__BackingField;
+
+			[CompilerGenerated]
+			private int <columnCount>k__BackingField;
+
+			[CompilerGenerated]
+			private int <rowCount>k__BackingField;
 		}
 	}
 }

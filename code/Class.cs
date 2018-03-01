@@ -5,17 +5,16 @@ using UnityEngine.PostProcessing;
 [Serializable]
 public class Class
 {
-	public string fullName = "Chaos Insurgency";
+	public Class()
+	{
+	}
 
-	public string fullName_pl = "Rebelia Chaosu";
+	public string fullName = "Chaos Insurgency";
 
 	public Color classColor = Color.white;
 
 	[Multiline]
 	public string description;
-
-	[Multiline]
-	public string description_pl;
 
 	public Team team;
 

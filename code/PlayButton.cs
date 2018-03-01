@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class PlayButton : MonoBehaviour
 {
+	public PlayButton()
+	{
+	}
+
 	public void Click()
 	{
 		CustomNetworkManager customNetworkManager = UnityEngine.Object.FindObjectOfType<CustomNetworkManager>();

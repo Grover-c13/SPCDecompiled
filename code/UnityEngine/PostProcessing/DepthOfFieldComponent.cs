@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class DepthOfFieldComponent : PostProcessingComponentRenderTexture<DepthOfFieldModel>
 	{
+		public DepthOfFieldComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -109,6 +113,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _DepthOfFieldTex = Shader.PropertyToID("_DepthOfFieldTex");
 
 			internal static readonly int _Distance = Shader.PropertyToID("_Distance");

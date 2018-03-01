@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class UserMainInterface : MonoBehaviour
 {
+	public UserMainInterface()
+	{
+	}
+
 	private void Awake()
 	{
 		UserMainInterface.singleton = this;

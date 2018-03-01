@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class shooter : MonoBehaviour
 {
+	public shooter()
+	{
+	}
+
 	private void Start()
 	{
 	}

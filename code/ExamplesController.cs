@@ -5,6 +5,10 @@ using UnityStandardAssets.CinematicEffects;
 
 public class ExamplesController : MonoBehaviour
 {
+	public ExamplesController()
+	{
+	}
+
 	public void Start()
 	{
 		RenderSettings.skybox = this.skyboxMaterial1;

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class NoammoTrigger : MonoBehaviour
 {
+	public NoammoTrigger()
+	{
+	}
+
 	public bool Trigger(int item)
 	{
 		bool flag = false;

@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Handcuffs : NetworkBehaviour
 {
+	public Handcuffs()
+	{
+	}
+
 	private void Start()
 	{
 		this.uncuffProgress = GameObject.Find("UncuffProgress").GetComponent<Image>();

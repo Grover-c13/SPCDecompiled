@@ -5,5 +5,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Method)]
 	internal sealed class SourceTemplateAttribute : Attribute
 	{
+		public SourceTemplateAttribute()
+		{
+		}
 	}
 }

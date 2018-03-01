@@ -5,5 +5,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Method)]
 	internal sealed class RazorWriteLiteralMethodAttribute : Attribute
 	{
+		public RazorWriteLiteralMethodAttribute()
+		{
+		}
 	}
 }

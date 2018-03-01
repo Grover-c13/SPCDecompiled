@@ -5,5 +5,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Method)]
 	internal sealed class RazorHelperCommonAttribute : Attribute
 	{
+		public RazorHelperCommonAttribute()
+		{
+		}
 	}
 }

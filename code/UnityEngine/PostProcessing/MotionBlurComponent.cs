@@ -6,6 +6,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class MotionBlurComponent : PostProcessingComponentCommandBuffer<MotionBlurModel>
 	{
+		public MotionBlurComponent()
+		{
+		}
+
 		public MotionBlurComponent.ReconstructionFilter reconstructionFilter
 		{
 			get
@@ -119,6 +123,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _VelocityScale = Shader.PropertyToID("_VelocityScale");
 
 			internal static readonly int _MaxBlurRadius = Shader.PropertyToID("_MaxBlurRadius");

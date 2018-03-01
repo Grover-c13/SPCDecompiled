@@ -8,6 +8,10 @@ namespace Kino
 	[AddComponentMenu("Kino Image Effects/Analog Glitch")]
 	public class AnalogGlitch : MonoBehaviour
 	{
+		public AnalogGlitch()
+		{
+		}
+
 		public float scanLineJitter
 		{
 			get
@@ -83,12 +87,12 @@ namespace Kino
 		[Range(0f, 1f)]
 		private float _verticalJump;
 
-		[Range(0f, 1f)]
 		[SerializeField]
+		[Range(0f, 1f)]
 		private float _horizontalShake;
 
-		[Range(0f, 1f)]
 		[SerializeField]
+		[Range(0f, 1f)]
 		private float _colorDrift;
 
 		[SerializeField]

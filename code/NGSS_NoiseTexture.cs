@@ -4,6 +4,10 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class NGSS_NoiseTexture : MonoBehaviour
 {
+	public NGSS_NoiseTexture()
+	{
+	}
+
 	private void Update()
 	{
 		Shader.SetGlobalFloat("NGSS_NOISE_TEXTURE_SCALE", this.noiseScale);

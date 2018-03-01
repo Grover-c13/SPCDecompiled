@@ -1,10 +1,27 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace UnityEngine.PostProcessing
 {
 	public class PostProcessingContext
 	{
-		public bool interrupted { get; private set; }
+		public PostProcessingContext()
+		{
+		}
+
+		public bool interrupted
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<interrupted>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<interrupted>k__BackingField = value;
+			}
+		}
 
 		public void Interrupt()
 		{
@@ -68,5 +85,8 @@ namespace UnityEngine.PostProcessing
 		public MaterialFactory materialFactory;
 
 		public RenderTextureFactory renderTextureFactory;
+
+		[CompilerGenerated]
+		private bool <interrupted>k__BackingField;
 	}
 }

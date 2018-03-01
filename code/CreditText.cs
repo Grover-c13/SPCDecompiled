@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CreditText : MonoBehaviour
 {
+	public CreditText()
+	{
+	}
+
 	private void FixedUpdate()
 	{
 		if (this.move)

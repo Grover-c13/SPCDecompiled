@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CheckpointKiller : MonoBehaviour
 {
+	public CheckpointKiller()
+	{
+	}
+
 	private void OnTriggerEnter(Collider other)
 	{
 		CharacterClassManager component = other.GetComponent<CharacterClassManager>();

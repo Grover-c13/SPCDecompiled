@@ -6,5 +6,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Method)]
 	internal sealed class TerminatesProgramAttribute : Attribute
 	{
+		public TerminatesProgramAttribute()
+		{
+		}
 	}
 }

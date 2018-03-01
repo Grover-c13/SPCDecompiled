@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SpectatorCamera : MonoBehaviour
 {
+	public SpectatorCamera()
+	{
+	}
+
 	public Camera cam;
 
 	public Camera freeCam;

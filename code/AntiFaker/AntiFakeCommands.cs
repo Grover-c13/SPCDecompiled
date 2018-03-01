@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,6 +10,10 @@ namespace AntiFaker
 {
 	public class AntiFakeCommands : NetworkBehaviour
 	{
+		public AntiFakeCommands()
+		{
+		}
+
 		private void Start()
 		{
 			if (TutorialManager.status)
@@ -32,7 +38,15 @@ namespace AntiFaker
 				return true;
 			}
 			this.distanceTraveled += Vector2.Distance(new Vector2(this.prevPos.x, this.prevPos.z), new Vector2(pos.x, pos.z));
-			float num = (this.ccm.curClass >= 0) ? ((this.ccm.curClass != 0) ? this.ccm.klasy[this.ccm.curClass].runSpeed : (base.GetComponent<Scp173PlayerScript>().boost_teleportDistance.Evaluate(base.GetComponent<PlayerStats>().GetHealthPercent()) * 2f)) : 0f;
+			float num = 0f;
+			if (this.ccm.curClass == 0)
+			{
+				num = base.GetComponent<Scp173PlayerScript>().boost_teleportDistance.Evaluate(base.GetComponent<PlayerStats>().GetHealthPercent()) * 2f;
+			}
+			else if (this.ccm.curClass > 0)
+			{
+				num = this.ccm.klasy[this.ccm.curClass].runSpeed;
+			}
 			if (this.distanceTraveled < num * 1.3f || this.SpeedhackJustification(pos))
 			{
 				this.prevPos = pos;
@@ -53,8 +67,8 @@ namespace AntiFaker
 
 		public bool SpeedhackJustification(Vector3 pos)
 		{
-			int curClass = base.GetComponent<CharacterClassManager>().curClass;
-			if (Vector3.Distance(pos, base.GetComponent<CharacterClassManager>().deathPosition) < 10f || pos.y > 2000f || pos.y < -1500f)
+			int curClass = this.ccm.curClass;
+			if (Vector3.Distance(pos, this.ccm.deathPosition) < 10f || pos.y > 2000f || pos.y < -1500f)
 			{
 				return true;
 			}
@@ -95,6 +109,11 @@ namespace AntiFaker
 			}
 		}
 
+		static AntiFakeCommands()
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+		}
+
 		private void UNetVersion()
 		{
 		}
@@ -120,5 +139,75 @@ namespace AntiFaker
 		private float distanceTraveled;
 
 		private Vector3 prevPos = Vector3.zero;
+
+		[CompilerGenerated]
+		private sealed class <AntiSpeedhack>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+		{
+			[DebuggerHidden]
+			public <AntiSpeedhack>c__Iterator0()
+			{
+			}
+
+			public bool MoveNext()
+			{
+				uint num = (uint)this.$PC;
+				this.$PC = -1;
+				switch (num)
+				{
+				case 0u:
+					break;
+				case 1u:
+					break;
+				default:
+					return false;
+				}
+				this.$this.distanceTraveled = 0f;
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.$current;
+				}
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.$current;
+				}
+			}
+
+			[DebuggerHidden]
+			public void Dispose()
+			{
+				this.$disposing = true;
+				this.$PC = -1;
+			}
+
+			[DebuggerHidden]
+			public void Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			internal AntiFakeCommands $this;
+
+			internal object $current;
+
+			internal bool $disposing;
+
+			internal int $PC;
+		}
 	}
 }

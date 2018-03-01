@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Spectator : NetworkBehaviour
 {
+	public Spectator()
+	{
+	}
+
 	private void Start()
 	{
 		this.spectInfo = UserMainInterface.singleton.specatorInfo;

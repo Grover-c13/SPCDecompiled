@@ -6,6 +6,10 @@ namespace RemoteAdmin
 {
 	public class PlayerRecord : MonoBehaviour
 	{
+		public PlayerRecord()
+		{
+		}
+
 		public void Setup(int _id, string _nick)
 		{
 			this.monitor = base.GetComponentInParent<PlayersMonitor>();

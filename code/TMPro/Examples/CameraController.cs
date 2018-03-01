@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class CameraController : MonoBehaviour
 	{
+		public CameraController()
+		{
+		}
+
 		private void Awake()
 		{
 			if (QualitySettings.vSyncCount > 0)

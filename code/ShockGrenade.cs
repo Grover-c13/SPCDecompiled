@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class ShockGrenade : GrenadeInstance
 {
+	public ShockGrenade()
+	{
+	}
+
 	public override void Explode(int thrower)
 	{
 		base.Explode(thrower);

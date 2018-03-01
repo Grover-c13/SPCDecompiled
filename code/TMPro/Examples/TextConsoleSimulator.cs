@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace TMPro.Examples
 {
 	public class TextConsoleSimulator : MonoBehaviour
 	{
+		public TextConsoleSimulator()
+		{
+		}
+
 		private void Awake()
 		{
 			this.m_TextComponent = base.gameObject.GetComponent<TMP_Text>();
@@ -93,5 +100,218 @@ namespace TMPro.Examples
 		private TMP_Text m_TextComponent;
 
 		private bool hasTextChanged;
+
+		[CompilerGenerated]
+		private sealed class <RevealCharacters>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+		{
+			[DebuggerHidden]
+			public <RevealCharacters>c__Iterator0()
+			{
+			}
+
+			public bool MoveNext()
+			{
+				uint num = (uint)this.$PC;
+				this.$PC = -1;
+				switch (num)
+				{
+				case 0u:
+					this.textComponent.ForceMeshUpdate();
+					this.<textInfo>__0 = this.textComponent.textInfo;
+					this.<totalVisibleCharacters>__0 = this.<textInfo>__0.characterCount;
+					this.<visibleCount>__0 = 0;
+					break;
+				case 1u:
+					this.<visibleCount>__0 = 0;
+					goto IL_C2;
+				case 2u:
+					break;
+				default:
+					return false;
+				}
+				if (this.$this.hasTextChanged)
+				{
+					this.<totalVisibleCharacters>__0 = this.<textInfo>__0.characterCount;
+					this.$this.hasTextChanged = false;
+				}
+				if (this.<visibleCount>__0 > this.<totalVisibleCharacters>__0)
+				{
+					this.$current = new WaitForSeconds(1f);
+					if (!this.$disposing)
+					{
+						this.$PC = 1;
+					}
+					return true;
+				}
+				IL_C2:
+				this.textComponent.maxVisibleCharacters = this.<visibleCount>__0;
+				this.<visibleCount>__0++;
+				this.$current = new WaitForSeconds(0f);
+				if (!this.$disposing)
+				{
+					this.$PC = 2;
+				}
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.$current;
+				}
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.$current;
+				}
+			}
+
+			[DebuggerHidden]
+			public void Dispose()
+			{
+				this.$disposing = true;
+				this.$PC = -1;
+			}
+
+			[DebuggerHidden]
+			public void Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			internal TMP_Text textComponent;
+
+			internal TMP_TextInfo <textInfo>__0;
+
+			internal int <totalVisibleCharacters>__0;
+
+			internal int <visibleCount>__0;
+
+			internal TextConsoleSimulator $this;
+
+			internal object $current;
+
+			internal bool $disposing;
+
+			internal int $PC;
+		}
+
+		[CompilerGenerated]
+		private sealed class <RevealWords>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
+		{
+			[DebuggerHidden]
+			public <RevealWords>c__Iterator1()
+			{
+			}
+
+			public bool MoveNext()
+			{
+				uint num = (uint)this.$PC;
+				this.$PC = -1;
+				switch (num)
+				{
+				case 0u:
+					this.textComponent.ForceMeshUpdate();
+					this.<totalWordCount>__0 = this.textComponent.textInfo.wordCount;
+					this.<totalVisibleCharacters>__0 = this.textComponent.textInfo.characterCount;
+					this.<counter>__0 = 0;
+					this.<currentWord>__0 = 0;
+					this.<visibleCount>__0 = 0;
+					break;
+				case 1u:
+					IL_140:
+					this.<counter>__0++;
+					this.$current = new WaitForSeconds(0.1f);
+					if (!this.$disposing)
+					{
+						this.$PC = 2;
+					}
+					return true;
+				case 2u:
+					break;
+				default:
+					return false;
+				}
+				this.<currentWord>__0 = this.<counter>__0 % (this.<totalWordCount>__0 + 1);
+				if (this.<currentWord>__0 == 0)
+				{
+					this.<visibleCount>__0 = 0;
+				}
+				else if (this.<currentWord>__0 < this.<totalWordCount>__0)
+				{
+					this.<visibleCount>__0 = this.textComponent.textInfo.wordInfo[this.<currentWord>__0 - 1].lastCharacterIndex + 1;
+				}
+				else if (this.<currentWord>__0 == this.<totalWordCount>__0)
+				{
+					this.<visibleCount>__0 = this.<totalVisibleCharacters>__0;
+				}
+				this.textComponent.maxVisibleCharacters = this.<visibleCount>__0;
+				if (this.<visibleCount>__0 < this.<totalVisibleCharacters>__0)
+				{
+					goto IL_140;
+				}
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.$current;
+				}
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.$current;
+				}
+			}
+
+			[DebuggerHidden]
+			public void Dispose()
+			{
+				this.$disposing = true;
+				this.$PC = -1;
+			}
+
+			[DebuggerHidden]
+			public void Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			internal TMP_Text textComponent;
+
+			internal int <totalWordCount>__0;
+
+			internal int <totalVisibleCharacters>__0;
+
+			internal int <counter>__0;
+
+			internal int <currentWord>__0;
+
+			internal int <visibleCount>__0;
+
+			internal object $current;
+
+			internal bool $disposing;
+
+			internal int $PC;
+		}
 	}
 }

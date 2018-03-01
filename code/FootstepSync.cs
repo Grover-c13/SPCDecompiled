@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class FootstepSync : NetworkBehaviour
 {
+	public FootstepSync()
+	{
+	}
+
 	private void Start()
 	{
 		this.ccm = base.GetComponent<CharacterClassManager>();

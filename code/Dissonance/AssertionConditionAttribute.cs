@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -10,6 +11,21 @@ namespace Dissonance
 			this.ConditionType = conditionType;
 		}
 
-		public AssertionConditionType ConditionType { get; private set; }
+		public AssertionConditionType ConditionType
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ConditionType>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<ConditionType>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private AssertionConditionType <ConditionType>k__BackingField;
 	}
 }

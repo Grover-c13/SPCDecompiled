@@ -6,6 +6,10 @@ namespace TMPro.Examples
 {
 	public class TMP_TextSelector_B : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerUpHandler, IEventSystemHandler
 	{
+		public TMP_TextSelector_B()
+		{
+		}
+
 		private void Awake()
 		{
 			this.m_TextMeshPro = base.gameObject.GetComponent<TextMeshProUGUI>();

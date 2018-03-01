@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ParticleCollision : MonoBehaviour
 {
+	public ParticleCollision()
+	{
+	}
+
 	private void Start()
 	{
 		this.m_ParticleSystem = base.GetComponent<ParticleSystem>();

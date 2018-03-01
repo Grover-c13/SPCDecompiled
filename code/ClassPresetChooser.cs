@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class ClassPresetChooser : MonoBehaviour
 {
+	public ClassPresetChooser()
+	{
+	}
+
 	public void RefreshBottomItems(string key)
 	{
 		this.curKey = key;
@@ -54,7 +58,6 @@ public class ClassPresetChooser : MonoBehaviour
 			this.wSpeed.value = pickerPreset.wSpeed;
 			this.rSpeed.value = pickerPreset.rSpeed;
 			this.avatar.texture = pickerPreset.icon;
-			this.addInfo.text = ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? pickerPreset.en_additionalInfo : pickerPreset.pl_additionalInfo);
 			for (int i = 0; i < this.startItems.Length; i++)
 			{
 				if (i >= pickerPreset.startingItems.Length)
@@ -95,6 +98,10 @@ public class ClassPresetChooser : MonoBehaviour
 	[Serializable]
 	public class PickerPreset
 	{
+		public PickerPreset()
+		{
+		}
+
 		public string classID;
 
 		public Texture icon;

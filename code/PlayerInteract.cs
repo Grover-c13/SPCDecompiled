@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class PlayerInteract : NetworkBehaviour
 {
+	public PlayerInteract()
+	{
+	}
+
 	private void Update()
 	{
 		RaycastHit raycastHit;
@@ -298,7 +305,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdChange914_State called on client.");
+			UnityEngine.Debug.LogError("Command CmdChange914_State called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdChange914_State(reader.ReadString());
@@ -308,7 +315,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdUseElevator called on client.");
+			UnityEngine.Debug.LogError("Command CmdUseElevator called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdUseElevator(reader.ReadGameObject());
@@ -318,7 +325,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdSwitchAWButton called on client.");
+			UnityEngine.Debug.LogError("Command CmdSwitchAWButton called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdSwitchAWButton(reader.ReadString());
@@ -328,7 +335,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdDetonateWarhead called on client.");
+			UnityEngine.Debug.LogError("Command CmdDetonateWarhead called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdDetonateWarhead();
@@ -338,7 +345,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdOpenDoor called on client.");
+			UnityEngine.Debug.LogError("Command CmdOpenDoor called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdOpenDoor(reader.ReadGameObject());
@@ -348,7 +355,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdChangeLeverState called on client.");
+			UnityEngine.Debug.LogError("Command CmdChangeLeverState called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdChangeLeverState(reader.ReadGameObject());
@@ -358,7 +365,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdConatin106 called on client.");
+			UnityEngine.Debug.LogError("Command CmdConatin106 called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdConatin106();
@@ -368,7 +375,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdUse294 called on client.");
+			UnityEngine.Debug.LogError("Command CmdUse294 called on client.");
 			return;
 		}
 		((PlayerInteract)obj).CmdUse294(reader.ReadString());
@@ -378,7 +385,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdChange914_State called on server.");
+			UnityEngine.Debug.LogError("Command function CmdChange914_State called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -399,7 +406,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdUseElevator called on server.");
+			UnityEngine.Debug.LogError("Command function CmdUseElevator called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -420,7 +427,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdSwitchAWButton called on server.");
+			UnityEngine.Debug.LogError("Command function CmdSwitchAWButton called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -441,7 +448,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdDetonateWarhead called on server.");
+			UnityEngine.Debug.LogError("Command function CmdDetonateWarhead called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -461,7 +468,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdOpenDoor called on server.");
+			UnityEngine.Debug.LogError("Command function CmdOpenDoor called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -482,7 +489,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdChangeLeverState called on server.");
+			UnityEngine.Debug.LogError("Command function CmdChangeLeverState called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -503,7 +510,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdConatin106 called on server.");
+			UnityEngine.Debug.LogError("Command function CmdConatin106 called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -523,7 +530,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdUse294 called on server.");
+			UnityEngine.Debug.LogError("Command function CmdUse294 called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -544,7 +551,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcDenied called on server.");
+			UnityEngine.Debug.LogError("RPC RpcDenied called on server.");
 			return;
 		}
 		((PlayerInteract)obj).RpcDenied(reader.ReadGameObject());
@@ -554,7 +561,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcContain106 called on server.");
+			UnityEngine.Debug.LogError("RPC RpcContain106 called on server.");
 			return;
 		}
 		((PlayerInteract)obj).RpcContain106();
@@ -564,7 +571,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcDenied called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcDenied called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -580,7 +587,7 @@ public class PlayerInteract : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcContain106 called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcContain106 called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -652,4 +659,87 @@ public class PlayerInteract : NetworkBehaviour
 	private static int kRpcRpcContain106;
 
 	private static int kCmdCmdUse294;
+
+	[CompilerGenerated]
+	private sealed class <Kill106>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <Kill106>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$current = new WaitForSeconds(20f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.$locvar0 = PlayerManager.singleton.players;
+				this.$locvar1 = 0;
+				while (this.$locvar1 < this.$locvar0.Length)
+				{
+					GameObject gameObject = this.$locvar0[this.$locvar1];
+					CharacterClassManager component = gameObject.GetComponent<CharacterClassManager>();
+					if (component.curClass == 3)
+					{
+						component.SetPlayersClass(2, gameObject);
+						gameObject.GetComponent<Scp106PlayerScript>().CallRpcAnnounceContaining();
+					}
+					this.$locvar1++;
+				}
+				this.$PC = -1;
+				break;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal GameObject[] $locvar0;
+
+		internal int $locvar1;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
 }

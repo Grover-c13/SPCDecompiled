@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class TaaComponent : PostProcessingComponentRenderTexture<AntialiasingModel>
 	{
+		public TaaComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -164,6 +168,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static int _Jitter = Shader.PropertyToID("_Jitter");
 
 			internal static int _SharpenParameters = Shader.PropertyToID("_SharpenParameters");

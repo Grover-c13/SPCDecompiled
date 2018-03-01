@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class GameMenuButton : MonoBehaviour
 {
+	public GameMenuButton()
+	{
+	}
+
 	private void Start()
 	{
 		this.rectTransform = base.GetComponent<RectTransform>();

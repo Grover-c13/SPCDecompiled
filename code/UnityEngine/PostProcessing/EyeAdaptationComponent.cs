@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class EyeAdaptationComponent : PostProcessingComponentRenderTexture<EyeAdaptationModel>
 	{
+		public EyeAdaptationComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -161,6 +165,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _Params = Shader.PropertyToID("_Params");
 
 			internal static readonly int _Speed = Shader.PropertyToID("_Speed");

@@ -4,6 +4,10 @@ using UnityEngine;
 [Serializable]
 public class UBER_ExampleObjectParams
 {
+	public UBER_ExampleObjectParams()
+	{
+	}
+
 	public GameObject target;
 
 	public string materialProperty;

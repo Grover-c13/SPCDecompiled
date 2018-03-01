@@ -7,6 +7,10 @@ using UnityEngine.Networking;
 
 public class QueryProcessor : NetworkBehaviour
 {
+	public QueryProcessor()
+	{
+	}
+
 	private void Update()
 	{
 		this.session_time += Time.deltaTime;

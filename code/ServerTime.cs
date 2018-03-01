@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class ServerTime : NetworkBehaviour
 {
+	public ServerTime()
+	{
+	}
+
 	public static bool CheckSynchronization(int myTime)
 	{
 		int num = Mathf.Abs(myTime - ServerTime.time);

@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public class PostProcessingProfile : ScriptableObject
 	{
+		public PostProcessingProfile()
+		{
+		}
+
 		public BuiltinDebugViewsModel debugViews = new BuiltinDebugViewsModel();
 
 		public FogModel fog = new FogModel();

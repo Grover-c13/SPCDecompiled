@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -14,6 +15,21 @@ namespace Dissonance
 			this.Required = required;
 		}
 
-		public bool Required { get; private set; }
+		public bool Required
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Required>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Required>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private bool <Required>k__BackingField;
 	}
 }

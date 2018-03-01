@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class GrainComponent : PostProcessingComponentRenderTexture<GrainModel>
 	{
+		public GrainComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -49,6 +53,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _Grain_Params1 = Shader.PropertyToID("_Grain_Params1");
 
 			internal static readonly int _Grain_Params2 = Shader.PropertyToID("_Grain_Params2");

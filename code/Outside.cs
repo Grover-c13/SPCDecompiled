@@ -4,6 +4,10 @@ using UnityStandardAssets.ImageEffects;
 
 public class Outside : MonoBehaviour
 {
+	public Outside()
+	{
+	}
+
 	private void Update()
 	{
 		if (this.listenerPos == null)

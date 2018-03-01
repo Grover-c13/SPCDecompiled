@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(NetworkIdentity))]
 public class BlastDoor : NetworkBehaviour
 {
+	public BlastDoor()
+	{
+	}
+
 	public void SetClosed(bool b)
 	{
 		this.NetworkisClosed = b;

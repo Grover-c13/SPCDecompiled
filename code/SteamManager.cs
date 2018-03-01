@@ -6,6 +6,10 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class SteamManager : MonoBehaviour
 {
+	public SteamManager()
+	{
+	}
+
 	private static SteamManager Instance
 	{
 		get

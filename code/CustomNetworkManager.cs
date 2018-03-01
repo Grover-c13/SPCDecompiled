@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Dissonance.Integrations.UNet_HLAPI;
 using GameConsole;
 using Steamworks;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -12,6 +14,18 @@ using UnityEngine.UI;
 
 public class CustomNetworkManager : NetworkManager
 {
+	public CustomNetworkManager()
+	{
+	}
+
+	private void Update()
+	{
+		if (this.popup.activeSelf && Input.GetKey(KeyCode.Escape))
+		{
+			this.ClickButton();
+		}
+	}
+
 	public override void OnClientDisconnect(NetworkConnection conn)
 	{
 		this.ShowLog((int)conn.lastError);
@@ -74,12 +88,9 @@ public class CustomNetworkManager : NetworkManager
 	public void ShowLog(int id)
 	{
 		this.curLogID = id;
-		bool flag = PlayerPrefs.GetString("langver", "en") == "pl";
 		this.popup.SetActive(true);
-		this.contSize.sizeDelta = ((!flag) ? this.logs[id].msgSize_en : this.logs[id].msgSize_pl);
-		this.content.text = ((!flag) ? this.logs[id].msg_en : this.logs[id].msg_pl);
-		this.button.GetComponentInChildren<Text>().text = ((!flag) ? this.logs[id].button.content_en : this.logs[id].button.content_pl);
-		this.button.GetComponent<RectTransform>().sizeDelta = new Vector2((!flag) ? this.logs[id].button.size_en : this.logs[id].button.size_pl, 80f);
+		this.content.text = TranslationReader.Get("Connection_Errors", id);
+		this.content.rectTransform.sizeDelta = Vector3.zero;
 	}
 
 	public void ClickButton()
@@ -250,6 +261,7 @@ public class CustomNetworkManager : NetworkManager
 
 	public int GetFreePort()
 	{
+		ServerConsole.AddLog("Loading config... - " + ConfigFile.path);
 		string @string = ConfigFile.GetString("port_queue", "7777,7778,7779,7780,7781,7782,7783,7784");
 		try
 		{
@@ -273,9 +285,12 @@ public class CustomNetworkManager : NetworkManager
 			if (array.Length == 0)
 			{
 				q = "Failed to detect ports.";
+				throw new Exception();
 			}
+			ServerConsole.AddLog("Port queue loaded: " + @string);
 			for (int i = 0; i < array.Length; i++)
 			{
+				ServerConsole.AddLog("Trying to init port: " + array[i] + "...");
 				q = "Failed to convert [" + array[i] + "]  into integer number!";
 				base.networkPort = int.Parse(array[i]);
 				if (NetworkServer.Listen(base.networkPort))
@@ -293,9 +308,16 @@ public class CustomNetworkManager : NetworkManager
 						q = "Failed to read config file: " + text;
 						ConfigFile.path = text;
 						ConfigFile.singleton.ReloadConfig();
+						ServerConsole.AddLog("Custom config detected, using " + text);
 					}
+					else
+					{
+						ServerConsole.AddLog("No custom config detected, using config.txt");
+					}
+					ServerConsole.AddLog("Done!LOGTYPE-10");
 					return base.networkPort;
 				}
+				ServerConsole.AddLog("...failed.LOGTYPE-6");
 			}
 		}
 		catch
@@ -311,9 +333,7 @@ public class CustomNetworkManager : NetworkManager
 
 	public RectTransform contSize;
 
-	public TextMeshProUGUI content;
-
-	public Button button;
+	public Text content;
 
 	public CustomNetworkManager.DisconnectLog[] logs;
 
@@ -329,15 +349,12 @@ public class CustomNetworkManager : NetworkManager
 	[Serializable]
 	public class DisconnectLog
 	{
+		public DisconnectLog()
+		{
+		}
+
 		[Multiline]
 		public string msg_en;
-
-		[Multiline]
-		public string msg_pl;
-
-		public Vector2 msgSize_en;
-
-		public Vector2 msgSize_pl;
 
 		public CustomNetworkManager.DisconnectLog.LogButton button;
 
@@ -346,15 +363,258 @@ public class CustomNetworkManager : NetworkManager
 		[Serializable]
 		public class LogButton
 		{
+			public LogButton()
+			{
+			}
+
 			public ConnInfoButton[] actions;
-
-			public string content_en;
-
-			public string content_pl;
-
-			public float size_en;
-
-			public float size_pl;
 		}
+	}
+
+	[CompilerGenerated]
+	private sealed class <CreateLobby>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <CreateLobby>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.<ip>__0 = string.Empty;
+				if (!(ConfigFile.GetString("server_ip", "auto") != "auto"))
+				{
+					ServerConsole.AddLog("Downloading your external IP address from: http://icanhazip.com/");
+					this.<www>__1 = new WWW("http://icanhazip.com/");
+					this.$current = this.<www>__1;
+					if (!this.$disposing)
+					{
+						this.$PC = 2;
+					}
+					return true;
+				}
+				this.<ip>__0 = ConfigFile.GetString("server_ip", "auto");
+				ServerConsole.AddLog("Custom config detected. Your game-server IP will be " + this.<ip>__0);
+				break;
+			case 2u:
+				if (!string.IsNullOrEmpty(this.<www>__1.error))
+				{
+					ServerConsole.AddLog("Error: connection to http://icanhazip.com/ failed. Website returned: " + this.<www>__1.error + " | Aborting startup... LOGTYPE-8");
+					return false;
+				}
+				this.<ip>__0 = this.<www>__1.text.Remove(this.<www>__1.text.Length - 1);
+				ServerConsole.AddLog("Done, your game-server IP will be " + this.<ip>__0);
+				break;
+			case 3u:
+				IL_1A3:
+				if (!(SceneManager.GetActiveScene().name != "Facility"))
+				{
+					ServerConsole.AddLog("Level loaded. Creating match...");
+					this.<info>__0 = string.Concat(new string[]
+					{
+						ConfigFile.GetString("server_name", "Unnamed server"),
+						":[:BREAK:]:",
+						ConfigFile.GetString("serverinfo_pastebin_id", "7wV681fT"),
+						":[:BREAK:]:",
+						this.$this.versionstring
+					});
+					ServerConsole.ip = this.<ip>__0;
+					this.<form>__0 = new WWWForm();
+					this.<form>__0.AddField("update", 1);
+					this.<form>__0.AddField("ip", this.<ip>__0);
+					this.<form>__0.AddField("info", this.<info>__0);
+					this.<form>__0.AddField("port", this.$this.networkPort);
+					this.<form>__0.AddField("players", 0);
+					this.<codeNotGenerated>__0 = false;
+					this.<pth>__0 = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/SCP Secret Laboratory/verkey.txt";
+					if (File.Exists(this.<pth>__0))
+					{
+						StreamReader streamReader = new StreamReader(this.<pth>__0);
+						string text = streamReader.ReadToEnd();
+						this.<form>__0.AddField("passcode", text);
+						ServerConsole.password = text;
+						streamReader.Close();
+					}
+					else
+					{
+						this.<form>__0.AddField("passcode", string.Empty);
+						this.<codeNotGenerated>__0 = true;
+					}
+					this.<www2>__0 = new WWW("https://hubertmoszka.pl/authenticator.php", this.<form>__0);
+					this.$current = this.<www2>__0;
+					if (!this.$disposing)
+					{
+						this.$PC = 4;
+					}
+					return true;
+				}
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 3;
+				}
+				return true;
+			case 4u:
+				if (!string.IsNullOrEmpty(this.<www2>__0.error))
+				{
+					ServerConsole.AddLog("Could not create the match - " + this.<www2>__0.error + "LOGTYPE-8");
+					goto IL_5B4;
+				}
+				if (!this.<www2>__0.text.Contains("YES"))
+				{
+					ServerConsole.AddLog(string.Concat(new string[]
+					{
+						"Your server won't be visible on the public server list - ",
+						this.<www2>__0.text,
+						" (",
+						this.<ip>__0,
+						")LOGTYPE-8"
+					}));
+					ServerConsole.AddLog("If you are 100% sure that the server is working correctly send your IP address at: LOGTYPE-8");
+					ServerConsole.AddLog("server.verification@hubertmoszka.pl LOGTYPE-8");
+					goto IL_590;
+				}
+				UnityEngine.Object.FindObjectOfType<ServerConsole>().RunServer();
+				ServerConsole.AddLog("The match is ready!LOGTYPE-8");
+				if (this.<codeNotGenerated>__0)
+				{
+					try
+					{
+						StreamWriter streamWriter = new StreamWriter(this.<pth>__0);
+						string text2 = this.<www2>__0.text.Remove(0, this.<www2>__0.text.IndexOf(":")).Remove(this.<www2>__0.text.IndexOf(":"));
+						while (text2.Contains(":"))
+						{
+							text2 = text2.Replace(":", string.Empty);
+						}
+						streamWriter.WriteLine(text2);
+						streamWriter.Close();
+						ServerConsole.AddLog("New password saved.LOGTYPE-8");
+					}
+					catch
+					{
+						ServerConsole.AddLog("New password could not be saved.LOGTYPE-8");
+					}
+					this.$current = new WaitForSeconds(2f);
+					if (!this.$disposing)
+					{
+						this.$PC = 5;
+					}
+					return true;
+				}
+				goto IL_538;
+			case 5u:
+				ServerConsole.AddLog("THIS SESSION HAS TO BE RESTARTED TO CONTINUE.LOGTYPE-2");
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 6;
+				}
+				return true;
+			case 6u:
+				ServerConsole.AddLog("This is a standard procedure. Don't worry about that crash!LOGTYPE-2");
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 7;
+				}
+				return true;
+			case 7u:
+				ServerConsole.AddLog("Forcing the crash in:LOGTYPE-2");
+				this.<i>__2 = 5;
+				goto IL_527;
+			case 8u:
+				ServerConsole.AddLog(this.<i>__2 + "LOGTYPE-2");
+				this.<i>__2--;
+				goto IL_527;
+			default:
+				return false;
+			}
+			ServerConsole.AddLog("Initializing game-server...");
+			this.$this.StartHost();
+			goto IL_1A3;
+			IL_527:
+			if (this.<i>__2 > 0)
+			{
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 8;
+				}
+				return true;
+			}
+			Application.Quit();
+			IL_538:
+			IL_590:
+			IL_5B4:
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal string <ip>__0;
+
+		internal WWW <www>__1;
+
+		internal string <info>__0;
+
+		internal WWWForm <form>__0;
+
+		internal bool <codeNotGenerated>__0;
+
+		internal string <pth>__0;
+
+		internal WWW <www2>__0;
+
+		internal int <i>__2;
+
+		internal CustomNetworkManager $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

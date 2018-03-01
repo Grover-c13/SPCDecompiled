@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class ToggleableLight : MonoBehaviour
 {
+	public ToggleableLight()
+	{
+	}
+
 	public void SetLights(bool b)
 	{
 		foreach (GameObject gameObject in this.allLights)

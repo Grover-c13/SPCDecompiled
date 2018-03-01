@@ -5,6 +5,10 @@ namespace RemoteAdmin
 {
 	public class PasswordHolder : MonoBehaviour
 	{
+		public PasswordHolder()
+		{
+		}
+
 		private void OnLevelWasLoaded(int level)
 		{
 			PasswordHolder.password = string.Empty;

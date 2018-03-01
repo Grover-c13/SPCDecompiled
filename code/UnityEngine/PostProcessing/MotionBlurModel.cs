@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class MotionBlurModel : PostProcessingModel
 	{
+		public MotionBlurModel()
+		{
+		}
+
 		public MotionBlurModel.Settings settings
 		{
 			get
@@ -45,8 +49,8 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 360f)]
 			public float shutterAngle;
 
-			[Range(4f, 32f)]
 			[Tooltip("The amount of sample points, which affects quality and performances.")]
+			[Range(4f, 32f)]
 			public int sampleCount;
 
 			[Tooltip("The strength of multiple frame blending. The opacity of preceding frames are determined from this coefficient and time differences.")]

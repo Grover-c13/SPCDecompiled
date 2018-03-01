@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Unity;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class GrenadeManager : NetworkBehaviour
 {
+	public GrenadeManager()
+	{
+	}
+
 	private void Start()
 	{
 		this.inv = base.GetComponent<Inventory>();
@@ -107,7 +114,7 @@ public class GrenadeManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdThrowGrenade called on client.");
+			UnityEngine.Debug.LogError("Command CmdThrowGrenade called on client.");
 			return;
 		}
 		((GrenadeManager)obj).CmdThrowGrenade((int)reader.ReadPackedUInt32());
@@ -117,7 +124,7 @@ public class GrenadeManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdThrowGrenade called on server.");
+			UnityEngine.Debug.LogError("Command function CmdThrowGrenade called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -138,7 +145,7 @@ public class GrenadeManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcThrowGrenade called on server.");
+			UnityEngine.Debug.LogError("RPC RpcThrowGrenade called on server.");
 			return;
 		}
 		((GrenadeManager)obj).RpcThrowGrenade(GeneratedNetworkCode._ReadGrenadeSpawnInfo_GrenadeManager(reader));
@@ -148,7 +155,7 @@ public class GrenadeManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcThrowGrenade called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcThrowGrenade called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -229,5 +236,153 @@ public class GrenadeManager : NetworkBehaviour
 		public float timeToExplode;
 
 		public int throwerclass;
+	}
+
+	[CompilerGenerated]
+	private sealed class <CountDown>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <CountDown>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$current = new WaitForSeconds(this.time);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				GameObject.Find(this.grenadeID).GetComponent<GrenadeInstance>().Explode(this.classId);
+				this.$PC = -1;
+				break;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal float time;
+
+		internal string grenadeID;
+
+		internal int classId;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
+
+	[CompilerGenerated]
+	private sealed class <Throw>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <Throw>c__Iterator1()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$this.inv.localInventoryItem.firstpersonModel.GetComponent<Animator>().SetTrigger("Throw");
+				this.$this.GetComponent<MicroHID_GFX>().onFire = true;
+				this.$current = new WaitForSeconds(this.$this.grenades[this.i].throwAnimationTime);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.$this.CallCmdThrowGrenade(this.i);
+				this.$this.inv.NetworkcurItem = -1;
+				this.$this.GetComponent<MicroHID_GFX>().onFire = false;
+				this.$PC = -1;
+				break;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal int i;
+
+		internal GrenadeManager $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

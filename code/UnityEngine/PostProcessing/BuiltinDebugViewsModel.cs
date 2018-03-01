@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class BuiltinDebugViewsModel : PostProcessingModel
 	{
+		public BuiltinDebugViewsModel()
+		{
+		}
+
 		public BuiltinDebugViewsModel.Settings settings
 		{
 			get

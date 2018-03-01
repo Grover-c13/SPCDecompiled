@@ -5,5 +5,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Parameter)]
 	internal sealed class RazorWriteMethodParameterAttribute : Attribute
 	{
+		public RazorWriteMethodParameterAttribute()
+		{
+		}
 	}
 }

@@ -1,10 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-[AddComponentMenu("UBER/Apply Light for Deferred")]
 [ExecuteInEditMode]
+[AddComponentMenu("UBER/Apply Light for Deferred")]
 public class UBER_applyLightForDeferred : MonoBehaviour
 {
+	public UBER_applyLightForDeferred()
+	{
+	}
+
 	private void Start()
 	{
 		this.Reset();

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ExplosionCameraShake : MonoBehaviour
 {
+	public ExplosionCameraShake()
+	{
+	}
+
 	private void Update()
 	{
 		this.glitch.enabled = (this.glitch.horizontalShake > 0f);

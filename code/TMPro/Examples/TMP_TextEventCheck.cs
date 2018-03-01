@@ -6,6 +6,10 @@ namespace TMPro.Examples
 {
 	public class TMP_TextEventCheck : MonoBehaviour
 	{
+		public TMP_TextEventCheck()
+		{
+		}
+
 		private void OnEnable()
 		{
 			if (this.TextEventHandler != null)

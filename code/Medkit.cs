@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class Medkit : NetworkBehaviour
 {
+	public Medkit()
+	{
+	}
+
 	private void Start()
 	{
 		this.ccm = base.GetComponent<CharacterClassManager>();

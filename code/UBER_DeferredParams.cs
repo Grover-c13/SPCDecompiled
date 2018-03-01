@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[AddComponentMenu("UBER/Deferred Params")]
-[ExecuteInEditMode]
 [DisallowMultipleComponent]
+[ExecuteInEditMode]
+[AddComponentMenu("UBER/Deferred Params")]
 [RequireComponent(typeof(Camera))]
 public class UBER_DeferredParams : MonoBehaviour
 {
+	public UBER_DeferredParams()
+	{
+	}
+
 	private void Start()
 	{
 		this.SetupTranslucencyValues();

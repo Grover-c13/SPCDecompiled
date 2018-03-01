@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class LeverButton : NetworkBehaviour
 {
+	public LeverButton()
+	{
+	}
+
 	private void SetSwitch(bool b)
 	{
 		this.NetworkdefaultState = b;
@@ -157,5 +164,104 @@ public class LeverButton : NetworkBehaviour
 	{
 		OnIsDown,
 		OnIsUp
+	}
+
+	[CompilerGenerated]
+	private sealed class <SetupLights>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <SetupLights>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.<increase>__0 = (this.l.intensity < this.targetIntens);
+				if (!this.<increase>__0)
+				{
+					goto IL_E6;
+				}
+				break;
+			case 1u:
+				break;
+			case 2u:
+				goto IL_E6;
+			default:
+				return false;
+			}
+			if (this.l.intensity >= this.targetIntens)
+			{
+				goto IL_FB;
+			}
+			this.l.intensity += Time.deltaTime * 5f;
+			this.$current = new WaitForEndOfFrame();
+			if (!this.$disposing)
+			{
+				this.$PC = 1;
+			}
+			return true;
+			IL_E6:
+			if (this.l.intensity > 0f)
+			{
+				this.l.intensity -= Time.deltaTime * 5f;
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 2;
+				}
+				return true;
+			}
+			IL_FB:
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal Light l;
+
+		internal float targetIntens;
+
+		internal bool <increase>__0;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

@@ -11,6 +11,10 @@ namespace Dissonance.Integrations.UNet_HLAPI
 {
 	public class HlapiCommsNetwork : BaseCommsNetwork<HlapiServer, HlapiClient, HlapiConn, Unit, Unit>
 	{
+		public HlapiCommsNetwork()
+		{
+		}
+
 		protected override HlapiServer CreateServer(Unit details)
 		{
 			HlapiServer hlapiServer = new HlapiServer(this);
@@ -191,6 +195,12 @@ namespace Dissonance.Integrations.UNet_HLAPI
 			return (int)writer.Position;
 		}
 
+		[CompilerGenerated]
+		private static byte[] <_loopbackBuffers>m__0()
+		{
+			return new byte[1024];
+		}
+
 		public byte UnreliableChannel = 1;
 
 		public byte ReliableSequencedChannel;
@@ -203,5 +213,8 @@ namespace Dissonance.Integrations.UNet_HLAPI
 
 		[CompilerGenerated]
 		private static NetworkMessageDelegate <>f__mg$cache0;
+
+		[CompilerGenerated]
+		private static Func<byte[]> <>f__am$cache0;
 	}
 }

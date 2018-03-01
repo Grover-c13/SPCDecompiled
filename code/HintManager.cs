@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
 public class HintManager : MonoBehaviour
 {
+	public HintManager()
+	{
+	}
+
 	private void Awake()
 	{
+		this.box.canvasRenderer.SetAlpha(0f);
 		HintManager.singleton = this;
+		for (int i = 0; i < this.hints.Length; i++)
+		{
+			this.hints[i].content_en = TranslationReader.Get("Hints", i);
+		}
 	}
 
 	private void Start()
@@ -20,37 +31,14 @@ public class HintManager : MonoBehaviour
 
 	private IEnumerator ShowHints()
 	{
-		bool usePL = PlayerPrefs.GetString("langver", "en") == "pl";
+		CanvasRenderer cr = this.box.canvasRenderer;
 		for (;;)
 		{
-			if (this.hintQueue.Count > 0)
+			while (cr.GetAlpha() > 0f)
 			{
-				this.box.GetComponentInChildren<Text>().text = ((!usePL) ? this.hintQueue[0].content_en : this.hintQueue[0].content_pl);
-				this.box.GetComponent<RectTransform>().sizeDelta = ((!usePL) ? this.hintQueue[0].size_en : this.hintQueue[0].size_pl);
-				CanvasRenderer cr = this.box.canvasRenderer;
-				base.GetComponent<AudioSource>().Play();
-				while (cr.GetAlpha() < 1f)
-				{
-					cr.SetAlpha(cr.GetAlpha() + Time.deltaTime * 5f);
-					cr.GetComponentInChildren<Text>().canvasRenderer.SetAlpha(cr.GetAlpha());
-					yield return new WaitForEndOfFrame();
-				}
-				float dur = this.hintQueue[0].duration;
-				while (dur > 0f)
-				{
-					dur -= Time.deltaTime;
-					float v3 = Mathf.Sin(dur * 4f) / 15f + 0.07f;
-					this.box.color = new Color(this.box.color.r, v3, this.box.color.b, this.box.color.a);
-					yield return new WaitForEndOfFrame();
-				}
-				while (cr.GetAlpha() > 0f)
-				{
-					cr.SetAlpha(cr.GetAlpha() - Time.deltaTime * 5f);
-					cr.GetComponentInChildren<Text>().canvasRenderer.SetAlpha(cr.GetAlpha());
-					yield return new WaitForEndOfFrame();
-				}
-				yield return new WaitForSeconds(0.3f);
-				this.hintQueue.RemoveAt(0);
+				cr.SetAlpha(cr.GetAlpha() - Time.deltaTime * 5f);
+				cr.GetComponentInChildren<Text>().canvasRenderer.SetAlpha(cr.GetAlpha());
+				yield return new WaitForEndOfFrame();
 			}
 			yield return new WaitForEndOfFrame();
 		}
@@ -82,18 +70,107 @@ public class HintManager : MonoBehaviour
 	[Serializable]
 	public class Hint
 	{
-		public Vector2 size_en;
-
-		public Vector2 size_pl;
+		public Hint()
+		{
+		}
 
 		[Multiline]
 		public string content_en;
 
-		[Multiline]
-		public string content_pl;
-
 		public string keyName;
 
 		public float duration;
+	}
+
+	[CompilerGenerated]
+	private sealed class <ShowHints>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <ShowHints>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.<cr>__0 = this.$this.box.canvasRenderer;
+				break;
+			case 1u:
+				IL_A1:
+				if (this.<cr>__0.GetAlpha() <= 0f)
+				{
+					this.$current = new WaitForEndOfFrame();
+					if (!this.$disposing)
+					{
+						this.$PC = 2;
+					}
+				}
+				else
+				{
+					this.<cr>__0.SetAlpha(this.<cr>__0.GetAlpha() - Time.deltaTime * 5f);
+					this.<cr>__0.GetComponentInChildren<Text>().canvasRenderer.SetAlpha(this.<cr>__0.GetAlpha());
+					this.$current = new WaitForEndOfFrame();
+					if (!this.$disposing)
+					{
+						this.$PC = 1;
+					}
+				}
+				return true;
+			case 2u:
+				break;
+			default:
+				return false;
+			}
+			goto IL_A1;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal CanvasRenderer <cr>__0;
+
+		internal float <dur>__1;
+
+		internal float <v3>__2;
+
+		internal HintManager $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

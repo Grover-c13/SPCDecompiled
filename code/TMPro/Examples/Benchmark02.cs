@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class Benchmark02 : MonoBehaviour
 	{
+		public Benchmark02()
+		{
+		}
+
 		private void Start()
 		{
 			for (int i = 0; i < this.NumberOfNPC; i++)

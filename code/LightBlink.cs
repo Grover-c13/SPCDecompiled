@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class LightBlink : MonoBehaviour
 {
+	public LightBlink()
+	{
+	}
+
 	private void Start()
 	{
 		if (QualitySettings.shadows != ShadowQuality.Disable)

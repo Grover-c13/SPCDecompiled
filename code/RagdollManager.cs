@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class RagdollManager : NetworkBehaviour
 {
+	public RagdollManager()
+	{
+	}
+
 	public void SpawnRagdoll(Vector3 pos, Quaternion rot, int classID, PlayerStats.HitInfo ragdollInfo, bool allowRecall, string ownerID, string ownerNick)
 	{
 		Class @class = base.GetComponent<CharacterClassManager>().klasy[1];
@@ -20,7 +24,6 @@ public class RagdollManager : NetworkBehaviour
 
 	private void Start()
 	{
-		this.isEN = (PlayerPrefs.GetString("langver", "en") != "pl");
 		this.txt = GameObject.Find("BodyInspection").GetComponentInChildren<TextMeshProUGUI>();
 		this.cam = base.GetComponent<Scp049PlayerScript>().plyCam.transform;
 		this.ccm = base.GetComponent<CharacterClassManager>();
@@ -39,7 +42,7 @@ public class RagdollManager : NetworkBehaviour
 			Ragdoll componentInParent = raycastHit.transform.GetComponentInParent<Ragdoll>();
 			if (componentInParent != null)
 			{
-				text = ((!this.isEN) ? "To ciało <b>[user]</b>, to [class]!\n\nPrzyczyna śmierci: [cause]" : "It's <b>[user]</b>'s body, he was [class]!\n\nCause of death: [cause]");
+				text = TranslationReader.Get("Death_Causes", 12);
 				text = text.Replace("[user]", componentInParent.owner.steamClientName);
 				text = text.Replace("[cause]", RagdollManager.GetCause(componentInParent.owner.deathCause, false));
 				text = text.Replace("[class]", string.Concat(new string[]
@@ -47,7 +50,7 @@ public class RagdollManager : NetworkBehaviour
 					"<color=",
 					this.GetColor(this.ccm.klasy[componentInParent.owner.charclass].classColor),
 					">",
-					(!this.isEN) ? this.ccm.klasy[componentInParent.owner.charclass].fullName_pl : this.ccm.klasy[componentInParent.owner.charclass].fullName,
+					this.ccm.klasy[componentInParent.owner.charclass].fullName,
 					"</color>"
 				}));
 			}
@@ -72,57 +75,56 @@ public class RagdollManager : NetworkBehaviour
 
 	public static string GetCause(PlayerStats.HitInfo info, bool ragdoll)
 	{
-		bool flag = PlayerPrefs.GetString("langver", "en") != "pl";
-		string result = (!flag) ? "Nieznana przyczyna śmierci." : "Unknown cause of death.";
+		string result = TranslationReader.Get("Death_Causes", 11);
 		int num = -1;
 		if (info.tool == "NUKE")
 		{
-			result = ((!flag) ? "Zgon od eksplozji." : "Died of an explosion.");
+			result = TranslationReader.Get("Death_Causes", 0);
 		}
 		else if (info.tool == "FALLDOWN")
 		{
-			result = ((!flag) ? "Upadek zakończył jego żywot." : "The fall has ended his life.");
+			result = TranslationReader.Get("Death_Causes", 1);
 		}
 		else if (info.tool == "LURE")
 		{
-			result = ((!flag) ? "Poświęcenie w celu zamknięcia SCP-106." : "Died to re-contain SCP-106.");
+			result = TranslationReader.Get("Death_Causes", 2);
 		}
 		else if (info.tool == "POCKET")
 		{
-			result = ((!flag) ? "Zaginął w Wymiarze Łuzowym." : "Lost in the Pocket Dimension.");
+			result = TranslationReader.Get("Death_Causes", 3);
 		}
 		else if (info.tool == "CONTAIN")
 		{
-			result = ((!flag) ? "To jest pozostałość po SCP-106." : "It's a remnant of SCP-106.");
+			result = TranslationReader.Get("Death_Causes", 4);
 		}
 		else if (info.tool == "TESLA")
 		{
-			result = ((!flag) ? "Porażenie prądem o wysokim napięciu." : "High-voltage electric shock.");
+			result = TranslationReader.Get("Death_Causes", 5);
 		}
 		else if (info.tool == "WALL")
 		{
-			result = ((!flag) ? "Zmiażdżony przez ciężki obiekt." : "Crushed by a heavy structure.");
+			result = TranslationReader.Get("Death_Causes", 6);
 		}
 		else if (info.tool.Length > 7 && info.tool.Substring(0, 7) == "Weapon:" && int.TryParse(info.tool.Remove(0, 7), out num) && num != -1)
 		{
 			GameObject gameObject = GameObject.Find("Host");
 			WeaponManager.Weapon weapon = gameObject.GetComponent<WeaponManager>().weapons[num];
 			AmmoBox component = gameObject.GetComponent<AmmoBox>();
-			result = ((!flag) ? "Na ciele widać wiele ran postrzałowych. Broń z której zostały oddane strzały najprawdopodobniej korzysta z amunicji " : "There are many gunshot wounds on the body. Most likely, a ") + component.types[weapon.ammoType].label + ((!flag) ? "." : " ammo type was used.");
+			result = TranslationReader.Get("Death_Causes", 7).Replace("[ammotype]", component.types[weapon.ammoType].label);
 		}
 		else if (info.tool.Length > 4 && info.tool.Substring(0, 4) == "SCP:" && int.TryParse(info.tool.Remove(0, 4), out num) && num != -1)
 		{
 			if (num == 173)
 			{
-				result = ((!flag) ? "Skręcenie karku u podstawy czaszki." : "Snapped neck at the base of the skull.");
+				result = TranslationReader.Get("Death_Causes", 8);
 			}
 			else if (num == 106)
 			{
-				result = ((!flag) ? "Nie przetrwał spotkania z SCP-106." : "Did not survive the meeting with SCP-106.");
+				result = TranslationReader.Get("Death_Causes", 9);
 			}
 			else if (num == 49 || num == 492)
 			{
-				result = ((!flag) ? "Został wyleczony z pomoru." : "He was cured of a plague.");
+				result = TranslationReader.Get("Death_Causes", 10);
 			}
 		}
 		return result;
@@ -185,8 +187,6 @@ public class RagdollManager : NetworkBehaviour
 	private CharacterClassManager ccm;
 
 	private TextMeshProUGUI txt;
-
-	private bool isEN = true;
 
 	private static int kCmdCmdRegisterScpFrag = 646872709;
 }

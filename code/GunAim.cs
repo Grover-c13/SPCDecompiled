@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class GunAim : MonoBehaviour
 {
+	public GunAim()
+	{
+	}
+
 	private void Start()
 	{
 		this.parentCamera = base.GetComponentInParent<Camera>();

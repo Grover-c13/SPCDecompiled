@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SmokeGrenade : GrenadeInstance
 {
+	public SmokeGrenade()
+	{
+	}
+
 	public override void Explode(int thrower)
 	{
 		base.Explode(thrower);

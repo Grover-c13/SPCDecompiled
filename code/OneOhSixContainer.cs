@@ -3,6 +3,10 @@ using UnityEngine.Networking;
 
 public class OneOhSixContainer : NetworkBehaviour
 {
+	public OneOhSixContainer()
+	{
+	}
+
 	public void SetState(bool b)
 	{
 		this.Networkused = b;

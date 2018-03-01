@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class ChatController : MonoBehaviour
 {
+	public ChatController()
+	{
+	}
+
 	private void OnEnable()
 	{
 		this.TMP_ChatInput.onSubmit.AddListener(new UnityAction<string>(this.AddToChatOutput));

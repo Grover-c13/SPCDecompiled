@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Lift : NetworkBehaviour
 {
+	public Lift()
+	{
+	}
+
 	private void SetStatus(int i)
 	{
 		this.NetworkstatusID = i;
@@ -147,7 +154,7 @@ public class Lift : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcPlayMusic called on server.");
+			UnityEngine.Debug.LogError("RPC RpcPlayMusic called on server.");
 			return;
 		}
 		((Lift)obj).RpcPlayMusic();
@@ -157,7 +164,7 @@ public class Lift : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcMovePlayers called on server.");
+			UnityEngine.Debug.LogError("RPC RpcMovePlayers called on server.");
 			return;
 		}
 		((Lift)obj).RpcMovePlayers();
@@ -167,7 +174,7 @@ public class Lift : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcPlayMusic called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcPlayMusic called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -182,7 +189,7 @@ public class Lift : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcMovePlayers called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcMovePlayers called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -259,11 +266,23 @@ public class Lift : NetworkBehaviour
 	[Serializable]
 	public struct Elevator
 	{
+		public void SetPosition()
+		{
+			this.pos = this.target.position;
+		}
+
+		public Vector3 GetPosition()
+		{
+			return this.pos;
+		}
+
 		public Transform target;
 
 		public Animator door;
 
 		public AudioSource musicSpeaker;
+
+		private Vector3 pos;
 	}
 
 	public enum Status
@@ -271,5 +290,102 @@ public class Lift : NetworkBehaviour
 		Up,
 		Down,
 		Moving
+	}
+
+	[CompilerGenerated]
+	private sealed class <LiftAnimation>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <LiftAnimation>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.<previousStatus>__0 = this.$this.status;
+				this.$this.SetStatus(2);
+				this.$current = new WaitForSeconds(0.7f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.$this.CallRpcPlayMusic();
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 2;
+				}
+				return true;
+			case 2u:
+				this.$this.CallRpcMovePlayers();
+				this.$current = new WaitForSeconds(this.$this.movingSpeed - 2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 3;
+				}
+				return true;
+			case 3u:
+				this.$this.SetStatus((this.<previousStatus>__0 != Lift.Status.Down) ? 1 : 0);
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 4;
+				}
+				return true;
+			case 4u:
+				this.$this.operative = true;
+				this.$PC = -1;
+				break;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal Lift.Status <previousStatus>__0;
+
+		internal Lift $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

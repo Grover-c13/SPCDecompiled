@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ImageGenerator : MonoBehaviour
 {
+	public ImageGenerator()
+	{
+	}
+
 	public bool GenerateMap(int seed)
 	{
 		base.GetComponent<PocketDimensionGenerator>().GenerateMap(seed);
@@ -297,6 +301,10 @@ public class ImageGenerator : MonoBehaviour
 	[Serializable]
 	public class ColorMap
 	{
+		public ColorMap()
+		{
+		}
+
 		public Color color = Color.white;
 
 		public ImageGenerator.RoomType type;
@@ -309,6 +317,10 @@ public class ImageGenerator : MonoBehaviour
 	[Serializable]
 	public class RoomsOfType
 	{
+		public RoomsOfType()
+		{
+		}
+
 		public List<ImageGenerator.Room> roomsOfType = new List<ImageGenerator.Room>();
 
 		public int amount;

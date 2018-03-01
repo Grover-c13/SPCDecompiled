@@ -7,9 +7,6 @@ public class Item
 	public Item(Item item)
 	{
 		this.label = item.label;
-		this.labelPL = item.labelPL;
-		this.description = item.description;
-		this.descriptionPL = item.descriptionPL;
 		this.icon = item.icon;
 		this.prefab = item.prefab;
 		this.pickingtime = item.pickingtime;
@@ -22,14 +19,6 @@ public class Item
 	}
 
 	public string label;
-
-	public string labelPL;
-
-	[Multiline]
-	public string description;
-
-	[Multiline]
-	public string descriptionPL;
 
 	public Texture2D icon;
 

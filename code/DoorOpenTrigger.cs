@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class DoorOpenTrigger : MonoBehaviour
 {
+	public DoorOpenTrigger()
+	{
+	}
+
 	private void Update()
 	{
 		if (this.door.isOpen == this.stageToTrigger)

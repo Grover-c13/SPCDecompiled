@@ -7,6 +7,10 @@ namespace TMPro
 {
 	public class TMP_TextEventHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
 	{
+		public TMP_TextEventHandler()
+		{
+		}
+
 		public TMP_TextEventHandler.CharacterSelectionEvent onCharacterSelection
 		{
 			get
@@ -190,21 +194,33 @@ namespace TMPro
 		[Serializable]
 		public class CharacterSelectionEvent : UnityEvent<char, int>
 		{
+			public CharacterSelectionEvent()
+			{
+			}
 		}
 
 		[Serializable]
 		public class WordSelectionEvent : UnityEvent<string, int, int>
 		{
+			public WordSelectionEvent()
+			{
+			}
 		}
 
 		[Serializable]
 		public class LineSelectionEvent : UnityEvent<string, int, int>
 		{
+			public LineSelectionEvent()
+			{
+			}
 		}
 
 		[Serializable]
 		public class LinkSelectionEvent : UnityEvent<string, string, int>
 		{
+			public LinkSelectionEvent()
+			{
+			}
 		}
 	}
 }

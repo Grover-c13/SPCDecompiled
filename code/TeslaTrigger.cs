@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class TeslaTrigger : MonoBehaviour
 {
+	public TeslaTrigger()
+	{
+	}
+
 	private void Start()
 	{
 		this.pmng = PlayerManager.singleton;

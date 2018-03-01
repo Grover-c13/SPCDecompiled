@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 {
 	public abstract class PostProcessingComponentCommandBuffer<T> : PostProcessingComponent<T> where T : PostProcessingModel
 	{
+		protected PostProcessingComponentCommandBuffer()
+		{
+		}
+
 		public abstract CameraEvent GetCameraEvent();
 
 		public abstract string GetName();

@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class ObjectSpin : MonoBehaviour
 	{
+		public ObjectSpin()
+		{
+		}
+
 		private void Awake()
 		{
 			this.m_transform = base.transform;

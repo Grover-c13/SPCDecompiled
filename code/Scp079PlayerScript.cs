@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Scp079PlayerScript : NetworkBehaviour
 {
+	public Scp079PlayerScript()
+	{
+	}
+
 	private void Start()
 	{
 		if (TutorialManager.status)
@@ -21,8 +25,6 @@ public class Scp079PlayerScript : NetworkBehaviour
 			this.cam = UnityEngine.Object.FindObjectOfType<SpectatorCamera>().cam079;
 			this.glowCam = UnityEngine.Object.FindObjectOfType<SpectatorCamera>().cam079_glow;
 			this.glitchEffect = this.glowCam.GetComponent<AnalogGlitch>();
-			this.gui = this.interfaces.Scp079_eq.GetComponent<Interface079>();
-			this.gui.localplayer = base.gameObject;
 		}
 	}
 
@@ -32,9 +34,6 @@ public class Scp079PlayerScript : NetworkBehaviour
 		this.iAm079 = (classID == 7);
 		if (base.isLocalPlayer)
 		{
-			this.gui.gameObject.SetActive(this.iAm079);
-			this.interfaces.Scp079_eq.SetActive(this.iAm079);
-			this.cam.gameObject.SetActive(this.iAm079);
 			if (!this.iAm079 && this.lockedDoor != null)
 			{
 				this.CallCmdLockDoor(null);

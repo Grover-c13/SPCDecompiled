@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PositionTrigger : MonoBehaviour
 {
+	public PositionTrigger()
+	{
+	}
+
 	private void Update()
 	{
 		if (this.ply == null)

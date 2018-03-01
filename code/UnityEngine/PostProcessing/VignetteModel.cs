@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class VignetteModel : PostProcessingModel
 	{
+		public VignetteModel()
+		{
+		}
+
 		public VignetteModel.Settings settings
 		{
 			get
@@ -67,12 +71,12 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 1f)]
 			public float intensity;
 
-			[Range(0.01f, 1f)]
 			[Tooltip("Smoothness of the vignette borders.")]
+			[Range(0.01f, 1f)]
 			public float smoothness;
 
-			[Range(0f, 1f)]
 			[Tooltip("Lower values will make a square-ish vignette.")]
+			[Range(0f, 1f)]
 			public float roundness;
 
 			[Tooltip("A black and white mask to use as a vignette.")]

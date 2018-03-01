@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -10,6 +11,21 @@ namespace Dissonance
 			this.CollectionAccessType = collectionAccessType;
 		}
 
-		public CollectionAccessType CollectionAccessType { get; private set; }
+		public CollectionAccessType CollectionAccessType
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<CollectionAccessType>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<CollectionAccessType>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private CollectionAccessType <CollectionAccessType>k__BackingField;
 	}
 }

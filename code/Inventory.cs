@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Inventory : NetworkBehaviour
 {
+	public Inventory()
+	{
+	}
+
 	private void SyncVerItems(SyncListInt i)
 	{
 		this.verifiedItems = i;

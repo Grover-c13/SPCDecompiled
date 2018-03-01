@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class AmbientOcclusionComponent : PostProcessingComponentCommandBuffer<AmbientOcclusionModel>
 	{
+		public AmbientOcclusionComponent()
+		{
+		}
+
 		private AmbientOcclusionComponent.OcclusionSource occlusionSource
 		{
 			get
@@ -123,6 +127,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _Intensity = Shader.PropertyToID("_Intensity");
 
 			internal static readonly int _Radius = Shader.PropertyToID("_Radius");

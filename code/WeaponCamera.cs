@@ -4,6 +4,10 @@ using UnityStandardAssets.ImageEffects;
 
 public class WeaponCamera : MonoBehaviour
 {
+	public WeaponCamera()
+	{
+	}
+
 	private void Start()
 	{
 		this.myvaca = base.GetComponent<VignetteAndChromaticAberration>();

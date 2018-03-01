@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -11,6 +12,21 @@ namespace Dissonance
 		}
 
 		[NotNull]
-		public string FormatParameterName { get; private set; }
+		public string FormatParameterName
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<FormatParameterName>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<FormatParameterName>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private string <FormatParameterName>k__BackingField;
 	}
 }

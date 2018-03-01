@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class EyeAdaptationModel : PostProcessingModel
 	{
+		public EyeAdaptationModel()
+		{
+		}
+
 		public EyeAdaptationModel.Settings settings
 		{
 			get

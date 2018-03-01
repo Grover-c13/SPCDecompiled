@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class AntialiasingModel : PostProcessingModel
 	{
+		public AntialiasingModel()
+		{
+		}
+
 		public AntialiasingModel.Settings settings
 		{
 			get
@@ -43,6 +47,11 @@ namespace UnityEngine.PostProcessing
 		[Serializable]
 		public struct FxaaQualitySettings
 		{
+			static FxaaQualitySettings()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			[Range(0f, 1f)]
 			[Tooltip("The amount of desired sub-pixel aliasing removal. Effects the sharpeness of the output.")]
 			public float subpixelAliasingRemovalAmount;
@@ -93,6 +102,11 @@ namespace UnityEngine.PostProcessing
 		[Serializable]
 		public struct FxaaConsoleSettings
 		{
+			static FxaaConsoleSettings()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			[Range(0.33f, 0.5f)]
 			[Tooltip("The amount of spread applied to the sampling coordinates while sampling for subpixel information.")]
 			public float subpixelSpreadAmount;

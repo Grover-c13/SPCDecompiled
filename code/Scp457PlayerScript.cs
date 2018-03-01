@@ -3,6 +3,10 @@ using UnityEngine.Networking;
 
 public class Scp457PlayerScript : NetworkBehaviour
 {
+	public Scp457PlayerScript()
+	{
+	}
+
 	private void UNetVersion()
 	{
 	}

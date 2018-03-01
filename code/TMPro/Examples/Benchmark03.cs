@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class Benchmark03 : MonoBehaviour
 	{
+		public Benchmark03()
+		{
+		}
+
 		private void Awake()
 		{
 		}

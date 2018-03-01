@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class TextChat : NetworkBehaviour
 {
+	public TextChat()
+	{
+	}
+
 	private void Start()
 	{
 		if (base.isLocalPlayer)

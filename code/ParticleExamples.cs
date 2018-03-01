@@ -4,6 +4,10 @@ using UnityEngine;
 [Serializable]
 public class ParticleExamples
 {
+	public ParticleExamples()
+	{
+	}
+
 	public string title;
 
 	[TextArea]

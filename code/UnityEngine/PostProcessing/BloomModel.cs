@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class BloomModel : PostProcessingModel
 	{
+		public BloomModel()
+		{
+		}
+
 		public BloomModel.Settings settings
 		{
 			get

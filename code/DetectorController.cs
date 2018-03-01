@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class DetectorController : MonoBehaviour
 {
+	public DetectorController()
+	{
+	}
+
 	private void Start()
 	{
 		base.InvokeRepeating("RefreshDetectorsList", 10f, 10f);

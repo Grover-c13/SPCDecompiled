@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{48545FA3-0337-4D35-8CA5-426AB765E633}</ProjectGuid>
+    <ProjectGuid>{A8C1D90F-EA8D-477E-8351-435DDFF607F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -98,6 +98,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="-PrivateImplementationDetails-.cs" />
     <Compile Include="AlphaWarheadButtonUnlocker.cs" />
     <Compile Include="AlphaWarheadDetonationController.cs" />
     <Compile Include="AmbientSoundPlayer.cs" />
@@ -322,6 +323,7 @@
     <Compile Include="Scp049PlayerScript.cs" />
     <Compile Include="Scp049_2PlayerScript.cs" />
     <Compile Include="Scp079PlayerScript.cs" />
+    <Compile Include="Scp096PlayerScript.cs" />
     <Compile Include="Scp106PlayerScript.cs" />
     <Compile Include="Scp173PlayerScript.cs" />
     <Compile Include="Scp294.cs" />
@@ -392,6 +394,9 @@
     <Compile Include="TMPro\TMP_DigitValidator.cs" />
     <Compile Include="TMPro\TMP_TextEventHandler.cs" />
     <Compile Include="ToggleableLight.cs" />
+    <Compile Include="TranslationBrowser.cs" />
+    <Compile Include="TranslationBrowserButton.cs" />
+    <Compile Include="TranslationReader.cs" />
     <Compile Include="TutorialManager.cs" />
     <Compile Include="TutorialUnlocker.cs" />
     <Compile Include="UBER_applyLightForDeferred.cs" />

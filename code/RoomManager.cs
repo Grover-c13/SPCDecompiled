@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class RoomManager : MonoBehaviour
 {
+	public RoomManager()
+	{
+	}
+
 	private void Start()
 	{
 		if (this.useSimulator != -1)
@@ -101,6 +105,10 @@ public class RoomManager : MonoBehaviour
 	[Serializable]
 	public class Room
 	{
+		public Room()
+		{
+		}
+
 		public string label;
 
 		public Offset roomOffset;

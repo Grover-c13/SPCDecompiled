@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class TextMessage : MonoBehaviour
 {
+	public TextMessage()
+	{
+	}
+
 	private Vector3 GetPosition()
 	{
 		return new Vector3(this.xOffset, this.spacing * this.position, 0f);

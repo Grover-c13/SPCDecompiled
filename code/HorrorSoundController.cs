@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class HorrorSoundController : NetworkBehaviour
 {
+	public HorrorSoundController()
+	{
+	}
+
 	private void Start()
 	{
 		this.pmng = PlayerManager.singleton;

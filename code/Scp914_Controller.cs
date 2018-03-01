@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Scp914_Controller : NetworkBehaviour
 {
+	public Scp914_Controller()
+	{
+	}
+
 	public void Refine(string label)
 	{
 		this.CallCmdRefine914(label);
@@ -112,7 +119,7 @@ public class Scp914_Controller : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdSetupPickup called on client.");
+			UnityEngine.Debug.LogError("Command CmdSetupPickup called on client.");
 			return;
 		}
 		((Scp914_Controller)obj).CmdSetupPickup(reader.ReadString(), (int)reader.ReadPackedUInt32(), reader.ReadVector3());
@@ -122,7 +129,7 @@ public class Scp914_Controller : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdDestroyItem called on client.");
+			UnityEngine.Debug.LogError("Command CmdDestroyItem called on client.");
 			return;
 		}
 		((Scp914_Controller)obj).CmdDestroyItem(reader.ReadString());
@@ -132,7 +139,7 @@ public class Scp914_Controller : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdRefine914 called on client.");
+			UnityEngine.Debug.LogError("Command CmdRefine914 called on client.");
 			return;
 		}
 		((Scp914_Controller)obj).CmdRefine914(reader.ReadString());
@@ -142,7 +149,7 @@ public class Scp914_Controller : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdSetupPickup called on server.");
+			UnityEngine.Debug.LogError("Command function CmdSetupPickup called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -165,7 +172,7 @@ public class Scp914_Controller : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdDestroyItem called on server.");
+			UnityEngine.Debug.LogError("Command function CmdDestroyItem called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -186,7 +193,7 @@ public class Scp914_Controller : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdRefine914 called on server.");
+			UnityEngine.Debug.LogError("Command function CmdRefine914 called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -236,6 +243,10 @@ public class Scp914_Controller : NetworkBehaviour
 	[Serializable]
 	public class SCP914Output
 	{
+		public SCP914Output()
+		{
+		}
+
 		public int[] output0;
 
 		public int[] output1;
@@ -245,5 +256,144 @@ public class Scp914_Controller : NetworkBehaviour
 		public int[] output3;
 
 		public int[] output4;
+	}
+
+	[CompilerGenerated]
+	private sealed class <SetRandomResults>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <SetRandomResults>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.<state>__0 = UnityEngine.Object.FindObjectOfType<Scp914>().state;
+				UnityEngine.Object.FindObjectOfType<Scp914Grabber>().GetComponent<BoxCollider>().isTrigger = true;
+				this.$current = new WaitForSeconds(11f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.<colliders>__0 = UnityEngine.Object.FindObjectOfType<Scp914Grabber>().observes.ToArray();
+				this.<i>__1 = 0;
+				break;
+			case 2u:
+				UnityEngine.Object.FindObjectOfType<Scp914Grabber>().observes.Clear();
+				UnityEngine.Object.FindObjectOfType<Scp914Grabber>().GetComponent<BoxCollider>().isTrigger = false;
+				this.<i>__1++;
+				break;
+			default:
+				return false;
+			}
+			if (this.<i>__1 < this.<colliders>__0.Length)
+			{
+				if (this.<colliders>__0.Length != 0)
+				{
+					if (this.<colliders>__0[this.<i>__1] != null && this.<colliders>__0[this.<i>__1].GetComponentInParent<Pickup>() != null)
+					{
+						int num2 = 0;
+						if (this.<state>__0 == 0)
+						{
+							int[] output = this.$this.outputs[this.<colliders>__0[this.<i>__1].gameObject.GetComponentInParent<Pickup>().id].output0;
+							num2 = output[UnityEngine.Random.Range(0, output.Length)];
+						}
+						if (this.<state>__0 == 1)
+						{
+							int[] output2 = this.$this.outputs[this.<colliders>__0[this.<i>__1].gameObject.GetComponentInParent<Pickup>().id].output1;
+							num2 = output2[UnityEngine.Random.Range(0, output2.Length)];
+						}
+						if (this.<state>__0 == 2)
+						{
+							int[] output3 = this.$this.outputs[this.<colliders>__0[this.<i>__1].gameObject.GetComponentInParent<Pickup>().id].output2;
+							num2 = output3[UnityEngine.Random.Range(0, output3.Length)];
+						}
+						if (this.<state>__0 == 3)
+						{
+							int[] output4 = this.$this.outputs[this.<colliders>__0[this.<i>__1].gameObject.GetComponentInParent<Pickup>().id].output3;
+							num2 = output4[UnityEngine.Random.Range(0, output4.Length)];
+						}
+						if (this.<state>__0 == 4)
+						{
+							int[] output5 = this.$this.outputs[this.<colliders>__0[this.<i>__1].gameObject.GetComponentInParent<Pickup>().id].output4;
+							num2 = output5[UnityEngine.Random.Range(0, output5.Length)];
+						}
+						if (num2 < 0)
+						{
+							this.$this.CallCmdDestroyItem(this.<colliders>__0[this.<i>__1].name);
+						}
+						else
+						{
+							Vector3 vector = UnityEngine.Object.FindObjectOfType<Scp914>().outputPlace.transform.position;
+							vector += new Vector3(UnityEngine.Random.Range(-0.7f, 0.7f), 0f, UnityEngine.Random.Range(-0.7f, 0.7f));
+							this.$this.CallCmdSetupPickup(this.<colliders>__0[this.<i>__1].name, num2, vector);
+						}
+					}
+					if (!(this.<colliders>__0[this.<i>__1] != null) || this.<colliders>__0[this.<i>__1].tag == "Player")
+					{
+					}
+					this.$current = new WaitForEndOfFrame();
+					if (!this.$disposing)
+					{
+						this.$PC = 2;
+					}
+					return true;
+				}
+			}
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal int <state>__0;
+
+		internal Collider[] <colliders>__0;
+
+		internal int <i>__1;
+
+		internal Scp914_Controller $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class AmmoBox : MonoBehaviour
 {
+	public AmmoBox()
+	{
+	}
+
 	private void Start()
 	{
 		this.inv = base.GetComponent<Inventory>();
@@ -122,6 +126,10 @@ public class AmmoBox : MonoBehaviour
 	[Serializable]
 	public class AmmoType
 	{
+		public AmmoType()
+		{
+		}
+
 		public string label;
 
 		public int inventoryID;

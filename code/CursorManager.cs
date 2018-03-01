@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
+	public CursorManager()
+	{
+	}
+
 	private void OnLevelWasLoaded(int level)
 	{
 		CursorManager.UnsetAll();

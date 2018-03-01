@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class GameMenu : MonoBehaviour
 {
+	public GameMenu()
+	{
+	}
+
 	private void Update()
 	{
 		if (Input.GetButtonDown("Cancel") && !CursorManager.eqOpen)

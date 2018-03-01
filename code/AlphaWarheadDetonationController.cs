@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class AlphaWarheadDetonationController : NetworkBehaviour
 {
+	public AlphaWarheadDetonationController()
+	{
+	}
+
 	public void StartDetonation()
 	{
 		if (this.detonationInProgress || !this.lever.GetState())
@@ -43,12 +47,12 @@ public class AlphaWarheadDetonationController : NetworkBehaviour
 				if (this.detonationTime < 83f && !this.doorsOpen && base.isLocalPlayer)
 				{
 					this.doorsOpen = true;
-					this.CmdOpenDoors();
+					this.OpenDoors();
 				}
 				if (this.detonationTime < 2f && !this.blastDoors && this.detonationInProgress && base.isLocalPlayer)
 				{
 					this.blastDoors = true;
-					this.CmdCloseBlastDoors();
+					this.CloseBlastDoors();
 				}
 			}
 			else
@@ -90,7 +94,7 @@ public class AlphaWarheadDetonationController : NetworkBehaviour
 	}
 
 	[ServerCallback]
-	private void CmdOpenDoors()
+	private void OpenDoors()
 	{
 		if (!NetworkServer.active)
 		{
@@ -98,9 +102,9 @@ public class AlphaWarheadDetonationController : NetworkBehaviour
 		}
 		foreach (Door door in UnityEngine.Object.FindObjectsOfType<Door>())
 		{
-			if (door.isOpen)
+			if (!door.isOpen && !door.permissionLevel.Contains("CONT") && door.permissionLevel != "UNACCESSIBLE")
 			{
-				door.GetComponent<Door>().SetState(true);
+				door.OpenWarhead();
 			}
 		}
 	}
@@ -112,14 +116,18 @@ public class AlphaWarheadDetonationController : NetworkBehaviour
 		{
 			return;
 		}
+		GameObject[] array = GameObject.FindGameObjectsWithTag("LiftTarget");
 		foreach (GameObject gameObject in PlayerManager.singleton.players)
 		{
-			gameObject.GetComponent<PlayerStats>().Explode();
+			foreach (GameObject gameObject2 in array)
+			{
+				gameObject.GetComponent<PlayerStats>().Explode(Vector3.Distance(gameObject2.transform.position, gameObject.transform.position) < 3.5f);
+			}
 		}
 	}
 
 	[ServerCallback]
-	private void CmdCloseBlastDoors()
+	private void CloseBlastDoors()
 	{
 		if (!NetworkServer.active)
 		{

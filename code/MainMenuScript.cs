@@ -6,26 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
+	public MainMenuScript()
+	{
+	}
+
 	private void Update()
 	{
-		if (SceneManager.GetActiveScene().buildIndex == 0)
+		if (SceneManager.GetActiveScene().buildIndex == 1)
 		{
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
-		}
-	}
-
-	public void SetLang(string lang)
-	{
-		string @string = PlayerPrefs.GetString("langver");
-		PlayerPrefs.SetString("langver", lang);
-		if (lang != @string)
-		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-		}
-		else
-		{
-			this.ChangeMenu(0);
 		}
 	}
 

@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Scp914 : NetworkBehaviour
 {
+	public Scp914()
+	{
+	}
+
 	public void SetProcessing(bool p)
 	{
 		this.NetworkisProcessing = p;
@@ -185,4 +192,109 @@ public class Scp914 : NetworkBehaviour
 
 	[SyncVar(hook = "SetProcessing")]
 	public bool isProcessing;
+
+	[CompilerGenerated]
+	private sealed class <StartProcessing>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <StartProcessing>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$this.source.Play();
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				break;
+			case 2u:
+				break;
+			case 3u:
+				goto IL_1AE;
+			case 4u:
+				goto IL_1AE;
+			default:
+				return false;
+			}
+			if (this.$this.doors.transform.localPosition.x <= 0f)
+			{
+				this.$current = new WaitForSeconds(11.7f);
+				if (!this.$disposing)
+				{
+					this.$PC = 3;
+				}
+				return true;
+			}
+			this.$this.doors.transform.localPosition -= Vector3.right * Time.deltaTime * 1.8f * ((!this.$this.isServer) ? 1f : 0.5f);
+			this.$current = new WaitForEndOfFrame();
+			if (!this.$disposing)
+			{
+				this.$PC = 2;
+			}
+			return true;
+			IL_1AE:
+			if (this.$this.doors.transform.localPosition.x < 1.74f)
+			{
+				this.$this.doors.transform.localPosition += Vector3.right * Time.deltaTime * 1.5f * ((!this.$this.isServer) ? 1f : 0.5f);
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 4;
+				}
+				return true;
+			}
+			this.$this.SetProcessing(false);
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal Scp914 $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
 }

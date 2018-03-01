@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class GFXSettings : MonoBehaviour
 {
+	public GFXSettings()
+	{
+	}
+
 	private void Start()
 	{
 		this.LoadSavedSettings();
@@ -134,12 +138,14 @@ public class GFXSettings : MonoBehaviour
 	[Serializable]
 	public class SliderValue
 	{
-		public string Return()
+		public SliderValue()
 		{
-			return (!(PlayerPrefs.GetString("langver", "en") == "pl")) ? this.en : this.pl;
 		}
 
-		public string pl;
+		public string Return()
+		{
+			return this.en;
+		}
 
 		public string en;
 	}

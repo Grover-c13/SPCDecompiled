@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Noclip : MonoBehaviour
 {
+	public Noclip()
+	{
+	}
+
 	public void Switch()
 	{
 		this.isOn = !this.isOn;

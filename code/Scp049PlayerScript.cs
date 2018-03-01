@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class Scp049PlayerScript : NetworkBehaviour
 {
+	public Scp049PlayerScript()
+	{
+	}
+
 	private void Start()
 	{
 		this.interfaces = UnityEngine.Object.FindObjectOfType<ScpInterfaces>();

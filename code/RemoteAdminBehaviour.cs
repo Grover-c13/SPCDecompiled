@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class RemoteAdminBehaviour : MonoBehaviour
 {
+	public RemoteAdminBehaviour()
+	{
+	}
+
 	public virtual void Reply(string[] reply)
 	{
 	}

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PickupTrigger : MonoBehaviour
 {
+	public PickupTrigger()
+	{
+	}
+
 	public bool Trigger(int item)
 	{
 		if (this.triggerID == -1)

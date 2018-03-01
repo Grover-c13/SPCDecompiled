@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class BloomComponent : PostProcessingComponentRenderTexture<BloomModel>
 	{
+		public BloomComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -93,6 +97,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _AutoExposure = Shader.PropertyToID("_AutoExposure");
 
 			internal static readonly int _Threshold = Shader.PropertyToID("_Threshold");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -15,6 +16,21 @@ namespace Dissonance
 		}
 
 		[CanBeNull]
-		public string Comment { get; private set; }
+		public string Comment
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Comment>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Comment>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private string <Comment>k__BackingField;
 	}
 }

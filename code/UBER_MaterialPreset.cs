@@ -4,6 +4,10 @@ using UnityEngine;
 [Serializable]
 public class UBER_MaterialPreset
 {
+	public UBER_MaterialPreset()
+	{
+	}
+
 	[SerializeField]
 	public string name;
 

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class VeryHighPerformance : MonoBehaviour
 {
+	public VeryHighPerformance()
+	{
+	}
+
 	private void Start()
 	{
 		if (PlayerPrefs.GetInt("gfxsets_hp", 0) == 0)

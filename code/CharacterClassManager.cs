@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GameConsole;
 using Unity;
 using UnityEngine;
@@ -9,6 +11,10 @@ using UnityEngine.PostProcessing;
 
 public class CharacterClassManager : NetworkBehaviour
 {
+	public CharacterClassManager()
+	{
+	}
+
 	public void SetUnit(int unit)
 	{
 		this.NetworkntfUnit = unit;
@@ -47,6 +53,27 @@ public class CharacterClassManager : NetworkBehaviour
 
 	private void Start()
 	{
+		if (base.isLocalPlayer)
+		{
+			for (int i = 0; i < this.klasy.Length; i++)
+			{
+				this.klasy[i].fullName = TranslationReader.Get("Class_Names", i);
+				this.klasy[i].description = TranslationReader.Get("Class_Descriptions", i);
+			}
+			CharacterClassManager.staticClasses = this.klasy;
+		}
+		else if (CharacterClassManager.staticClasses == null || CharacterClassManager.staticClasses.Length == 0)
+		{
+			for (int j = 0; j < this.klasy.Length; j++)
+			{
+				this.klasy[j].description = TranslationReader.Get("Class_Descriptions", j);
+				this.klasy[j].fullName = TranslationReader.Get("Class_Names", j);
+			}
+		}
+		else
+		{
+			this.klasy = CharacterClassManager.staticClasses;
+		}
 		this.lureSpj = UnityEngine.Object.FindObjectOfType<LureSubjectContainer>();
 		this.scp049 = base.GetComponent<Scp049PlayerScript>();
 		this.scp049_2 = base.GetComponent<Scp049_2PlayerScript>();
@@ -59,10 +86,10 @@ public class CharacterClassManager : NetworkBehaviour
 		base.StartCoroutine("Init");
 		string text = ConfigFile.GetString("team_respawn_queue", "401431403144144") + "...........................";
 		this.classTeamQueue.Clear();
-		for (int i = 0; i < text.Length; i++)
+		for (int k = 0; k < text.Length; k++)
 		{
 			int item = 4;
-			if (!int.TryParse(text[i].ToString(), out item))
+			if (!int.TryParse(text[k].ToString(), out item))
 			{
 				item = 4;
 			}
@@ -194,7 +221,7 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogWarning("[Client] function 'System.Void CharacterClassManager::CmdSuicide(PlayerStats/HitInfo)' called on server");
+			UnityEngine.Debug.LogWarning("[Client] function 'System.Void CharacterClassManager::CmdSuicide(PlayerStats/HitInfo)' called on server");
 			return;
 		}
 		hitInfo.amount = ((hitInfo.amount != 0f) ? hitInfo.amount : 999799f);
@@ -679,7 +706,7 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdSuicide called on client.");
+			UnityEngine.Debug.LogError("Command CmdSuicide called on client.");
 			return;
 		}
 		((CharacterClassManager)obj).CmdSuicide(GeneratedNetworkCode._ReadHitInfo_PlayerStats(reader));
@@ -689,7 +716,7 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdRegisterEscape called on client.");
+			UnityEngine.Debug.LogError("Command CmdRegisterEscape called on client.");
 			return;
 		}
 		((CharacterClassManager)obj).CmdRegisterEscape(reader.ReadGameObject());
@@ -699,7 +726,7 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdSuicide called on server.");
+			UnityEngine.Debug.LogError("Command function CmdSuicide called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -720,7 +747,7 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdRegisterEscape called on server.");
+			UnityEngine.Debug.LogError("Command function CmdRegisterEscape called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -880,6 +907,8 @@ public class CharacterClassManager : NetworkBehaviour
 
 	private LureSubjectContainer lureSpj;
 
+	private static Class[] staticClasses;
+
 	private float aliveTime;
 
 	private int prevId = -1;
@@ -887,4 +916,240 @@ public class CharacterClassManager : NetworkBehaviour
 	private static int kCmdCmdSuicide = -1051695024;
 
 	private static int kCmdCmdRegisterEscape;
+
+	[CompilerGenerated]
+	private sealed class <Init>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <Init>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.<host>__0 = null;
+				break;
+			case 1u:
+				break;
+			case 2u:
+				if (!this.$this.isServer)
+				{
+					goto IL_2F0;
+				}
+				if (ServerStatic.isDedicated)
+				{
+					ServerConsole.AddLog("Waiting for players..");
+				}
+				CursorManager.roundStarted = true;
+				this.<rs>__1 = RoundStart.singleton;
+				if (TutorialManager.status)
+				{
+					this.$this.ForceRoundStart();
+					goto IL_2AB;
+				}
+				this.<rs>__1.ShowButton();
+				this.<timeLeft>__2 = 20;
+				this.<maxPlayers>__2 = 1;
+				goto IL_291;
+			case 3u:
+				goto IL_291;
+			case 4u:
+				goto IL_2F0;
+			case 5u:
+				if (this.$this.curClass < 0)
+				{
+					this.$this.CallCmdSuicide(default(PlayerStats.HitInfo));
+					goto IL_34E;
+				}
+				goto IL_34E;
+			case 6u:
+				this.<iteration>__4 = 0;
+				goto Block_24;
+			case 7u:
+				goto IL_355;
+			default:
+				return false;
+			}
+			if (this.<host>__0 == null)
+			{
+				this.<host>__0 = GameObject.Find("Host");
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			}
+			while (this.$this.seed == 0)
+			{
+				this.$this.seed = this.<host>__0.GetComponent<RandomSeedSync>().seed;
+				UnityEngine.Object.FindObjectOfType<GameConsole.Console>().UpdateValue("seed", this.$this.seed.ToString());
+			}
+			if (this.$this.isLocalPlayer)
+			{
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 2;
+				}
+				return true;
+			}
+			this.$PC = -1;
+			return false;
+			IL_291:
+			if (this.<rs>__1.info != "started")
+			{
+				if (this.<maxPlayers>__2 > 1)
+				{
+					this.<timeLeft>__2--;
+				}
+				this.<count>__3 = PlayerManager.singleton.players.Length;
+				if (this.<count>__3 > this.<maxPlayers>__2)
+				{
+					this.<maxPlayers>__2 = this.<count>__3;
+					if (this.<timeLeft>__2 < 5)
+					{
+						this.<timeLeft>__2 = 5;
+					}
+					else if (this.<timeLeft>__2 < 10)
+					{
+						this.<timeLeft>__2 = 10;
+					}
+					else if (this.<timeLeft>__2 < 15)
+					{
+						this.<timeLeft>__2 = 15;
+					}
+					else
+					{
+						this.<timeLeft>__2 = 20;
+					}
+					if (this.<maxPlayers>__2 == NetworkManager.singleton.maxConnections)
+					{
+						this.<timeLeft>__2 = 0;
+					}
+				}
+				if (this.<timeLeft>__2 > 0)
+				{
+					this.$this.CmdUpdateStartText(this.<timeLeft>__2.ToString());
+				}
+				else
+				{
+					this.$this.ForceRoundStart();
+				}
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 3;
+				}
+				return true;
+			}
+			IL_2AB:
+			CursorManager.roundStarted = false;
+			this.$this.CmdStartRound();
+			this.$this.SetRandomRoles();
+			goto IL_34E;
+			IL_2F0:
+			if (this.<host>__0.GetComponent<CharacterClassManager>().roundStarted)
+			{
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 5;
+				}
+				return true;
+			}
+			this.$current = new WaitForEndOfFrame();
+			if (!this.$disposing)
+			{
+				this.$PC = 4;
+			}
+			return true;
+			IL_34E:
+			this.<iteration>__4 = 0;
+			IL_355:
+			this.<plys>__5 = PlayerManager.singleton.players;
+			if (this.<iteration>__4 >= this.<plys>__5.Length)
+			{
+				this.$current = new WaitForSeconds(3f);
+				if (!this.$disposing)
+				{
+					this.$PC = 6;
+				}
+				return true;
+			}
+			Block_24:
+			try
+			{
+				this.<plys>__5[this.<iteration>__4].GetComponent<CharacterClassManager>().InitSCPs();
+			}
+			catch
+			{
+			}
+			this.<iteration>__4++;
+			this.$current = new WaitForEndOfFrame();
+			if (!this.$disposing)
+			{
+				this.$PC = 7;
+			}
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal GameObject <host>__0;
+
+		internal RoundStart <rs>__1;
+
+		internal int <timeLeft>__2;
+
+		internal int <maxPlayers>__2;
+
+		internal int <count>__3;
+
+		internal int <iteration>__4;
+
+		internal GameObject[] <plys>__5;
+
+		internal CharacterClassManager $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
 }

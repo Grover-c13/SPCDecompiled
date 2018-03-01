@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TextureAnimator : MonoBehaviour
 {
+	public TextureAnimator()
+	{
+	}
+
 	private void Start()
 	{
 		base.StartCoroutine(this.Animate());
@@ -32,4 +39,84 @@ public class TextureAnimator : MonoBehaviour
 	public Light optionalLight;
 
 	public int lightRange;
+
+	[CompilerGenerated]
+	private sealed class <Animate>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <Animate>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				IL_21:
+				this.<i>__1 = 0;
+				break;
+			case 1u:
+				this.<i>__1++;
+				break;
+			default:
+				return false;
+			}
+			if (this.<i>__1 >= this.$this.textures.Length)
+			{
+				goto IL_21;
+			}
+			this.$this.optionalLight.enabled = (this.<i>__1 < this.$this.lightRange);
+			this.$this.targetRenderer.material = this.$this.textures[this.<i>__1];
+			this.$current = new WaitForSeconds(this.$this.cooldown);
+			if (!this.$disposing)
+			{
+				this.$PC = 1;
+			}
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal int <i>__1;
+
+		internal TextureAnimator $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
 }

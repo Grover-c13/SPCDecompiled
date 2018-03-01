@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -15,6 +16,21 @@ namespace Dissonance
 		}
 
 		[CanBeNull]
-		public string AnonymousProperty { get; private set; }
+		public string AnonymousProperty
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<AnonymousProperty>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<AnonymousProperty>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private string <AnonymousProperty>k__BackingField;
 	}
 }

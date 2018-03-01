@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class NetManagerValueSetter : MonoBehaviour
 {
+	public NetManagerValueSetter()
+	{
+	}
+
 	private void Start()
 	{
 		this.singleton = NetworkManager.singleton.GetComponent<CustomNetworkManager>();

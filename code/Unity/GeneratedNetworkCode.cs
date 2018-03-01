@@ -7,6 +7,10 @@ namespace Unity
 	[StructLayout(LayoutKind.Auto, CharSet = CharSet.Auto)]
 	public class GeneratedNetworkCode
 	{
+		public GeneratedNetworkCode()
+		{
+		}
+
 		public static GrenadeManager.GrenadeSpawnInfo _ReadGrenadeSpawnInfo_GrenadeManager(NetworkReader reader)
 		{
 			return new GrenadeManager.GrenadeSpawnInfo

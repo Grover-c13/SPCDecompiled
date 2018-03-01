@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class TMP_ExampleScript_01 : MonoBehaviour
 	{
+		public TMP_ExampleScript_01()
+		{
+		}
+
 		private void Awake()
 		{
 			if (this.ObjectType == TMP_ExampleScript_01.objectType.TextMeshPro)

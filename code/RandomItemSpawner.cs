@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class RandomItemSpawner : MonoBehaviour
 {
+	public RandomItemSpawner()
+	{
+	}
+
 	public void RefreshIndexes()
 	{
 		for (int i = 0; i < this.posIds.Length; i++)
@@ -18,6 +22,10 @@ public class RandomItemSpawner : MonoBehaviour
 	[Serializable]
 	public class PickupPositionRelation
 	{
+		public PickupPositionRelation()
+		{
+		}
+
 		public Pickup pickup;
 
 		public int itemID;
@@ -30,6 +38,10 @@ public class RandomItemSpawner : MonoBehaviour
 	[Serializable]
 	public class PositionPosIdRelation
 	{
+		public PositionPosIdRelation()
+		{
+		}
+
 		public string posID;
 
 		public Transform position;

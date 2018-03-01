@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class RoundStart : NetworkBehaviour
 {
+	public RoundStart()
+	{
+	}
+
 	public void SetInfo(string i)
 	{
 		this.Networkinfo = i;

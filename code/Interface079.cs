@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class Interface079 : MonoBehaviour
 {
+	public Interface079()
+	{
+	}
+
 	private void Update()
 	{
 		this.teslaButton.GetComponent<Button>().interactable = (this.ability >= 40f);
@@ -29,7 +33,7 @@ public class Interface079 : MonoBehaviour
 			".",
 			now.Day,
 			".20▮▮\n",
-			(!(PlayerPrefs.GetString("langver") == "pl")) ? ((this.ability <= 40f) ? "ABILITY NOT READY" : "ABILITY READY") : ((this.ability <= 40f) ? "UMIEJĘTNOŚĆ NIEGOTOWA" : "UMIEJĘTNOŚĆ GOTOWA")
+			(this.ability <= 40f) ? "ABILITY NOT READY" : "ABILITY READY"
 		});
 	}
 

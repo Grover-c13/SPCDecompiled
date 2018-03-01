@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class HandPart : MonoBehaviour
 {
+	public HandPart()
+	{
+	}
+
 	private void Start()
 	{
 		if (this.anim == null)

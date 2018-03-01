@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Intercom : NetworkBehaviour
 {
+	public Intercom()
+	{
+	}
+
 	private void SetSpeaker(GameObject go)
 	{
 		this.Networkspeaker = go;
@@ -205,7 +212,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdUpdateText called on client.");
+			UnityEngine.Debug.LogError("Command CmdUpdateText called on client.");
 			return;
 		}
 		((Intercom)obj).CmdUpdateText(reader.ReadString());
@@ -215,7 +222,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdSetTransmit called on client.");
+			UnityEngine.Debug.LogError("Command CmdSetTransmit called on client.");
 			return;
 		}
 		((Intercom)obj).CmdSetTransmit(reader.ReadGameObject());
@@ -225,7 +232,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdUpdateText called on server.");
+			UnityEngine.Debug.LogError("Command function CmdUpdateText called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -246,7 +253,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdSetTransmit called on server.");
+			UnityEngine.Debug.LogError("Command function CmdSetTransmit called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -267,7 +274,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcPlaySound called on server.");
+			UnityEngine.Debug.LogError("RPC RpcPlaySound called on server.");
 			return;
 		}
 		((Intercom)obj).RpcPlaySound(reader.ReadBoolean());
@@ -277,7 +284,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcUpdateText called on server.");
+			UnityEngine.Debug.LogError("RPC RpcUpdateText called on server.");
 			return;
 		}
 		((Intercom)obj).RpcUpdateText(reader.ReadString());
@@ -287,7 +294,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcPlaySound called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcPlaySound called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -303,7 +310,7 @@ public class Intercom : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcUpdateText called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcUpdateText called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -413,4 +420,295 @@ public class Intercom : NetworkBehaviour
 	private static int kRpcRpcUpdateText;
 
 	private static int kCmdCmdSetTransmit;
+
+	[CompilerGenerated]
+	private sealed class <StartTransmitting>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <StartTransmitting>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$this.CallRpcPlaySound(true);
+				this.$current = new WaitForSeconds(2f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.$this.SetSpeaker(this.sp);
+				this.$this.speechRemainingTime = this.$this.speechTime;
+				break;
+			case 2u:
+				break;
+			case 3u:
+				goto IL_165;
+			default:
+				return false;
+			}
+			if (this.$this.speechRemainingTime > 0f && this.$this.speaker != null)
+			{
+				this.$this.speechRemainingTime -= Time.deltaTime;
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 2;
+				}
+				return true;
+			}
+			if (this.$this.speaker != null)
+			{
+				this.$this.SetSpeaker(null);
+			}
+			this.$this.CallRpcPlaySound(false);
+			this.$this.remainingCooldown = this.$this.cooldownAfter;
+			IL_165:
+			if (this.$this.remainingCooldown >= 0f)
+			{
+				this.$this.remainingCooldown -= Time.deltaTime;
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 3;
+				}
+				return true;
+			}
+			this.$this.inUse = false;
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal GameObject sp;
+
+		internal Intercom $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
+
+	[CompilerGenerated]
+	private sealed class <FindHost>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <FindHost>c__Iterator1()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				break;
+			case 1u:
+				break;
+			default:
+				return false;
+			}
+			if (Intercom.host == null)
+			{
+				this.<h>__1 = GameObject.Find("Host");
+				if (this.<h>__1 != null)
+				{
+					Intercom.host = this.<h>__1.GetComponent<Intercom>();
+				}
+				this.$current = new WaitForFixedUpdate();
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			}
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal GameObject <h>__1;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
+
+	[CompilerGenerated]
+	private sealed class <CheckForInput>c__Iterator2 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <CheckForInput>c__Iterator2()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				if (!this.$this.isLocalPlayer)
+				{
+					this.$current = new WaitForEndOfFrame();
+					if (!this.$disposing)
+					{
+						this.$PC = 3;
+					}
+					return true;
+				}
+				break;
+			case 1u:
+				if (!this.$this.AllowToSpeak())
+				{
+					this.$this.CallCmdSetTransmit(null);
+					goto IL_F3;
+				}
+				goto IL_F3;
+			case 2u:
+				break;
+			case 3u:
+				this.$PC = -1;
+				return false;
+			default:
+				return false;
+			}
+			if (Intercom.host != null)
+			{
+				if (this.$this.AllowToSpeak() && Intercom.host.speaker == null)
+				{
+					this.$this.CallCmdSetTransmit(this.$this.gameObject);
+				}
+				if (!this.$this.AllowToSpeak() && Intercom.host.speaker == this.$this.gameObject)
+				{
+					this.$current = new WaitForSeconds(1f);
+					if (!this.$disposing)
+					{
+						this.$PC = 1;
+					}
+					return true;
+				}
+			}
+			IL_F3:
+			this.$current = new WaitForEndOfFrame();
+			if (!this.$disposing)
+			{
+				this.$PC = 2;
+			}
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal Intercom $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
 }

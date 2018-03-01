@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class ConfigFile : MonoBehaviour
 {
+	public ConfigFile()
+	{
+	}
+
 	private void Awake()
 	{
 		ConfigFile.singleton = this;
@@ -54,14 +58,21 @@ public class ConfigFile : MonoBehaviour
 	public static string GetString(string key, string defaultValue = "")
 	{
 		string text = ConfigFile.singleton.cfg;
-		try
+		if (text.Contains(key))
 		{
-			text = text.Remove(0, text.IndexOf(key));
-			text = text.Remove(0, text.IndexOf("=") + 1);
-			text = ConfigFile.RemoveSpacesBefore(text);
-			text = text.Remove(text.IndexOf(";"));
+			try
+			{
+				text = text.Remove(0, text.IndexOf(key));
+				text = text.Remove(0, text.IndexOf("=") + 1);
+				text = ConfigFile.RemoveSpacesBefore(text);
+				text = text.Remove(text.IndexOf(";"));
+			}
+			catch
+			{
+				text = defaultValue;
+			}
 		}
-		catch
+		else
 		{
 			text = defaultValue;
 		}

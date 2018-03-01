@@ -6,6 +6,10 @@ namespace RemoteAdmin
 {
 	public class PlayerInspector : RemoteAdminBehaviour
 	{
+		public PlayerInspector()
+		{
+		}
+
 		private void Start()
 		{
 			this.monitor = base.GetComponent<PlayersMonitor>();

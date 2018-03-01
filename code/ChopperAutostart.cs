@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class ChopperAutostart : NetworkBehaviour
 {
+	public ChopperAutostart()
+	{
+	}
+
 	public void SetState(bool b)
 	{
 		this.NetworkisLanded = b;

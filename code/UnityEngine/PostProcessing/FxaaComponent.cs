@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class FxaaComponent : PostProcessingComponentRenderTexture<AntialiasingModel>
 	{
+		public FxaaComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -25,6 +29,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _QualitySettings = Shader.PropertyToID("_QualitySettings");
 
 			internal static readonly int _ConsoleSettings = Shader.PropertyToID("_ConsoleSettings");

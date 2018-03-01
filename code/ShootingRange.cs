@@ -5,6 +5,10 @@ using UnityStandardAssets.ImageEffects;
 
 public class ShootingRange : MonoBehaviour
 {
+	public ShootingRange()
+	{
+	}
+
 	public void PrintDamage(float dmg)
 	{
 		if (this.isOnRange)

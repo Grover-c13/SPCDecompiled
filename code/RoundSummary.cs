@@ -7,6 +7,10 @@ using UnityEngine.Networking;
 
 public class RoundSummary : NetworkBehaviour
 {
+	public RoundSummary()
+	{
+	}
+
 	private void Awake()
 	{
 		Radio.roundEnded = false;
@@ -151,106 +155,62 @@ public class RoundSummary : NetworkBehaviour
 	{
 		Radio.roundEnded = true;
 		string text = string.Empty;
-		if (PlayerPrefs.GetString("langver", "en") == "pl")
+		string text2 = text;
+		text = string.Concat(new object[]
 		{
-			string text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.classD_escaped,
-				"/",
-				sum.classD_start,
-				"</color> Personelu Klasy D uciekło z placówki\n"
-			});
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.scientists_escaped,
-				"/",
-				sum.scientists_start,
-				"</color> Naukowców ocalało\n"
-			});
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.scp_frags,
-				"</color> Zabitych przez SCP\n"
-			});
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.scp_start - sum.scp_nozombies,
-				"/",
-				sum.scp_start,
-				"</color> Unieszkodliwionych podmiotów SCP\n"
-			});
-			text = text + "Głowica Alfa: <color=#ff0000>" + ((!sum.warheadDetonated) ? "Nie została użyta" : "Zdetonowana") + "</color>\n\n";
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"Następna runda rozpocznie się w ciągu ",
-				posttime,
-				" sekund."
-			});
-		}
-		else
+			text2,
+			"<color=#ff0000>",
+			sum.classD_escaped,
+			"/",
+			sum.classD_start,
+			"</color> ",
+			TranslationReader.Get("Legancy_Interfaces", 3),
+			"\n"
+		});
+		text2 = text;
+		text = string.Concat(new object[]
 		{
-			string text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.classD_escaped,
-				"/",
-				sum.classD_start,
-				"</color> Class-D Personnel escaped\n"
-			});
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.scientists_escaped,
-				"/",
-				sum.scientists_start,
-				"</color> Scientists survived\n"
-			});
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.scp_frags,
-				"</color> Killed by SCP\n"
-			});
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"<color=#ff0000>",
-				sum.scp_start - sum.scp_alive,
-				"/",
-				sum.scp_start,
-				"</color> Terminated SCP subjects\n"
-			});
-			text = text + "Alpha Warhead: <color=#ff0000>" + ((!sum.warheadDetonated) ? "Unused" : "Detonated") + "</color>\n\n";
-			text2 = text;
-			text = string.Concat(new object[]
-			{
-				text2,
-				"The next round will start within ",
-				posttime,
-				" seconds."
-			});
-		}
+			text2,
+			"<color=#ff0000>",
+			sum.scientists_escaped,
+			"/",
+			sum.scientists_start,
+			"</color> ",
+			TranslationReader.Get("Legancy_Interfaces", 4),
+			"\n"
+		});
+		text2 = text;
+		text = string.Concat(new object[]
+		{
+			text2,
+			"<color=#ff0000>",
+			sum.scp_frags,
+			"</color> ",
+			TranslationReader.Get("Legancy_Interfaces", 5),
+			"\n"
+		});
+		text2 = text;
+		text = string.Concat(new object[]
+		{
+			text2,
+			"<color=#ff0000>",
+			Mathf.Clamp(sum.scp_start - sum.scp_alive, 0, sum.scp_start),
+			"/",
+			sum.scp_start,
+			"</color> ",
+			TranslationReader.Get("Legancy_Interfaces", 6),
+			"\n"
+		});
+		text2 = text;
+		text = string.Concat(new string[]
+		{
+			text2,
+			TranslationReader.Get("Legancy_Interfaces", 7),
+			": <color=#ff0000>",
+			(!sum.warheadDetonated) ? TranslationReader.Get("Legancy_Interfaces", 9) : TranslationReader.Get("Legancy_Interfaces", 8),
+			"</color>\n\n"
+		});
+		text += TranslationReader.Get("Legancy_Interfaces", 10).Replace("[time]", posttime.ToString());
 		GameObject gameObject = UserMainInterface.singleton.summary;
 		gameObject.SetActive(true);
 		TextMeshProUGUI component = GameObject.FindGameObjectWithTag("Summary").GetComponent<TextMeshProUGUI>();
@@ -371,6 +331,10 @@ public class RoundSummary : NetworkBehaviour
 	[Serializable]
 	public class Summary
 	{
+		public Summary()
+		{
+		}
+
 		public int classD_escaped;
 
 		public int classD_start;

@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class Locker : NetworkBehaviour
 {
+	public Locker()
+	{
+	}
+
 	public int GetItem()
 	{
 		return (!this.isTaken) ? this.ids[UnityEngine.Random.Range(0, this.ids.Length)] : -1;

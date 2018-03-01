@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class Scp294 : NetworkBehaviour
 {
+	public Scp294()
+	{
+	}
+
 	public void Buy()
 	{
 		GameObject[] array = GameObject.FindGameObjectsWithTag("Pickup");

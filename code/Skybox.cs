@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Skybox : MonoBehaviour
 {
+	public Skybox()
+	{
+	}
+
 	private void Start()
 	{
 		this.cam = UnityEngine.Object.FindObjectOfType<SpectatorCamera>().cam.transform;

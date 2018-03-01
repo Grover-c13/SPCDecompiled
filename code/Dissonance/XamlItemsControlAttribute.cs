@@ -5,5 +5,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Class)]
 	internal sealed class XamlItemsControlAttribute : Attribute
 	{
+		public XamlItemsControlAttribute()
+		{
+		}
 	}
 }

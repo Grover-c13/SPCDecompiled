@@ -5,6 +5,10 @@ using UnityEngine;
 [AddComponentMenu("UBER/Global Params")]
 public class UBER_GlobalParams : MonoBehaviour
 {
+	public UBER_GlobalParams()
+	{
+	}
+
 	private void Update()
 	{
 		this.AdvanceTime(Time.deltaTime);
@@ -320,9 +324,9 @@ public class UBER_GlobalParams : MonoBehaviour
 
 	public const float SNOW_DECREASE_RATE = 0.01f;
 
-	[Header("Global Water & Rain")]
 	[Range(0f, 1f)]
 	[Tooltip("You can control global water level (multiplied by material value)")]
+	[Header("Global Water & Rain")]
 	public float WaterLevel = 1f;
 
 	[Range(0f, 1f)]

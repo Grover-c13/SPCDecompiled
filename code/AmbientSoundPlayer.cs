@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class AmbientSoundPlayer : NetworkBehaviour
 {
+	public AmbientSoundPlayer()
+	{
+	}
+
 	private void Start()
 	{
 		if (base.isLocalPlayer && base.isServer)
@@ -156,6 +160,10 @@ public class AmbientSoundPlayer : NetworkBehaviour
 	[Serializable]
 	public class AmbientClip
 	{
+		public AmbientClip()
+		{
+		}
+
 		public AudioClip clip;
 
 		public bool repeatable = true;

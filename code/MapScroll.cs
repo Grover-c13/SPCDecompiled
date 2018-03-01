@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class MapScroll : MonoBehaviour
 {
+	public MapScroll()
+	{
+	}
+
 	private void Start()
 	{
 		this.rootTransf = base.GetComponent<RectTransform>();

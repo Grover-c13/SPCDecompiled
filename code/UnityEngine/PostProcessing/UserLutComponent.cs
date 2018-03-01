@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class UserLutComponent : PostProcessingComponentRenderTexture<UserLutModel>
 	{
+		public UserLutComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -30,6 +34,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _UserLut = Shader.PropertyToID("_UserLut");
 
 			internal static readonly int _UserLut_Params = Shader.PropertyToID("_UserLut_Params");

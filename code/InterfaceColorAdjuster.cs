@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class InterfaceColorAdjuster : MonoBehaviour
 {
+	public InterfaceColorAdjuster()
+	{
+	}
+
 	public void ChangeColor(Color color)
 	{
 		foreach (Graphic graphic in this.graphicsToChange)

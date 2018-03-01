@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class ServerFilters : MonoBehaviour
 {
+	public ServerFilters()
+	{
+	}
+
 	public bool AllowToSpawn(string server_name)
 	{
 		if (this.nameFilter.Length == 0)

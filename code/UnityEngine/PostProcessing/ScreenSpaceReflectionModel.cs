@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class ScreenSpaceReflectionModel : PostProcessingModel
 	{
+		public ScreenSpaceReflectionModel()
+		{
+		}
+
 		public ScreenSpaceReflectionModel.Settings settings
 		{
 			get
@@ -40,8 +44,8 @@ namespace UnityEngine.PostProcessing
 		[Serializable]
 		public struct IntensitySettings
 		{
-			[Tooltip("Nonphysical multiplier for the SSR reflections. 1.0 is physically based.")]
 			[Range(0f, 2f)]
+			[Tooltip("Nonphysical multiplier for the SSR reflections. 1.0 is physically based.")]
 			public float reflectionMultiplier;
 
 			[Range(0f, 1000f)]
@@ -74,8 +78,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Max raytracing length.")]
 			public int iterationCount;
 
-			[Range(1f, 16f)]
 			[Tooltip("Log base 2 of ray tracing coarse step size. Higher traces farther, lower gives better quality silhouettes.")]
+			[Range(1f, 16f)]
 			public int stepSize;
 
 			[Range(0.01f, 10f)]

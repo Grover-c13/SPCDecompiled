@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class ParticleMenu : MonoBehaviour
 {
+	public ParticleMenu()
+	{
+	}
+
 	private void Start()
 	{
 		this.Navigate(0);

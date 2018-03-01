@@ -6,6 +6,10 @@ namespace TMPro.Examples
 	[ExecuteInEditMode]
 	public class TMP_TextInfoDebugTool : MonoBehaviour
 	{
+		public TMP_TextInfoDebugTool()
+		{
+		}
+
 		public bool ShowCharacters;
 
 		public bool ShowWords;

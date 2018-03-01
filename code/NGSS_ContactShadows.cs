@@ -6,6 +6,10 @@ using UnityEngine.Rendering;
 [ImageEffectAllowedInSceneView]
 public class NGSS_ContactShadows : MonoBehaviour
 {
+	public NGSS_ContactShadows()
+	{
+	}
+
 	private Camera mCamera
 	{
 		get

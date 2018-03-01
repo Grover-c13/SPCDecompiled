@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class AmbientOcclusionModel : PostProcessingModel
 	{
+		public AmbientOcclusionModel()
+		{
+		}
+
 		public AmbientOcclusionModel.Settings settings
 		{
 			get

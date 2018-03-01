@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ServerStatic : MonoBehaviour
 {
+	public ServerStatic()
+	{
+	}
+
 	private void Awake()
 	{
 		this.processStarted = false;
@@ -38,12 +41,17 @@ public class ServerStatic : MonoBehaviour
 		}
 	}
 
-	private void Start()
+	private void OnLevelWasLoaded(int i)
 	{
-		if (ServerStatic.isDedicated && SceneManager.GetActiveScene().buildIndex == 0)
+		if (ServerStatic.isDedicated && i == 1)
 		{
 			base.GetComponent<CustomNetworkManager>().CreateMatch();
 		}
+	}
+
+	static ServerStatic()
+	{
+		// Note: this type is marked as 'beforefieldinit'.
 	}
 
 	public static bool isDedicated;

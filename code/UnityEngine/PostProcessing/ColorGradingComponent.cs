@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class ColorGradingComponent : PostProcessingComponentRenderTexture<ColorGradingModel>
 	{
+		public ColorGradingComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -293,6 +297,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _LutParams = Shader.PropertyToID("_LutParams");
 
 			internal static readonly int _NeutralTonemapperParams1 = Shader.PropertyToID("_NeutralTonemapperParams1");

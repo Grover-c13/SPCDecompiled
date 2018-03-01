@@ -4,6 +4,10 @@ using UnityEngine;
 [AddComponentMenu("UBER/Mouse Orbit - Dynamic Distance")]
 public class UBER_MouseOrbit_DynamicDistance : MonoBehaviour
 {
+	public UBER_MouseOrbit_DynamicDistance()
+	{
+	}
+
 	private void Start()
 	{
 		Vector3 eulerAngles = base.transform.eulerAngles;

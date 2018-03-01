@@ -9,6 +9,10 @@ using UnityEngine.UI;
 
 public class RadioInitializator : NetworkBehaviour
 {
+	public RadioInitializator()
+	{
+	}
+
 	private void Start()
 	{
 		this.pm = PlayerManager.singleton;
@@ -73,6 +77,11 @@ public class RadioInitializator : NetworkBehaviour
 		catch
 		{
 		}
+	}
+
+	static RadioInitializator()
+	{
+		// Note: this type is marked as 'beforefieldinit'.
 	}
 
 	private void UNetVersion()

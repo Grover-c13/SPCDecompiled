@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class DisableUselessComponents : NetworkBehaviour
 {
+	public DisableUselessComponents()
+	{
+	}
+
 	private void OnDestroy()
 	{
 		if (!base.isLocalPlayer)

@@ -6,6 +6,10 @@ using UnityStandardAssets.ImageEffects;
 
 public class Scp173PlayerScript : NetworkBehaviour
 {
+	public Scp173PlayerScript()
+	{
+	}
+
 	private void Start()
 	{
 		this.ps = base.GetComponent<PlayerStats>();

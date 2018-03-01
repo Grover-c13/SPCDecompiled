@@ -4,6 +4,10 @@ using UnityEngine.Networking;
 
 public class AlphaWarheadButtonUnlocker : NetworkBehaviour
 {
+	public AlphaWarheadButtonUnlocker()
+	{
+	}
+
 	private void SetLeft(bool b)
 	{
 		this.NetworklockL = b;

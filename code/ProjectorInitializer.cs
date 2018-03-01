@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
 public class ProjectorInitializer : MonoBehaviour
 {
+	public ProjectorInitializer()
+	{
+	}
+
 	private IEnumerator StartProjector()
 	{
 		this.src.Stop();
@@ -82,6 +89,10 @@ public class ProjectorInitializer : MonoBehaviour
 	[Serializable]
 	public class LightStruct
 	{
+		public LightStruct()
+		{
+		}
+
 		public void SetLight(float time)
 		{
 			this.targetLight.color = Color.Lerp(Color.black, this.normalColor, this.curve.Evaluate(time));
@@ -94,5 +105,148 @@ public class ProjectorInitializer : MonoBehaviour
 		public Light targetLight;
 
 		public AnimationCurve curve;
+	}
+
+	[CompilerGenerated]
+	private sealed class <StartProjector>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <StartProjector>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$this.src.Stop();
+				this.$this.src.PlayOneShot(this.$this.c_st);
+				this.$this.Invoke("InitLoop", 4f);
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.$this.dir = true;
+				this.$PC = -1;
+				break;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal ProjectorInitializer $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
+	}
+
+	[CompilerGenerated]
+	private sealed class <StopProjector>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <StopProjector>c__Iterator1()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				this.$this.src.Stop();
+				this.$this.src.PlayOneShot(this.$this.c_sp);
+				this.$current = new WaitForSeconds(1f);
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			case 1u:
+				this.$this.dir = false;
+				this.$PC = -1;
+				break;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal ProjectorInitializer $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

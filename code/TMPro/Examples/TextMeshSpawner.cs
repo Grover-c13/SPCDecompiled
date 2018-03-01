@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class TextMeshSpawner : MonoBehaviour
 	{
+		public TextMeshSpawner()
+		{
+		}
+
 		private void Awake()
 		{
 		}

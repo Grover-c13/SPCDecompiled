@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class GrainModel : PostProcessingModel
 	{
+		public GrainModel()
+		{
+		}
+
 		public GrainModel.Settings settings
 		{
 			get
@@ -49,12 +53,12 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 1f)]
 			public float intensity;
 
-			[Range(0.3f, 3f)]
 			[Tooltip("Grain particle size in \"Filmic\" mode.")]
+			[Range(0.3f, 3f)]
 			public float size;
 
-			[Range(0f, 1f)]
 			[Tooltip("Controls the noisiness response curve based on scene luminance. Lower values mean less noise in dark areas.")]
+			[Range(0f, 1f)]
 			public float luminanceContribution;
 		}
 	}

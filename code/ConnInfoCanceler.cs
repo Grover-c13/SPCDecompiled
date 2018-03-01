@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class ConnInfoCanceler : ConnInfoButton
 {
+	public ConnInfoCanceler()
+	{
+	}
+
 	public override void UseButton()
 	{
 		base.UseButton();

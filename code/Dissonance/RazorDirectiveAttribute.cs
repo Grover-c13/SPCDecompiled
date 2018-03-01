@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -11,6 +12,21 @@ namespace Dissonance
 		}
 
 		[NotNull]
-		public string Directive { get; private set; }
+		public string Directive
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Directive>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Directive>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private string <Directive>k__BackingField;
 	}
 }

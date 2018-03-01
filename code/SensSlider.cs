@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class SensSlider : MonoBehaviour
 {
+	public SensSlider()
+	{
+	}
+
 	private void Start()
 	{
 		this.OnValueChanged((float)PlayerPrefs.GetInt("Volume", 0));

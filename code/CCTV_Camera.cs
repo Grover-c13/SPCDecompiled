@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CCTV_Camera : MonoBehaviour
 {
+	public CCTV_Camera()
+	{
+	}
+
 	private void Start()
 	{
 		this.spriteRenderer.material = new Material(this.mat);

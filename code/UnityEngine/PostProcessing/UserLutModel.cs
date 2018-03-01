@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class UserLutModel : PostProcessingModel
 	{
+		public UserLutModel()
+		{
+		}
+
 		public UserLutModel.Settings settings
 		{
 			get

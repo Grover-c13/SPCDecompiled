@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
@@ -16,8 +17,38 @@ namespace Dissonance
 		}
 
 		[NotNull]
-		public string Contract { get; private set; }
+		public string Contract
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Contract>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Contract>k__BackingField = value;
+			}
+		}
 
-		public bool ForceFullStates { get; private set; }
+		public bool ForceFullStates
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ForceFullStates>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<ForceFullStates>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private string <Contract>k__BackingField;
+
+		[CompilerGenerated]
+		private bool <ForceFullStates>k__BackingField;
 	}
 }

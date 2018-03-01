@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -7,7 +8,23 @@ namespace Dissonance.Integrations.UNet_HLAPI
 	[RequireComponent(typeof(NetworkIdentity))]
 	public class HlapiPlayer : NetworkBehaviour, IDissonancePlayer
 	{
-		public bool IsTracking { get; private set; }
+		public HlapiPlayer()
+		{
+		}
+
+		public bool IsTracking
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<IsTracking>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<IsTracking>k__BackingField = value;
+			}
+		}
 
 		public string PlayerId
 		{
@@ -264,6 +281,9 @@ namespace Dissonance.Integrations.UNet_HLAPI
 		private static readonly Log Log = Logs.Create(LogCategory.Network, "HLAPI Player Component");
 
 		private DissonanceComms _comms;
+
+		[CompilerGenerated]
+		private bool <IsTracking>k__BackingField;
 
 		[SyncVar]
 		private string _playerId;

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class DetectorBlink : MonoBehaviour
 {
+	public DetectorBlink()
+	{
+	}
+
 	private void Start()
 	{
 		this.Blink();

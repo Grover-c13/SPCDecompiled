@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class ExampleWheelController : MonoBehaviour
 {
+	public ExampleWheelController()
+	{
+	}
+
 	private void Start()
 	{
 		this.m_Rigidbody = base.GetComponent<Rigidbody>();
@@ -34,6 +38,11 @@ public class ExampleWheelController : MonoBehaviour
 
 	private static class Uniforms
 	{
+		static Uniforms()
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+		}
+
 		internal static readonly int _MotionAmount = Shader.PropertyToID("_MotionAmount");
 	}
 }

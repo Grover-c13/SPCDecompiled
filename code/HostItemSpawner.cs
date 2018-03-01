@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class HostItemSpawner : NetworkBehaviour
 {
+	public HostItemSpawner()
+	{
+	}
+
 	private void Start()
 	{
 		this.avItems = UnityEngine.Object.FindObjectOfType<Inventory>().availableItems;

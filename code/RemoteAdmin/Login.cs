@@ -6,6 +6,10 @@ namespace RemoteAdmin
 {
 	public class Login : RemoteAdminBehaviour
 	{
+		public Login()
+		{
+		}
+
 		public void ClearWhite()
 		{
 			this.passwordField.GetComponent<RawImage>().color = Color.white;

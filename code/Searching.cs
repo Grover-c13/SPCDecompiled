@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class Searching : NetworkBehaviour
 {
+	public Searching()
+	{
+	}
+
 	private void Start()
 	{
 		this.fpc = base.GetComponent<FirstPersonController>();

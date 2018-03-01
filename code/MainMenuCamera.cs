@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class MainMenuCamera : MonoBehaviour
 {
+	public MainMenuCamera()
+	{
+	}
+
 	private void Update()
 	{
 		float num = (float)Screen.width * (this.borderWidthPercent / 100f);

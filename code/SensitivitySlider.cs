@@ -5,6 +5,10 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class SensitivitySlider : MonoBehaviour
 {
+	public SensitivitySlider()
+	{
+	}
+
 	private void Start()
 	{
 		this.OnValueChanged(PlayerPrefs.GetFloat("Sens", 1f));

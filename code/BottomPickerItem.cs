@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class BottomPickerItem : MonoBehaviour
 {
+	public BottomPickerItem()
+	{
+	}
+
 	public void SetupButton(string k, int i)
 	{
 		this.key = k;

@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class DitheringComponent : PostProcessingComponentRenderTexture<DitheringModel>
 	{
+		public DitheringComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -52,6 +56,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _DitheringTex = Shader.PropertyToID("_DitheringTex");
 
 			internal static readonly int _DitheringCoords = Shader.PropertyToID("_DitheringCoords");

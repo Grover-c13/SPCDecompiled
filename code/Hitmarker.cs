@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Hitmarker : MonoBehaviour
 {
+	public Hitmarker()
+	{
+	}
+
 	private void Awake()
 	{
 		Hitmarker.singleton = this;

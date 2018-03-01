@@ -6,6 +6,10 @@ namespace Dissonance.Integrations.UNet_HLAPI.Demo
 {
 	public class HlapiPlayerController : NetworkBehaviour
 	{
+		public HlapiPlayerController()
+		{
+		}
+
 		private void Update()
 		{
 			if (!base.isLocalPlayer)

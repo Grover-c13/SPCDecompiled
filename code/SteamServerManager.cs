@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class SteamServerManager : MonoBehaviour
 {
+	public SteamServerManager()
+	{
+	}
+
 	private void Start()
 	{
 		this.console = GameConsole.Console.singleton;

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class MenuMusicManager : MonoBehaviour
 {
+	public MenuMusicManager()
+	{
+	}
+
 	private void Update()
 	{
 		this.curState = Mathf.Lerp(this.curState, (!this.creditsHolder.activeSelf) ? 0f : 1f, this.lerpSpeed * Time.deltaTime);

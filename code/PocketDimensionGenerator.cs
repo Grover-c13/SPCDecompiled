@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PocketDimensionGenerator : MonoBehaviour
 {
+	public PocketDimensionGenerator()
+	{
+	}
+
 	public void GenerateMap(int seed)
 	{
 		UnityEngine.Random.InitState(seed);

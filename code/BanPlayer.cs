@@ -7,6 +7,10 @@ using UnityEngine.Networking;
 
 public class BanPlayer : NetworkBehaviour
 {
+	public BanPlayer()
+	{
+	}
+
 	private void Start()
 	{
 		if (base.isLocalPlayer)

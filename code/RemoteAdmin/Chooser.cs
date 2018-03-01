@@ -6,6 +6,10 @@ namespace RemoteAdmin
 {
 	public class Chooser : MonoBehaviour
 	{
+		public Chooser()
+		{
+		}
+
 		private void Start()
 		{
 			foreach (Chooser.Option option in this.options)
@@ -33,6 +37,10 @@ namespace RemoteAdmin
 		[Serializable]
 		public class Option
 		{
+			public Option()
+			{
+			}
+
 			public string name;
 
 			public Button button;

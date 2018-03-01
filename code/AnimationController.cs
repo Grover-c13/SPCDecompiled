@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 
 public class AnimationController : NetworkBehaviour
 {
+	public AnimationController()
+	{
+	}
+
 	public void SyncItem(int i)
 	{
 		this.Networkitem = i;
@@ -361,6 +365,10 @@ public class AnimationController : NetworkBehaviour
 	[Serializable]
 	public class AnimAudioClip
 	{
+		public AnimAudioClip()
+		{
+		}
+
 		public string clipName;
 
 		public AudioClip audio;

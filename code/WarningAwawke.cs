@@ -4,9 +4,13 @@ using UnityEngine.UI;
 
 public class WarningAwawke : MonoBehaviour
 {
+	public WarningAwawke()
+	{
+	}
+
 	private void Awake()
 	{
-		if (PlayerPrefs.GetString("warningToggle", "false") != "false")
+		if (PlayerPrefs.GetString("warningToggle", "false") == "true")
 		{
 			base.gameObject.SetActive(false);
 		}

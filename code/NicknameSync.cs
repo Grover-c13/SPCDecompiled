@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class NicknameSync : NetworkBehaviour
 {
+	public NicknameSync()
+	{
+	}
+
 	private void Start()
 	{
 		if (base.isLocalPlayer)
@@ -55,7 +59,7 @@ public class NicknameSync : NetworkBehaviour
 					Text text = this.n_text;
 					text.text += component.myNick;
 					Text text2 = this.n_text;
-					text2.text = text2.text + "\n" + ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? component2.klasy[component2.curClass].fullName : component2.klasy[component2.curClass].fullName_pl);
+					text2.text = text2.text + "\n" + component2.klasy[component2.curClass].fullName;
 					try
 					{
 						if (component2.klasy[component2.curClass].team == Team.MTF && component3.klasy[component3.curClass].team == Team.MTF)
@@ -93,17 +97,17 @@ public class NicknameSync : NetworkBehaviour
 							if (num > num2)
 							{
 								Text text4 = this.n_text;
-								text4.text += ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? "YOU CAN GIVE ORDERS" : "MOŻESZ DAWAĆ ROZKAZY");
+								text4.text += TranslationReader.Get("Legancy_Interfaces", 0);
 							}
 							else if (num2 > num)
 							{
 								Text text5 = this.n_text;
-								text5.text += ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? "FOLLOW ORDERS" : "WYKONUJ ROZKAZY");
+								text5.text += TranslationReader.Get("Legancy_Interfaces", 1);
 							}
 							else if (num2 == num)
 							{
 								Text text6 = this.n_text;
-								text6.text += ((!(PlayerPrefs.GetString("langver", "en") == "pl")) ? "THE SAME PERMISSION LEVEL" : "RÓWNY POZIOM UPRAWNIEŃ");
+								text6.text += TranslationReader.Get("Legancy_Interfaces", 2);
 							}
 							Text text7 = this.n_text;
 							text7.text += "</b>";

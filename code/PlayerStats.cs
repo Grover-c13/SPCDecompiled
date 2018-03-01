@@ -7,6 +7,10 @@ using UnityEngine.Networking;
 
 public class PlayerStats : NetworkBehaviour
 {
+	public PlayerStats()
+	{
+	}
+
 	private void Start()
 	{
 		this.ccm = base.GetComponent<CharacterClassManager>();
@@ -28,9 +32,9 @@ public class PlayerStats : NetworkBehaviour
 		this.HurtPlayer(info, base.gameObject);
 	}
 
-	public void Explode()
+	public void Explode(bool inWarhead)
 	{
-		bool flag = this.health >= 1 && base.transform.position.y < 900f;
+		bool flag = this.health > 0 && (inWarhead || base.transform.position.y < 900f);
 		if (this.ccm.curClass == 3)
 		{
 			Scp106PlayerScript component = base.GetComponent<Scp106PlayerScript>();
@@ -38,17 +42,6 @@ public class PlayerStats : NetworkBehaviour
 			if (component.goingViaThePortal)
 			{
 				flag = true;
-			}
-		}
-		if (!flag)
-		{
-			foreach (Lift lift in PlayerStats.lifts)
-			{
-				GameObject gameObject;
-				if (lift.InRange(base.transform.position, out gameObject))
-				{
-					flag = true;
-				}
 			}
 		}
 		if (flag)

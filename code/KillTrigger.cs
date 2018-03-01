@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class KillTrigger : MonoBehaviour
 {
+	public KillTrigger()
+	{
+	}
+
 	public void Trigger(int amount)
 	{
 		if (amount != this.killsToTrigger)

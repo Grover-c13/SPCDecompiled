@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class Benchmark04 : MonoBehaviour
 	{
+		public Benchmark04()
+		{
+		}
+
 		private void Start()
 		{
 			this.m_Transform = base.transform;

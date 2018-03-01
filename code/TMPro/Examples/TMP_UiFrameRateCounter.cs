@@ -5,6 +5,10 @@ namespace TMPro.Examples
 {
 	public class TMP_UiFrameRateCounter : MonoBehaviour
 	{
+		public TMP_UiFrameRateCounter()
+		{
+		}
+
 		private void Awake()
 		{
 			if (!base.enabled)

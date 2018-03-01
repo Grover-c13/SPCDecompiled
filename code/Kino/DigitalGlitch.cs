@@ -3,11 +3,15 @@ using UnityEngine;
 
 namespace Kino
 {
-	[ExecuteInEditMode]
 	[AddComponentMenu("Kino Image Effects/Digital Glitch")]
 	[RequireComponent(typeof(Camera))]
+	[ExecuteInEditMode]
 	public class DigitalGlitch : MonoBehaviour
 	{
+		public DigitalGlitch()
+		{
+		}
+
 		public float intensity
 		{
 			get
@@ -89,8 +93,8 @@ namespace Kino
 			Graphics.Blit(source, destination, this._material);
 		}
 
-		[SerializeField]
 		[Range(0f, 1f)]
+		[SerializeField]
 		private float _intensity;
 
 		[SerializeField]

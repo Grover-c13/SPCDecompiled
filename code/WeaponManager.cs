@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Dissonance.Integrations.UNet_HLAPI;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class WeaponManager : NetworkBehaviour
 {
+	public WeaponManager()
+	{
+	}
+
 	private void SyncFF(bool ff)
 	{
 		this.NetworksyncFF = ff;
@@ -446,7 +452,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdSyncFF called on client.");
+			UnityEngine.Debug.LogError("Command CmdSyncFF called on client.");
 			return;
 		}
 		((WeaponManager)obj).CmdSyncFF(reader.ReadBoolean());
@@ -456,7 +462,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdShoot called on client.");
+			UnityEngine.Debug.LogError("Command CmdShoot called on client.");
 			return;
 		}
 		((WeaponManager)obj).CmdShoot(reader.ReadString(), reader.ReadGameObject(), reader.ReadVector3(), reader.ReadVector3(), reader.ReadString());
@@ -466,7 +472,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdDoAnimation called on client.");
+			UnityEngine.Debug.LogError("Command CmdDoAnimation called on client.");
 			return;
 		}
 		((WeaponManager)obj).CmdDoAnimation(reader.ReadString());
@@ -476,7 +482,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdDoAudio called on client.");
+			UnityEngine.Debug.LogError("Command CmdDoAudio called on client.");
 			return;
 		}
 		((WeaponManager)obj).CmdDoAudio(reader.ReadString(), reader.ReadBoolean());
@@ -486,7 +492,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdSyncFF called on server.");
+			UnityEngine.Debug.LogError("Command function CmdSyncFF called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -507,7 +513,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdShoot called on server.");
+			UnityEngine.Debug.LogError("Command function CmdShoot called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -532,7 +538,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdDoAnimation called on server.");
+			UnityEngine.Debug.LogError("Command function CmdDoAnimation called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -553,7 +559,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdDoAudio called on server.");
+			UnityEngine.Debug.LogError("Command function CmdDoAudio called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -575,7 +581,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcMakeHole called on server.");
+			UnityEngine.Debug.LogError("RPC RpcMakeHole called on server.");
 			return;
 		}
 		((WeaponManager)obj).RpcMakeHole((int)reader.ReadPackedUInt32(), reader.ReadVector3(), reader.ReadQuaternion(), reader.ReadString());
@@ -585,7 +591,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcSyncAnim called on server.");
+			UnityEngine.Debug.LogError("RPC RpcSyncAnim called on server.");
 			return;
 		}
 		((WeaponManager)obj).RpcSyncAnim(reader.ReadString());
@@ -595,7 +601,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("RPC RpcSyncAudio called on server.");
+			UnityEngine.Debug.LogError("RPC RpcSyncAudio called on server.");
 			return;
 		}
 		((WeaponManager)obj).RpcSyncAudio(reader.ReadString(), reader.ReadBoolean());
@@ -605,7 +611,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcMakeHole called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcMakeHole called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -624,7 +630,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcSyncAnim called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcSyncAnim called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -640,7 +646,7 @@ public class WeaponManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("RPC Function RpcSyncAudio called on client.");
+			UnityEngine.Debug.LogError("RPC Function RpcSyncAudio called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -765,6 +771,10 @@ public class WeaponManager : NetworkBehaviour
 	[Serializable]
 	public class Weapon
 	{
+		public Weapon()
+		{
+		}
+
 		public int itemID;
 
 		public Animator model;
@@ -819,5 +829,100 @@ public class WeaponManager : NetworkBehaviour
 
 		[HideInInspector]
 		public int arrayID;
+	}
+
+	[CompilerGenerated]
+	private sealed class <Reload>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <Reload>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				if (this.$this.curItem.durability < (float)this.$this.weapons[this.$this.curWeapon].magSize && this.$this.ammoBox.types[this.$this.weapons[this.$this.curWeapon].ammoType].quantity > 0)
+				{
+					if (TutorialManager.status)
+					{
+						UnityEngine.Object.FindObjectOfType<TutorialManager>().Reload();
+					}
+					this.$this.CallCmdDoAnimation("Reload");
+					this.<startWeapon>__1 = this.$this.curWeapon;
+					this.$this.weapons[this.$this.curWeapon].cooldown = this.$this.weapons[this.$this.curWeapon].reloadingTime + 0.3f;
+					this.$this.weapons[this.$this.curWeapon].model.SetBool("Reloading", true);
+					this.$this.weapons[this.$this.curWeapon].model.GetComponent<AudioSource>().PlayOneShot(this.$this.weapons[this.$this.curWeapon].reloadAudio);
+					this.$this.CallCmdDoAudio(this.$this.weapons[this.$this.curWeapon].reloadAudio_aac, true);
+					this.$current = new WaitForSeconds(this.$this.weapons[this.$this.curWeapon].reloadingTime);
+					if (!this.$disposing)
+					{
+						this.$PC = 1;
+					}
+					return true;
+				}
+				break;
+			case 1u:
+				this.$this.weapons[this.<startWeapon>__1].model.SetBool("Reloading", false);
+				if (this.<startWeapon>__1 == this.$this.curWeapon)
+				{
+					while (this.$this.curItem.durability < (float)this.$this.weapons[this.$this.curWeapon].magSize && this.$this.ammoBox.types[this.$this.weapons[this.$this.curWeapon].ammoType].quantity > 0)
+					{
+						this.$this.curItem.durability += 1f;
+						this.$this.ammoBox.types[this.$this.weapons[this.$this.curWeapon].ammoType].quantity--;
+					}
+				}
+				break;
+			default:
+				return false;
+			}
+			this.$PC = -1;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal int <startWeapon>__1;
+
+		internal WeaponManager $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

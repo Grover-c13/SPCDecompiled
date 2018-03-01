@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class MusicSlider : MonoBehaviour
 {
+	public MusicSlider()
+	{
+	}
+
 	private void Start()
 	{
 		this.OnValueChanged((float)PlayerPrefs.GetInt(this.keyName, 0));

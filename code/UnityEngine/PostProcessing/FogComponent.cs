@@ -5,6 +5,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class FogComponent : PostProcessingComponentCommandBuffer<FogModel>
 	{
+		public FogComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -67,6 +71,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _FogColor = Shader.PropertyToID("_FogColor");
 
 			internal static readonly int _Density = Shader.PropertyToID("_Density");

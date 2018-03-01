@@ -5,5 +5,8 @@ namespace Dissonance
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
 	internal sealed class AspDataFieldAttribute : Attribute
 	{
+		public AspDataFieldAttribute()
+		{
+		}
 	}
 }

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class UBER_MaterialPresetCollection : ScriptableObject
 {
+	public UBER_MaterialPresetCollection()
+	{
+	}
+
 	[HideInInspector]
 	[SerializeField]
 	public string currentPresetName;

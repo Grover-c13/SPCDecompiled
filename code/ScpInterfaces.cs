@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class ScpInterfaces : MonoBehaviour
 {
+	public ScpInterfaces()
+	{
+	}
+
 	private GameObject FindLocalPlayer()
 	{
 		foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
@@ -42,6 +46,4 @@ public class ScpInterfaces : MonoBehaviour
 	public GameObject Scp049_eq;
 
 	public Image Scp049_loading;
-
-	public GameObject Scp079_eq;
 }

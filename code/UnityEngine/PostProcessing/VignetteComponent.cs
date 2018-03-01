@@ -4,6 +4,10 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class VignetteComponent : PostProcessingComponentRenderTexture<VignetteModel>
 	{
+		public VignetteComponent()
+		{
+		}
+
 		public override bool active
 		{
 			get
@@ -33,6 +37,11 @@ namespace UnityEngine.PostProcessing
 
 		private static class Uniforms
 		{
+			static Uniforms()
+			{
+				// Note: this type is marked as 'beforefieldinit'.
+			}
+
 			internal static readonly int _Vignette_Color = Shader.PropertyToID("_Vignette_Color");
 
 			internal static readonly int _Vignette_Center = Shader.PropertyToID("_Vignette_Center");

@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SoundtrackManager : MonoBehaviour
 {
+	public SoundtrackManager()
+	{
+	}
+
 	private void FixedUpdate()
 	{
 		if (this.nooneSawTime > 140f && !this.overlayPlaying)
@@ -75,7 +82,6 @@ public class SoundtrackManager : MonoBehaviour
 							Transform root = raycastHit.collider.transform.root;
 							if (root.tag == "Player")
 							{
-								MonoBehaviour.print("Found someone!");
 								int curClass = root.GetComponent<CharacterClassManager>().curClass;
 								if (ccm.klasy[Mathf.Clamp(curClass, 0, ccm.klasy.Length - 1)].team != Team.SCP)
 								{
@@ -151,6 +157,10 @@ public class SoundtrackManager : MonoBehaviour
 	[Serializable]
 	public class Track
 	{
+		public Track()
+		{
+		}
+
 		public void Update()
 		{
 			if (this.restartOnPlay && this.source.volume == 0f && this.playing)
@@ -175,5 +185,148 @@ public class SoundtrackManager : MonoBehaviour
 		public float exitFadeDuration;
 
 		public float maxVolume;
+	}
+
+	[CompilerGenerated]
+	private sealed class <Start>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	{
+		[DebuggerHidden]
+		public <Start>c__Iterator0()
+		{
+		}
+
+		public bool MoveNext()
+		{
+			uint num = (uint)this.$PC;
+			this.$PC = -1;
+			switch (num)
+			{
+			case 0u:
+				break;
+			case 1u:
+				break;
+			case 2u:
+				this.$locvar1++;
+				goto IL_230;
+			case 3u:
+				goto IL_A9;
+			default:
+				return false;
+			}
+			if (this.$this.player == null)
+			{
+				this.$this.player = PlayerManager.localPlayer;
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 1;
+				}
+				return true;
+			}
+			this.<_camera>__0 = this.$this.player.GetComponent<Scp049PlayerScript>().plyCam.transform;
+			this.<ccm>__0 = this.$this.player.GetComponent<CharacterClassManager>();
+			IL_A9:
+			this.<foundSomeone>__1 = false;
+			this.<team>__1 = this.<ccm>__0.klasy[Mathf.Clamp(this.<ccm>__0.curClass, 0, this.<ccm>__0.klasy.Length - 1)].team;
+			if (this.<team>__1 == Team.SCP || this.<team>__1 == Team.RIP)
+			{
+				this.<foundSomeone>__1 = true;
+				this.$this.StopOverlay(0);
+				goto IL_25B;
+			}
+			this.$locvar0 = PlayerManager.singleton.players;
+			this.$locvar1 = 0;
+			IL_230:
+			if (this.$locvar1 < this.$locvar0.Length)
+			{
+				this.<item>__2 = this.$locvar0[this.$locvar1];
+				try
+				{
+					RaycastHit raycastHit;
+					if (Physics.Raycast(new Ray(this.$this.player.transform.position, (this.<item>__2.transform.position - this.<_camera>__0.position).normalized), out raycastHit, 20f, this.$this.mask))
+					{
+						Transform root = raycastHit.collider.transform.root;
+						if (root.tag == "Player")
+						{
+							int curClass = root.GetComponent<CharacterClassManager>().curClass;
+							if (this.<ccm>__0.klasy[Mathf.Clamp(curClass, 0, this.<ccm>__0.klasy.Length - 1)].team != Team.SCP)
+							{
+								this.<foundSomeone>__1 = true;
+							}
+						}
+					}
+				}
+				catch
+				{
+				}
+				this.$current = new WaitForEndOfFrame();
+				if (!this.$disposing)
+				{
+					this.$PC = 2;
+				}
+				return true;
+			}
+			IL_25B:
+			this.$this.seeSomeone = this.<foundSomeone>__1;
+			this.$current = new WaitForEndOfFrame();
+			if (!this.$disposing)
+			{
+				this.$PC = 3;
+			}
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.$current;
+			}
+		}
+
+		[DebuggerHidden]
+		public void Dispose()
+		{
+			this.$disposing = true;
+			this.$PC = -1;
+		}
+
+		[DebuggerHidden]
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		internal Transform <_camera>__0;
+
+		internal CharacterClassManager <ccm>__0;
+
+		internal bool <foundSomeone>__1;
+
+		internal Team <team>__1;
+
+		internal GameObject[] $locvar0;
+
+		internal int $locvar1;
+
+		internal GameObject <item>__2;
+
+		internal SoundtrackManager $this;
+
+		internal object $current;
+
+		internal bool $disposing;
+
+		internal int $PC;
 	}
 }

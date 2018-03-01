@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
-	[BaseTypeRequired(typeof(Attribute))]
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+	[BaseTypeRequired(typeof(Attribute))]
 	internal sealed class BaseTypeRequiredAttribute : Attribute
 	{
 		public BaseTypeRequiredAttribute([NotNull] Type baseType)
@@ -12,6 +13,21 @@ namespace Dissonance
 		}
 
 		[NotNull]
-		public Type BaseType { get; private set; }
+		public Type BaseType
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<BaseType>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<BaseType>k__BackingField = value;
+			}
+		}
+
+		[CompilerGenerated]
+		private Type <BaseType>k__BackingField;
 	}
 }

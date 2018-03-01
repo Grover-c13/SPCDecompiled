@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace UnityEngine.PostProcessing
 {
 	[Serializable]
 	public class ColorGradingModel : PostProcessingModel
 	{
+		public ColorGradingModel()
+		{
+		}
+
 		public ColorGradingModel.Settings settings
 		{
 			get
@@ -18,9 +23,33 @@ namespace UnityEngine.PostProcessing
 			}
 		}
 
-		public bool isDirty { get; internal set; }
+		public bool isDirty
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<isDirty>k__BackingField;
+			}
+			[CompilerGenerated]
+			internal set
+			{
+				this.<isDirty>k__BackingField = value;
+			}
+		}
 
-		public RenderTexture bakedLut { get; internal set; }
+		public RenderTexture bakedLut
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<bakedLut>k__BackingField;
+			}
+			[CompilerGenerated]
+			internal set
+			{
+				this.<bakedLut>k__BackingField = value;
+			}
+		}
 
 		public override void Reset()
 		{
@@ -35,6 +64,12 @@ namespace UnityEngine.PostProcessing
 
 		[SerializeField]
 		private ColorGradingModel.Settings m_Settings = ColorGradingModel.Settings.defaultSettings;
+
+		[CompilerGenerated]
+		private bool <isDirty>k__BackingField;
+
+		[CompilerGenerated]
+		private RenderTexture <bakedLut>k__BackingField;
 
 		public enum Tonemapper
 		{
@@ -119,8 +154,8 @@ namespace UnityEngine.PostProcessing
 			[Range(-180f, 180f)]
 			public float hueShift;
 
-			[Range(0f, 2f)]
 			[Tooltip("Pushes the intensity of all colors.")]
+			[Range(0f, 2f)]
 			public float saturation;
 
 			[Range(0f, 2f)]

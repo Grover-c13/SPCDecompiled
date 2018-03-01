@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+	public PlayerManager()
+	{
+	}
+
 	private void Awake()
 	{
 		PlayerManager.singleton = this;
