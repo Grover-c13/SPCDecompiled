@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A8C1D90F-EA8D-477E-8351-435DDFF607F4}</ProjectGuid>
+    <ProjectGuid>{493A4CBB-F45F-4577-AE0B-37675C1CEFE6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -33,20 +33,23 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.AudioModule">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="TextMeshPro-1.0.55.56.0b11">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\TextMeshPro-1.0.55.56.0b11.dll</HintPath>
@@ -60,9 +63,6 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\System.Core.dll</HintPath>
     </Reference>
@@ -75,14 +75,14 @@
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.VideoModule">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UNETModule">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>E:\SteamLibrary\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
@@ -99,13 +99,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="-PrivateImplementationDetails-.cs" />
-    <Compile Include="AlphaWarheadButtonUnlocker.cs" />
-    <Compile Include="AlphaWarheadDetonationController.cs" />
+    <Compile Include="AlphaWarheadController.cs" />
+    <Compile Include="AlphaWarheadNukesitePanel.cs" />
+    <Compile Include="AlphaWarheadOutsitePanel.cs" />
     <Compile Include="AmbientSoundPlayer.cs" />
     <Compile Include="AmmoBox.cs" />
     <Compile Include="AnimationController.cs" />
     <Compile Include="AntiFaker\AntiFakeCommands.cs" />
-    <Compile Include="AWSoundController.cs" />
     <Compile Include="A_Href.cs" />
     <Compile Include="BanPlayer.cs" />
     <Compile Include="BlastDoor.cs" />
@@ -125,6 +125,7 @@
     <Compile Include="ConnInfoCanceler.cs" />
     <Compile Include="ConnInfoCloser.cs" />
     <Compile Include="ControlPanelLights.cs" />
+    <Compile Include="CrashDetector.cs" />
     <Compile Include="Credits.cs" />
     <Compile Include="CreditText.cs" />
     <Compile Include="CursorManager.cs" />
@@ -214,7 +215,6 @@
     <Compile Include="Dissonance\XamlItemsControlAttribute.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="DoorOpenTrigger.cs" />
-    <Compile Include="ElectroMagnets.cs" />
     <Compile Include="Embargo.cs" />
     <Compile Include="EnvMapAnimator.cs" />
     <Compile Include="Escape.cs" />
@@ -250,7 +250,6 @@
     <Compile Include="KillTrigger.cs" />
     <Compile Include="Kino\AnalogGlitch.cs" />
     <Compile Include="Kino\DigitalGlitch.cs" />
-    <Compile Include="LeverButton.cs" />
     <Compile Include="Lift.cs" />
     <Compile Include="LiftChecker.cs" />
     <Compile Include="LightBlink.cs" />
@@ -274,7 +273,6 @@
     <Compile Include="NicknameSync.cs" />
     <Compile Include="NineTailedFoxUnits.cs" />
     <Compile Include="NoammoTrigger.cs" />
-    <Compile Include="Noclip.cs" />
     <Compile Include="Offset.cs" />
     <Compile Include="OneOhSixContainer.cs" />
     <Compile Include="Outside.cs" />
@@ -329,8 +327,6 @@
     <Compile Include="Scp294.cs" />
     <Compile Include="Scp457PlayerScript.cs" />
     <Compile Include="Scp914.cs" />
-    <Compile Include="Scp914Grabber.cs" />
-    <Compile Include="Scp914_Controller.cs" />
     <Compile Include="ScpInterfaces.cs" />
     <Compile Include="Searching.cs" />
     <Compile Include="SensitivitySlider.cs" />
@@ -339,6 +335,7 @@
     <Compile Include="ServerFilters.cs" />
     <Compile Include="ServerInfo.cs" />
     <Compile Include="ServerListManager.cs" />
+    <Compile Include="ServerRoles.cs" />
     <Compile Include="ServerStatic.cs" />
     <Compile Include="ServerTime.cs" />
     <Compile Include="ShockGrenade.cs" />
@@ -352,6 +349,7 @@
     <Compile Include="SpeakerIcon.cs" />
     <Compile Include="Spectator.cs" />
     <Compile Include="SpectatorCamera.cs" />
+    <Compile Include="StaffLogin.cs" />
     <Compile Include="StartScreen.cs" />
     <Compile Include="SteamManager.cs" />
     <Compile Include="SteamServerManager.cs" />

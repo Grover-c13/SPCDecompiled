@@ -142,7 +142,7 @@ public class TutorialManager : MonoBehaviour
 	private void Tutorial2_GiveNTFRifle()
 	{
 		UnityEngine.Object.Destroy(UnityEngine.Object.FindObjectOfType<NoammoTrigger>().gameObject);
-		GameObject.Find("Host").GetComponent<Inventory>().CallCmdSetPickup(20, 0f, GameObject.Find("ItemPos").transform.position, Quaternion.Euler(-90f, 0f, 0f), default(Quaternion));
+		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(20, 0f, GameObject.Find("ItemPos").transform.position, Quaternion.Euler(-90f, 0f, 0f), default(Quaternion));
 		base.Invoke("Tutorial2_GiveSFA", 1f);
 	}
 
@@ -155,7 +155,7 @@ public class TutorialManager : MonoBehaviour
 				return;
 			}
 		}
-		GameObject.Find("Host").GetComponent<Inventory>().CallCmdSetPickup(29, 12f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
+		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(29, 12f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
 	}
 
 	private void Tutorial2_MoreAmmo()
@@ -167,7 +167,7 @@ public class TutorialManager : MonoBehaviour
 				return;
 			}
 		}
-		GameObject.Find("Host").GetComponent<Inventory>().CallCmdSetPickup(29, 12f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
+		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(29, 12f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
 		this.Trigger(5);
 	}
 
@@ -184,7 +184,7 @@ public class TutorialManager : MonoBehaviour
 
 	private void Tutorial2_GiveSFA()
 	{
-		GameObject.Find("Host").GetComponent<Inventory>().CallCmdSetPickup(22, 1E+08f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
+		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(22, 1E+08f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
 	}
 
 	private void Tutorial2_ResultText()
@@ -216,7 +216,7 @@ public class TutorialManager : MonoBehaviour
 
 	private void Tutorial3_GiveKeycard()
 	{
-		GameObject.Find("Host").GetComponent<Inventory>().CallCmdSetPickup(0, 0f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
+		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(0, 0f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
 	}
 
 	public void Tutorial3_KeycardBurnt()

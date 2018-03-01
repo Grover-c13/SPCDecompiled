@@ -51,6 +51,11 @@ public class CharacterClassManager : NetworkBehaviour
 		}
 	}
 
+	public bool IsHuman()
+	{
+		return this.curClass > 0 && this.klasy[this.curClass].team != Team.SCP && this.klasy[this.curClass].team != Team.RIP;
+	}
+
 	private void Start()
 	{
 		if (base.isLocalPlayer)
@@ -215,8 +220,8 @@ public class CharacterClassManager : NetworkBehaviour
 		}
 	}
 
-	[Command]
 	[Client]
+	[Command]
 	public void CmdSuicide(PlayerStats.HitInfo hitInfo)
 	{
 		if (!NetworkClient.active)
@@ -254,6 +259,7 @@ public class CharacterClassManager : NetworkBehaviour
 			this.scp079.Init(this.curClass, c);
 			this.scp106.Init(this.curClass, c);
 			this.scp173.Init(this.curClass, c);
+			this.scp096.Init(this.curClass, c);
 		}
 	}
 
@@ -310,8 +316,6 @@ public class CharacterClassManager : NetworkBehaviour
 				if (base.isLocalPlayer)
 				{
 					base.GetComponent<WeaponManager>().DisableAllWeaponCameras();
-					base.GetComponent<Inventory>().DropAll();
-					component.items.Clear();
 					component.NetworkcurItem = -1;
 					base.GetComponent<FirstPersonController>().enabled = false;
 					UnityEngine.Object.FindObjectOfType<StartScreen>().PlayAnimation(this.curClass);
@@ -339,12 +343,7 @@ public class CharacterClassManager : NetworkBehaviour
 					{
 						base.transform.position = this.deathPosition;
 					}
-					component.items.Clear();
 					component.NetworkcurItem = -1;
-					foreach (int id in @class.startItems)
-					{
-						component.AddItem(id, -4.65664672E+11f);
-					}
 					UnityEngine.Object.FindObjectOfType<StartScreen>().PlayAnimation(this.curClass);
 					if (!base.GetComponent<HorrorSoundController>().horrorSoundSource.isPlaying)
 					{
@@ -357,7 +356,6 @@ public class CharacterClassManager : NetworkBehaviour
 				{
 					base.GetComponent<Radio>().NetworkcurPreset = 0;
 					base.GetComponent<Radio>().CallCmdUpdatePreset(0);
-					base.GetComponent<AmmoBox>().SetAmmoAmount();
 					FirstPersonController component2 = base.GetComponent<FirstPersonController>();
 					PlayerStats component3 = base.GetComponent<PlayerStats>();
 					if (@class.postprocessingProfile != null && base.GetComponentInChildren<PostProcessingBehaviour>() != null)
@@ -445,6 +443,12 @@ public class CharacterClassManager : NetworkBehaviour
 		{
 			this.aliveTime = 0f;
 			this.ApplyProperties();
+		}
+		Inventory component = base.GetComponent<Inventory>();
+		component.items.Clear();
+		foreach (int id2 in this.klasy[this.curClass].startItems)
+		{
+			component.AddNewItem(id2, -4.65664672E+11f);
 		}
 	}
 
@@ -561,6 +565,7 @@ public class CharacterClassManager : NetworkBehaviour
 		}
 		ply.GetComponent<CharacterClassManager>().SetClassID(classid);
 		ply.GetComponent<PlayerStats>().SetHPAmount(this.klasy[classid].maxHP);
+		ply.GetComponent<AmmoBox>().SetAmmoAmount();
 	}
 
 	private int Find_Random_ID_Using_Defined_Team(Team team)

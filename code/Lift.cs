@@ -37,7 +37,7 @@ public class Lift : NetworkBehaviour
 
 	public void UseLift()
 	{
-		if (this.operative)
+		if (this.operative && AlphaWarheadController.host.timeToDetonation != 0f)
 		{
 			base.StartCoroutine(this.LiftAnimation());
 			this.operative = false;

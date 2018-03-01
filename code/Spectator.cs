@@ -87,6 +87,8 @@ public class Spectator : NetworkBehaviour
 				this.spectInfo.color = this.ccm.klasy[gameObject.GetComponent<CharacterClassManager>().curClass].classColor;
 				this.spectInfo.text = string.Concat(new object[]
 				{
+					gameObject.GetComponent<ServerRoles>().GetColoredRoleString(),
+					" ",
 					gameObject.GetComponent<NicknameSync>().myNick,
 					" ",
 					gameObject.GetComponent<PlayerStats>().health,

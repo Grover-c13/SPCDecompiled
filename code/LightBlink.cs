@@ -20,7 +20,7 @@ public class LightBlink : MonoBehaviour
 		this.RandomOuter();
 		if (this.innerVariationPercent < 100f)
 		{
-			base.InvokeRepeating("RefreshLight", 0f, 0.0833333358f);
+			base.InvokeRepeating("RefreshLight", 0f, 1f / this.FREQ);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class LightBlink : MonoBehaviour
 
 	private float innerVariation;
 
-	private const float FREQ = 12f;
+	public float FREQ = 12f;
 
 	private Light l;
 

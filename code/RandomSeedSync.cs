@@ -34,8 +34,7 @@ public class RandomSeedSync : NetworkBehaviour
 
 	private IEnumerator Generate()
 	{
-		bool generated = false;
-		while (!generated)
+		while (!this.generated)
 		{
 			if (base.name == "Host")
 			{
@@ -69,7 +68,6 @@ public class RandomSeedSync : NetworkBehaviour
 						door.UpdatePos();
 					}
 				}
-				generated = true;
 				foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("DoorButton"))
 				{
 					try
@@ -95,10 +93,18 @@ public class RandomSeedSync : NetworkBehaviour
 				console.AddLog("Spawning items...", new Color32(0, byte.MaxValue, 0, byte.MaxValue), false);
 				if (base.isLocalPlayer)
 				{
+					foreach (Door door2 in UnityEngine.Object.FindObjectsOfType<Door>())
+					{
+						if (door2.destroyed)
+						{
+							door2.DestroyDoor(true);
+						}
+					}
 					base.GetComponent<HostItemSpawner>().Spawn(this.seed);
 					base.GetComponent<AntiFakeCommands>().FindAllowedTeleportPositions();
 				}
 				console.AddLog("The scene is ready! Good luck!", new Color32(0, byte.MaxValue, 0, byte.MaxValue), false);
+				this.generated = true;
 			}
 			yield return new WaitForEndOfFrame();
 		}
@@ -169,6 +175,8 @@ public class RandomSeedSync : NetworkBehaviour
 	[SyncVar(hook = "SetSeed")]
 	public int seed = -1;
 
+	public bool generated;
+
 	[CompilerGenerated]
 	private sealed class <Generate>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
 	{
@@ -184,31 +192,38 @@ public class RandomSeedSync : NetworkBehaviour
 			switch (num)
 			{
 			case 0u:
-				this.<generated>__0 = false;
-				goto IL_375;
+				goto IL_3AE;
 			case 1u:
 				this.<console>__1.AddLog("Spawning items...", new Color32(0, byte.MaxValue, 0, byte.MaxValue), false);
 				if (this.$this.isLocalPlayer)
 				{
+					foreach (Door door in UnityEngine.Object.FindObjectsOfType<Door>())
+					{
+						if (door.destroyed)
+						{
+							door.DestroyDoor(true);
+						}
+					}
 					this.$this.GetComponent<HostItemSpawner>().Spawn(this.$this.seed);
 					this.$this.GetComponent<AntiFakeCommands>().FindAllowedTeleportPositions();
 				}
 				this.<console>__1.AddLog("The scene is ready! Good luck!", new Color32(0, byte.MaxValue, 0, byte.MaxValue), false);
+				this.$this.generated = true;
 				break;
 			case 2u:
-				goto IL_375;
+				goto IL_3AE;
 			default:
 				return false;
 			}
-			IL_356:
+			IL_38F:
 			this.$current = new WaitForEndOfFrame();
 			if (!this.$disposing)
 			{
 				this.$PC = 2;
 			}
 			return true;
-			IL_375:
-			if (this.<generated>__0)
+			IL_3AE:
+			if (this.$this.generated)
 			{
 				this.$PC = -1;
 			}
@@ -245,12 +260,11 @@ public class RandomSeedSync : NetworkBehaviour
 						this.<lcz>__1.GenerateMap(this.$this.seed);
 						this.<hcz>__1.GenerateMap(this.$this.seed + 1);
 						this.<enz>__1.GenerateMap(this.$this.seed + 2);
-						foreach (Door door in UnityEngine.Object.FindObjectsOfType<Door>())
+						foreach (Door door2 in UnityEngine.Object.FindObjectsOfType<Door>())
 						{
-							door.UpdatePos();
+							door2.UpdatePos();
 						}
 					}
-					this.<generated>__0 = true;
 					this.$locvar4 = GameObject.FindGameObjectsWithTag("DoorButton");
 					this.$locvar5 = 0;
 					while (this.$locvar5 < this.$locvar4.Length)
@@ -287,7 +301,7 @@ public class RandomSeedSync : NetworkBehaviour
 					}
 					return true;
 				}
-				goto IL_356;
+				goto IL_38F;
 			}
 			return false;
 		}
@@ -322,8 +336,6 @@ public class RandomSeedSync : NetworkBehaviour
 		{
 			throw new NotSupportedException();
 		}
-
-		internal bool <generated>__0;
 
 		internal GameConsole.Console <console>__1;
 

@@ -68,7 +68,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	[Command(channel = 2)]
 	private void CmdHurtPlayer(GameObject ply, string id)
 	{
-		if (Vector3.Distance(base.GetComponent<PlyMovementSync>().position, ply.transform.position) <= this.distance * 1.3f && base.GetComponent<CharacterClassManager>().curClass == 10)
+		if (Vector3.Distance(base.GetComponent<PlyMovementSync>().position, ply.transform.position) <= this.distance * 1.5f && base.GetComponent<CharacterClassManager>().curClass == 10)
 		{
 			base.GetComponent<PlayerStats>().HurtPlayer(new PlayerStats.HitInfo((float)this.damage, id, "SCP:0492"), ply);
 		}

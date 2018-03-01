@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Kino
 {
-	[AddComponentMenu("Kino Image Effects/Digital Glitch")]
-	[RequireComponent(typeof(Camera))]
 	[ExecuteInEditMode]
+	[RequireComponent(typeof(Camera))]
+	[AddComponentMenu("Kino Image Effects/Digital Glitch")]
 	public class DigitalGlitch : MonoBehaviour
 	{
 		public DigitalGlitch()

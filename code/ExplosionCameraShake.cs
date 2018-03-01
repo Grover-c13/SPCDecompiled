@@ -18,6 +18,11 @@ public class ExplosionCameraShake : MonoBehaviour
 		this.glitch.colorDrift = this.force;
 	}
 
+	private void Awake()
+	{
+		ExplosionCameraShake.singleton = this;
+	}
+
 	public void Shake(float explosionForce)
 	{
 		if (explosionForce > this.force)
@@ -31,4 +36,6 @@ public class ExplosionCameraShake : MonoBehaviour
 	public float deductSpeed;
 
 	public AnalogGlitch glitch;
+
+	public static ExplosionCameraShake singleton;
 }

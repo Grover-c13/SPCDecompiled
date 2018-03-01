@@ -316,16 +316,16 @@ public class Scp106PlayerScript : NetworkBehaviour
 			this.fpc.noclip = true;
 			float y = base.transform.position.y - 2.5f;
 			float duration = 0f;
-			while (base.transform.position.y > y && duration < 10f)
+			while (base.transform.position.y > y && duration < 5f)
 			{
-				duration += Time.deltaTime;
+				duration += Time.fixedDeltaTime;
 				if (base.transform.position.y - 2f < y)
 				{
-					vaca.intensity += Time.deltaTime / 2f * this.teleportSpeed;
+					vaca.intensity += Time.fixedDeltaTime / 2f * this.teleportSpeed;
 				}
 				vaca.intensity = Mathf.Clamp(vaca.intensity, 0.036f, 1f);
-				base.transform.position += Vector3.down * Time.deltaTime / 2f * this.teleportSpeed;
-				yield return new WaitForEndOfFrame();
+				base.transform.position += Vector3.down * Time.fixedDeltaTime / 2f * this.teleportSpeed;
+				yield return new WaitForFixedUpdate();
 			}
 			if (this.portalPosition == Vector3.zero)
 			{
@@ -333,15 +333,17 @@ public class Scp106PlayerScript : NetworkBehaviour
 			}
 			base.transform.position = this.portalPrefab.transform.position - Vector3.up * 1.5f;
 			y = base.transform.position.y + 3f;
-			while (base.transform.position.y < y)
+			duration = 0f;
+			while (base.transform.position.y < y && duration < 5f)
 			{
-				base.transform.position += Vector3.up * Time.deltaTime / 2f * this.teleportSpeed;
+				duration += Time.fixedDeltaTime;
+				base.transform.position += Vector3.up * Time.fixedDeltaTime / 2f * this.teleportSpeed;
 				if (base.transform.position.y + 2f > y)
 				{
-					vaca.intensity -= Time.deltaTime / 2f * this.teleportSpeed;
+					vaca.intensity -= Time.fixedDeltaTime / 2f * this.teleportSpeed;
 				}
 				vaca.intensity = Mathf.Clamp(vaca.intensity, 0.036f, 1f);
-				yield return new WaitForEndOfFrame();
+				yield return new WaitForFixedUpdate();
 			}
 			this.fpc.noclip = false;
 			this.goingViaThePortal = false;
@@ -959,7 +961,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 			case 0u:
 				if (!(this.$this.portalPrefab != null) || this.$this.goingViaThePortal)
 				{
-					goto IL_376;
+					goto IL_3A3;
 				}
 				this.$this.goingViaThePortal = true;
 				this.<vaca>__1 = this.$this.GetComponentInChildren<VignetteAndChromaticAberration>();
@@ -970,20 +972,20 @@ public class Scp106PlayerScript : NetworkBehaviour
 			case 1u:
 				break;
 			case 2u:
-				goto IL_335;
+				goto IL_352;
 			default:
 				return false;
 			}
-			if (this.$this.transform.position.y > this.<y>__1 && this.<duration>__1 < 10f)
+			if (this.$this.transform.position.y > this.<y>__1 && this.<duration>__1 < 5f)
 			{
-				this.<duration>__1 += Time.deltaTime;
+				this.<duration>__1 += Time.fixedDeltaTime;
 				if (this.$this.transform.position.y - 2f < this.<y>__1)
 				{
-					this.<vaca>__1.intensity += Time.deltaTime / 2f * this.$this.teleportSpeed;
+					this.<vaca>__1.intensity += Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
 				}
 				this.<vaca>__1.intensity = Mathf.Clamp(this.<vaca>__1.intensity, 0.036f, 1f);
-				this.$this.transform.position += Vector3.down * Time.deltaTime / 2f * this.$this.teleportSpeed;
-				this.$current = new WaitForEndOfFrame();
+				this.$this.transform.position += Vector3.down * Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
+				this.$current = new WaitForFixedUpdate();
 				if (!this.$disposing)
 				{
 					this.$PC = 1;
@@ -996,16 +998,18 @@ public class Scp106PlayerScript : NetworkBehaviour
 			}
 			this.$this.transform.position = this.$this.portalPrefab.transform.position - Vector3.up * 1.5f;
 			this.<y>__1 = this.$this.transform.position.y + 3f;
-			IL_335:
-			if (this.$this.transform.position.y < this.<y>__1)
+			this.<duration>__1 = 0f;
+			IL_352:
+			if (this.$this.transform.position.y < this.<y>__1 && this.<duration>__1 < 5f)
 			{
-				this.$this.transform.position += Vector3.up * Time.deltaTime / 2f * this.$this.teleportSpeed;
+				this.<duration>__1 += Time.fixedDeltaTime;
+				this.$this.transform.position += Vector3.up * Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
 				if (this.$this.transform.position.y + 2f > this.<y>__1)
 				{
-					this.<vaca>__1.intensity -= Time.deltaTime / 2f * this.$this.teleportSpeed;
+					this.<vaca>__1.intensity -= Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
 				}
 				this.<vaca>__1.intensity = Mathf.Clamp(this.<vaca>__1.intensity, 0.036f, 1f);
-				this.$current = new WaitForEndOfFrame();
+				this.$current = new WaitForFixedUpdate();
 				if (!this.$disposing)
 				{
 					this.$PC = 2;
@@ -1014,7 +1018,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 			}
 			this.$this.fpc.noclip = false;
 			this.$this.goingViaThePortal = false;
-			IL_376:
+			IL_3A3:
 			this.$PC = -1;
 			return false;
 		}

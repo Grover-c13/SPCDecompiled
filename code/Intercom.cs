@@ -130,7 +130,13 @@ public class Intercom : NetworkBehaviour
 	[ClientRpc(channel = 2)]
 	private void RpcUpdateText(string t)
 	{
-		this.txt.text = t;
+		try
+		{
+			this.txt.text = t;
+		}
+		catch
+		{
+		}
 	}
 
 	public void RequestTransmission(GameObject spk)

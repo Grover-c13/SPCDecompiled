@@ -9,13 +9,10 @@ public class AnimationController : NetworkBehaviour
 	{
 	}
 
-	public void SyncItem(int i)
-	{
-		this.Networkitem = i;
-	}
-
 	private void Start()
 	{
+		this.scp096 = base.GetComponent<Scp096PlayerScript>();
+		this.pms = base.GetComponent<PlyMovementSync>();
 		this.fpc = base.GetComponent<FirstPersonController>();
 		this.inv = base.GetComponent<Inventory>();
 		if (!base.isLocalPlayer)
@@ -33,8 +30,22 @@ public class AnimationController : NetworkBehaviour
 		}
 	}
 
+	private Quaternion GetCameraRotation()
+	{
+		float num = this.pms.rotX;
+		num = ((num <= 270f) ? num : (num - 360f));
+		num /= 3f;
+		float d = Mathf.Lerp(this.prevRotX, num, Time.deltaTime * 15f);
+		this.prevRotX = d;
+		return Quaternion.Euler(Vector3.right * d);
+	}
+
 	private void LateUpdate()
 	{
+		if (!base.isLocalPlayer && this.headAnimator != null)
+		{
+			this.headAnimator.transform.localRotation = this.GetCameraRotation();
+		}
 		if (!base.isLocalPlayer && this.handAnimator != null)
 		{
 			this.handAnimator.SetBool("Cuffed", this.cuffed);
@@ -92,16 +103,16 @@ public class AnimationController : NetworkBehaviour
 	{
 		if (!base.isLocalPlayer)
 		{
-			if (this.prevItem != this.item)
+			if (this.prevItem != this.inv.curItem)
 			{
-				this.prevItem = this.item;
+				this.prevItem = this.inv.curItem;
 				this.RefreshItems();
 			}
 			this.RecieveData();
 		}
 		else
 		{
-			this.TransmitData(this.fpc.animationID, this.item, this.fpc.plySpeed);
+			this.TransmitData(this.fpc.animationID, this.fpc.plySpeed);
 		}
 	}
 
@@ -127,14 +138,24 @@ public class AnimationController : NetworkBehaviour
 			if (this.handAnimator == null)
 			{
 				Animator[] componentsInChildren = this.animator.GetComponentsInChildren<Animator>();
-				if (componentsInChildren.Length > 1)
+				foreach (Animator animator in componentsInChildren)
 				{
-					this.handAnimator = componentsInChildren[1];
+					if (animator != this.animator)
+					{
+						if (animator.transform.name.ToUpper().Contains("NECK"))
+						{
+							this.headAnimator = animator;
+						}
+						else
+						{
+							this.handAnimator = animator;
+						}
+					}
 				}
 			}
 			else
 			{
-				this.handAnimator.SetInteger("CurItem", this.item);
+				this.handAnimator.SetInteger("CurItem", this.inv.curItem);
 				this.handAnimator.SetInteger("Running", (this.speed.x == 0f) ? 0 : ((this.curAnim != 1) ? 1 : 2));
 			}
 		}
@@ -166,20 +187,19 @@ public class AnimationController : NetworkBehaviour
 	}
 
 	[ClientCallback]
-	private void TransmitData(int state, int it, Vector2 v2)
+	private void TransmitData(int state, Vector2 v2)
 	{
 		if (!NetworkClient.active)
 		{
 			return;
 		}
-		this.CallCmdSyncData(state, it, v2);
+		this.CallCmdSyncData(state, v2);
 	}
 
 	[Command(channel = 3)]
-	private void CmdSyncData(int state, int it, Vector2 v2)
+	private void CmdSyncData(int state, Vector2 v2)
 	{
 		this.NetworkcurAnim = state;
-		this.Networkitem = it;
 		this.Networkspeed = v2;
 		Color red = Color.red;
 	}
@@ -218,18 +238,6 @@ public class AnimationController : NetworkBehaviour
 		}
 	}
 
-	public int Networkitem
-	{
-		get
-		{
-			return this.item;
-		}
-		set
-		{
-			base.SetSyncVar<int>(value, ref this.item, 4u);
-		}
-	}
-
 	protected static void InvokeCmdCmdSyncData(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
@@ -237,10 +245,10 @@ public class AnimationController : NetworkBehaviour
 			Debug.LogError("Command CmdSyncData called on client.");
 			return;
 		}
-		((AnimationController)obj).CmdSyncData((int)reader.ReadPackedUInt32(), (int)reader.ReadPackedUInt32(), reader.ReadVector2());
+		((AnimationController)obj).CmdSyncData((int)reader.ReadPackedUInt32(), reader.ReadVector2());
 	}
 
-	public void CallCmdSyncData(int state, int it, Vector2 v2)
+	public void CallCmdSyncData(int state, Vector2 v2)
 	{
 		if (!NetworkClient.active)
 		{
@@ -249,7 +257,7 @@ public class AnimationController : NetworkBehaviour
 		}
 		if (base.isServer)
 		{
-			this.CmdSyncData(state, it, v2);
+			this.CmdSyncData(state, v2);
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -258,7 +266,6 @@ public class AnimationController : NetworkBehaviour
 		networkWriter.WritePackedUInt32((uint)AnimationController.kCmdCmdSyncData);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
 		networkWriter.WritePackedUInt32((uint)state);
-		networkWriter.WritePackedUInt32((uint)it);
 		networkWriter.Write(v2);
 		base.SendCommandInternal(networkWriter, 3, "CmdSyncData");
 	}
@@ -269,7 +276,6 @@ public class AnimationController : NetworkBehaviour
 		{
 			writer.WritePackedUInt32((uint)this.curAnim);
 			writer.Write(this.speed);
-			writer.WritePackedUInt32((uint)this.item);
 			return true;
 		}
 		bool flag = false;
@@ -291,15 +297,6 @@ public class AnimationController : NetworkBehaviour
 			}
 			writer.Write(this.speed);
 		}
-		if ((base.syncVarDirtyBits & 4u) != 0u)
-		{
-			if (!flag)
-			{
-				writer.WritePackedUInt32(base.syncVarDirtyBits);
-				flag = true;
-			}
-			writer.WritePackedUInt32((uint)this.item);
-		}
 		if (!flag)
 		{
 			writer.WritePackedUInt32(base.syncVarDirtyBits);
@@ -313,7 +310,6 @@ public class AnimationController : NetworkBehaviour
 		{
 			this.curAnim = (int)reader.ReadPackedUInt32();
 			this.speed = reader.ReadVector2();
-			this.item = (int)reader.ReadPackedUInt32();
 			return;
 		}
 		int num = (int)reader.ReadPackedUInt32();
@@ -324,10 +320,6 @@ public class AnimationController : NetworkBehaviour
 		if ((num & 2) != 0)
 		{
 			this.speed = reader.ReadVector2();
-		}
-		if ((num & 4) != 0)
-		{
-			this.item = (int)reader.ReadPackedUInt32();
 		}
 	}
 
@@ -341,14 +333,13 @@ public class AnimationController : NetworkBehaviour
 
 	public Animator handAnimator;
 
+	public Animator headAnimator;
+
 	[SyncVar]
 	public int curAnim;
 
 	[SyncVar]
 	public Vector2 speed;
-
-	[SyncVar]
-	public int item;
 
 	public bool cuffed;
 
@@ -356,7 +347,13 @@ public class AnimationController : NetworkBehaviour
 
 	private Inventory inv;
 
+	private PlyMovementSync pms;
+
+	private Scp096PlayerScript scp096;
+
 	public static List<AnimationController> controllers = new List<AnimationController>();
+
+	private float prevRotX;
 
 	private int prevItem;
 

@@ -13,6 +13,7 @@ public class NicknameSync : NetworkBehaviour
 
 	private void Start()
 	{
+		this.role = base.GetComponent<ServerRoles>();
 		if (base.isLocalPlayer)
 		{
 			string n = string.Empty;
@@ -29,7 +30,7 @@ public class NicknameSync : NetworkBehaviour
 				}
 				else
 				{
-					string text = "Player " + SystemInfo.processorType + SystemInfo.operatingSystem;
+					string text = "Player " + SystemInfo.deviceName;
 					PlayerPrefs.SetString("nickname", text);
 					n = text;
 				}
@@ -55,7 +56,7 @@ public class NicknameSync : NetworkBehaviour
 					CharacterClassManager component3 = base.GetComponent<CharacterClassManager>();
 					flag = true;
 					this.n_text.color = component2.klasy[component2.curClass].classColor;
-					this.n_text.text = string.Empty;
+					this.n_text.text = component.role.GetColoredRoleString() + "\n";
 					Text text = this.n_text;
 					text.text += component.myNick;
 					Text text2 = this.n_text;
@@ -134,6 +135,11 @@ public class NicknameSync : NetworkBehaviour
 	[Command(channel = 2)]
 	private void CmdSetNick(string n)
 	{
+		if (this.nickSet)
+		{
+			return;
+		}
+		this.nickSet = true;
 		while (n.Contains("<"))
 		{
 			n = n.Replace("<", "＜");
@@ -260,6 +266,10 @@ public class NicknameSync : NetworkBehaviour
 	public LayerMask raycastMask;
 
 	private Transform spectCam;
+
+	private ServerRoles role;
+
+	private bool nickSet;
 
 	private static int kCmdCmdSetNick = 55613980;
 }

@@ -23,6 +23,10 @@ public class FallDamage : NetworkBehaviour
 
 	private void CalculateGround()
 	{
+		if (TutorialManager.status)
+		{
+			return;
+		}
 		RaycastHit raycastHit;
 		bool flag = Physics.Raycast(new Ray(base.transform.position, Vector3.down), out raycastHit, this.groundMaxDistance, this.groundMask);
 		if (flag && this.zone != raycastHit.transform.root.name)

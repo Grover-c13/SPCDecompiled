@@ -22,8 +22,8 @@ namespace TMPro.Examples
 
 		public bool ShowTextBounds;
 
-		[Space(10f)]
 		[TextArea(2, 2)]
+		[Space(10f)]
 		public string ObjectStats;
 
 		private TMP_Text m_TextComponent;

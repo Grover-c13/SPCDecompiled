@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	[BaseTypeRequired(typeof(Attribute))]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	internal sealed class BaseTypeRequiredAttribute : Attribute
 	{
 		public BaseTypeRequiredAttribute([NotNull] Type baseType)

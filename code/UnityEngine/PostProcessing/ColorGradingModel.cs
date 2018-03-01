@@ -142,8 +142,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Adjusts the overall exposure of the scene in EV units. This is applied after HDR effect and right before tonemapping so it won't affect previous effects in the chain.")]
 			public float postExposure;
 
-			[Range(-100f, 100f)]
 			[Tooltip("Sets the white balance to a custom color temperature.")]
+			[Range(-100f, 100f)]
 			public float temperature;
 
 			[Range(-100f, 100f)]
@@ -154,12 +154,12 @@ namespace UnityEngine.PostProcessing
 			[Range(-180f, 180f)]
 			public float hueShift;
 
-			[Tooltip("Pushes the intensity of all colors.")]
 			[Range(0f, 2f)]
+			[Tooltip("Pushes the intensity of all colors.")]
 			public float saturation;
 
-			[Range(0f, 2f)]
 			[Tooltip("Expands or shrinks the overall range of tonal values.")]
+			[Range(0f, 2f)]
 			public float contrast;
 		}
 

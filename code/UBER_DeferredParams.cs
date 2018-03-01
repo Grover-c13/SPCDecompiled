@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[DisallowMultipleComponent]
+[RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
 [AddComponentMenu("UBER/Deferred Params")]
-[RequireComponent(typeof(Camera))]
+[DisallowMultipleComponent]
 public class UBER_DeferredParams : MonoBehaviour
 {
 	public UBER_DeferredParams()
@@ -287,9 +287,9 @@ public class UBER_DeferredParams : MonoBehaviour
 	[Range(0f, 1f)]
 	public float NdotLReduction3;
 
-	[Space]
-	[Header("Translucency setup 4")]
 	[ColorUsage(false)]
+	[Header("Translucency setup 4")]
+	[Space]
 	public Color TranslucencyColor4 = new Color(1f, 1f, 1f, 1f);
 
 	[Tooltip("You can control strength per light using its color alpha (first enable in UBER config file)")]

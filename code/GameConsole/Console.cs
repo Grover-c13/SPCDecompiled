@@ -188,7 +188,7 @@ namespace GameConsole
 							{
 								if (component.availableItems.Length > num)
 								{
-									component.AddItem(num, -4.65664672E+11f);
+									component.AddNewItem(num, -4.65664672E+11f);
 									a = "none";
 								}
 								else

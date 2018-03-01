@@ -231,10 +231,7 @@ public class Scp173PlayerScript : NetworkBehaviour
 	[ClientRpc(channel = 1)]
 	private void RpcSyncAudio()
 	{
-		if (!base.isLocalPlayer)
-		{
-			base.GetComponent<AnimationController>().gunSource.PlayOneShot(this.necksnaps[UnityEngine.Random.Range(0, this.necksnaps.Length)]);
-		}
+		base.GetComponent<AnimationController>().gunSource.PlayOneShot(this.necksnaps[UnityEngine.Random.Range(0, this.necksnaps.Length)]);
 	}
 
 	private void UNetVersion()

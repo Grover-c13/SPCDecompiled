@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using Unity;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -10,9 +10,15 @@ public class Inventory : NetworkBehaviour
 	{
 	}
 
-	private void SyncVerItems(SyncListInt i)
+	public void SetUniq(int i)
 	{
-		this.verifiedItems = i;
+		this.NetworkitemUniq = i;
+	}
+
+	[Command(channel = 2)]
+	public void CmdSetUnic(int i)
+	{
+		this.NetworkitemUniq = i;
 	}
 
 	private void Awake()
@@ -21,7 +27,7 @@ public class Inventory : NetworkBehaviour
 		{
 			this.availableItems[i].id = i;
 		}
-		this.verifiedItems.InitializeBehaviour(this, Inventory.kListverifiedItems);
+		this.items.InitializeBehaviour(this, Inventory.kListitems);
 	}
 
 	private void Log(string msg)
@@ -52,7 +58,7 @@ public class Inventory : NetworkBehaviour
 		this.ac = base.GetComponent<AnimationController>();
 		if (base.isLocalPlayer)
 		{
-			UnityEngine.Object.FindObjectOfType<InventoryDisplay>().localplayer = base.gameObject;
+			UnityEngine.Object.FindObjectOfType<InventoryDisplay>().localplayer = this;
 		}
 	}
 
@@ -78,83 +84,103 @@ public class Inventory : NetworkBehaviour
 			{
 				this.NetworkcurItem = -1;
 			}
-			this.CallCmdSetPickup(this.items[id].id, this.items[id].durability, base.transform.position, this.kamera.transform.rotation, base.transform.rotation);
-			this.items.RemoveAt(id);
+			this.CallCmdDropItem(id, this.items[id].id);
 		}
 	}
 
-	public void DropAll()
+	public void ServerDropAll()
 	{
-		for (int i = 0; i < 20; i++)
+		foreach (Inventory.SyncItemInfo syncItemInfo in this.items)
 		{
-			if (this.items.Count > 0)
-			{
-				this.DropItem(0);
-			}
+			this.SetPickup(syncItemInfo.id, syncItemInfo.durability, base.transform.position, this.kamera.transform.rotation, base.transform.rotation);
 		}
 		AmmoBox component = base.GetComponent<AmmoBox>();
-		for (int j = 0; j < component.types.Length; j++)
+		for (int i = 0; i < 3; i++)
 		{
-			if (component.types[j].quantity > 0)
+			if (component.GetAmmo(i) != 0)
 			{
-				this.CallCmdSetPickup(component.types[j].inventoryID, (float)component.types[j].quantity, base.transform.position, this.kamera.transform.rotation, base.transform.rotation);
-				component.types[j].quantity = 0;
+				this.SetPickup(component.types[i].inventoryID, (float)component.GetAmmo(i), base.transform.position, this.kamera.transform.rotation, base.transform.rotation);
 			}
+		}
+		this.items.Clear();
+		component.Networkamount = "0:0:0";
+	}
+
+	public int GetItemIndex()
+	{
+		int num = 0;
+		foreach (Inventory.SyncItemInfo syncItemInfo in this.items)
+		{
+			if (this.itemUniq == syncItemInfo.uniq)
+			{
+				return num;
+			}
+			num++;
+		}
+		return -1;
+	}
+
+	public void AddNewItem(int id, float dur = -4.65664672E+11f)
+	{
+		Inventory.uniqid++;
+		if (TutorialManager.status)
+		{
+			PickupTrigger[] array = UnityEngine.Object.FindObjectsOfType<PickupTrigger>();
+			PickupTrigger pickupTrigger = null;
+			foreach (PickupTrigger pickupTrigger2 in array)
+			{
+				if ((pickupTrigger2.filter == -1 || pickupTrigger2.filter == id) && (pickupTrigger == null || pickupTrigger2.prioirty < pickupTrigger.prioirty))
+				{
+					pickupTrigger = pickupTrigger2;
+				}
+			}
+			try
+			{
+				if (pickupTrigger != null)
+				{
+					pickupTrigger.Trigger(id);
+				}
+			}
+			catch
+			{
+				MonoBehaviour.print("Error");
+			}
+		}
+		Item item = new Item(this.availableItems[id]);
+		if (this.items.Count < 8 || item.noEquipable)
+		{
+			if (dur != -4.65664672E+11f)
+			{
+				item.durability = dur;
+			}
+			this.items.Add(new Inventory.SyncItemInfo
+			{
+				id = item.id,
+				durability = item.durability,
+				uniq = Inventory.uniqid
+			});
 		}
 	}
 
-	public void AddItem(int id, float dur = -4.65664672E+11f)
+	[Command(channel = 3)]
+	private void CmdSyncItem(int i)
 	{
-		if (base.isLocalPlayer)
+		foreach (Inventory.SyncItemInfo syncItemInfo in this.items)
 		{
-			if (TutorialManager.status)
+			if (syncItemInfo.id == i)
 			{
-				PickupTrigger[] array = UnityEngine.Object.FindObjectsOfType<PickupTrigger>();
-				PickupTrigger pickupTrigger = null;
-				foreach (PickupTrigger pickupTrigger2 in array)
-				{
-					if ((pickupTrigger2.filter == -1 || pickupTrigger2.filter == id) && (pickupTrigger == null || pickupTrigger2.prioirty < pickupTrigger.prioirty))
-					{
-						pickupTrigger = pickupTrigger2;
-					}
-				}
-				try
-				{
-					if (pickupTrigger != null)
-					{
-						pickupTrigger.Trigger(id);
-					}
-				}
-				catch
-				{
-					MonoBehaviour.print("Error");
-				}
-			}
-			Item item = new Item(this.availableItems[id]);
-			if (base.GetComponent<Inventory>().items.Count < 8 || item.noEquipable)
-			{
-				if (dur != -4.65664672E+11f)
-				{
-					item.durability = dur;
-				}
-				this.items.Add(item);
-			}
-			else
-			{
-				base.GetComponent<Searching>().ShowErrorMessage();
+				this.NetworkcurItem = i;
+				return;
 			}
 		}
+		this.NetworkcurItem = -1;
 	}
 
 	private void Update()
 	{
-		if (TutorialManager.status && !base.isLocalPlayer)
-		{
-			this.ac.SyncItem(this.curItem);
-		}
 		if (base.isLocalPlayer)
 		{
-			this.ac.SyncItem(this.curItem);
+			this.CallCmdSyncItem(this.curItem);
 			int num = Mathf.Clamp(this.curItem, 0, this.availableItems.Length - 1);
 			if (this.ccm.curClass >= 0 && this.ccm.klasy[this.ccm.curClass].forcedCrosshair != -1)
 			{
@@ -171,7 +197,16 @@ public class Inventory : NetworkBehaviour
 	}
 
 	[Command(channel = 2)]
-	public void CmdSetPickup(int dropedItemID, float dur, Vector3 pos, Quaternion camRot, Quaternion myRot)
+	private void CmdDropItem(int itemInventoryIndex, int itemId)
+	{
+		if (this.items[itemInventoryIndex].id == itemId)
+		{
+			this.SetPickup(this.items[itemInventoryIndex].id, this.items[itemInventoryIndex].durability, base.transform.position, this.kamera.transform.rotation, base.transform.rotation);
+			this.items.RemoveAt(itemInventoryIndex);
+		}
+	}
+
+	public void SetPickup(int dropedItemID, float dur, Vector3 pos, Quaternion camRot, Quaternion myRot)
 	{
 		GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.pickupPrefab);
 		NetworkServer.Spawn(gameObject);
@@ -211,56 +246,138 @@ public class Inventory : NetworkBehaviour
 		}
 	}
 
-	protected static void InvokeSyncListverifiedItems(NetworkBehaviour obj, NetworkReader reader)
+	public int NetworkitemUniq
+	{
+		get
+		{
+			return this.itemUniq;
+		}
+		set
+		{
+			uint dirtyBit = 4u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetUniq(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.itemUniq, dirtyBit);
+		}
+	}
+
+	protected static void InvokeSyncListitems(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("SyncList verifiedItems called on server.");
+			Debug.LogError("SyncList items called on server.");
 			return;
 		}
-		((Inventory)obj).verifiedItems.HandleMsg(reader);
+		((Inventory)obj).items.HandleMsg(reader);
 	}
 
-	protected static void InvokeCmdCmdSetPickup(NetworkBehaviour obj, NetworkReader reader)
+	protected static void InvokeCmdCmdSetUnic(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
 		{
-			Debug.LogError("Command CmdSetPickup called on client.");
+			Debug.LogError("Command CmdSetUnic called on client.");
 			return;
 		}
-		((Inventory)obj).CmdSetPickup((int)reader.ReadPackedUInt32(), reader.ReadSingle(), reader.ReadVector3(), reader.ReadQuaternion(), reader.ReadQuaternion());
+		((Inventory)obj).CmdSetUnic((int)reader.ReadPackedUInt32());
 	}
 
-	public void CallCmdSetPickup(int dropedItemID, float dur, Vector3 pos, Quaternion camRot, Quaternion myRot)
+	protected static void InvokeCmdCmdSyncItem(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			Debug.LogError("Command CmdSyncItem called on client.");
+			return;
+		}
+		((Inventory)obj).CmdSyncItem((int)reader.ReadPackedUInt32());
+	}
+
+	protected static void InvokeCmdCmdDropItem(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			Debug.LogError("Command CmdDropItem called on client.");
+			return;
+		}
+		((Inventory)obj).CmdDropItem((int)reader.ReadPackedUInt32(), (int)reader.ReadPackedUInt32());
+	}
+
+	public void CallCmdSetUnic(int i)
 	{
 		if (!NetworkClient.active)
 		{
-			Debug.LogError("Command function CmdSetPickup called on server.");
+			Debug.LogError("Command function CmdSetUnic called on server.");
 			return;
 		}
 		if (base.isServer)
 		{
-			this.CmdSetPickup(dropedItemID, dur, pos, camRot, myRot);
+			this.CmdSetUnic(i);
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
 		networkWriter.Write(0);
 		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)Inventory.kCmdCmdSetPickup);
+		networkWriter.WritePackedUInt32((uint)Inventory.kCmdCmdSetUnic);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.WritePackedUInt32((uint)dropedItemID);
-		networkWriter.Write(dur);
-		networkWriter.Write(pos);
-		networkWriter.Write(camRot);
-		networkWriter.Write(myRot);
-		base.SendCommandInternal(networkWriter, 2, "CmdSetPickup");
+		networkWriter.WritePackedUInt32((uint)i);
+		base.SendCommandInternal(networkWriter, 2, "CmdSetUnic");
+	}
+
+	public void CallCmdSyncItem(int i)
+	{
+		if (!NetworkClient.active)
+		{
+			Debug.LogError("Command function CmdSyncItem called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdSyncItem(i);
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)Inventory.kCmdCmdSyncItem);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		networkWriter.WritePackedUInt32((uint)i);
+		base.SendCommandInternal(networkWriter, 3, "CmdSyncItem");
+	}
+
+	public void CallCmdDropItem(int itemInventoryIndex, int itemId)
+	{
+		if (!NetworkClient.active)
+		{
+			Debug.LogError("Command function CmdDropItem called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdDropItem(itemInventoryIndex, itemId);
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)Inventory.kCmdCmdDropItem);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		networkWriter.WritePackedUInt32((uint)itemInventoryIndex);
+		networkWriter.WritePackedUInt32((uint)itemId);
+		base.SendCommandInternal(networkWriter, 2, "CmdDropItem");
 	}
 
 	static Inventory()
 	{
-		NetworkBehaviour.RegisterCommandDelegate(typeof(Inventory), Inventory.kCmdCmdSetPickup, new NetworkBehaviour.CmdDelegate(Inventory.InvokeCmdCmdSetPickup));
-		Inventory.kListverifiedItems = -1745481958;
-		NetworkBehaviour.RegisterSyncListDelegate(typeof(Inventory), Inventory.kListverifiedItems, new NetworkBehaviour.CmdDelegate(Inventory.InvokeSyncListverifiedItems));
+		NetworkBehaviour.RegisterCommandDelegate(typeof(Inventory), Inventory.kCmdCmdSetUnic, new NetworkBehaviour.CmdDelegate(Inventory.InvokeCmdCmdSetUnic));
+		Inventory.kCmdCmdSyncItem = 2140153578;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(Inventory), Inventory.kCmdCmdSyncItem, new NetworkBehaviour.CmdDelegate(Inventory.InvokeCmdCmdSyncItem));
+		Inventory.kCmdCmdDropItem = -109121218;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(Inventory), Inventory.kCmdCmdDropItem, new NetworkBehaviour.CmdDelegate(Inventory.InvokeCmdCmdDropItem));
+		Inventory.kListitems = 1683194626;
+		NetworkBehaviour.RegisterSyncListDelegate(typeof(Inventory), Inventory.kListitems, new NetworkBehaviour.CmdDelegate(Inventory.InvokeSyncListitems));
 		NetworkCRC.RegisterBehaviour("Inventory", 0);
 	}
 
@@ -268,8 +385,9 @@ public class Inventory : NetworkBehaviour
 	{
 		if (forceAll)
 		{
-			SyncListInt.WriteInstance(writer, this.verifiedItems);
+			GeneratedNetworkCode._WriteStructSyncListItemInfo_Inventory(writer, this.items);
 			writer.WritePackedUInt32((uint)this.curItem);
+			writer.WritePackedUInt32((uint)this.itemUniq);
 			return true;
 		}
 		bool flag = false;
@@ -280,7 +398,7 @@ public class Inventory : NetworkBehaviour
 				writer.WritePackedUInt32(base.syncVarDirtyBits);
 				flag = true;
 			}
-			SyncListInt.WriteInstance(writer, this.verifiedItems);
+			GeneratedNetworkCode._WriteStructSyncListItemInfo_Inventory(writer, this.items);
 		}
 		if ((base.syncVarDirtyBits & 2u) != 0u)
 		{
@@ -290,6 +408,15 @@ public class Inventory : NetworkBehaviour
 				flag = true;
 			}
 			writer.WritePackedUInt32((uint)this.curItem);
+		}
+		if ((base.syncVarDirtyBits & 4u) != 0u)
+		{
+			if (!flag)
+			{
+				writer.WritePackedUInt32(base.syncVarDirtyBits);
+				flag = true;
+			}
+			writer.WritePackedUInt32((uint)this.itemUniq);
 		}
 		if (!flag)
 		{
@@ -302,27 +429,29 @@ public class Inventory : NetworkBehaviour
 	{
 		if (initialState)
 		{
-			SyncListInt.ReadReference(reader, this.verifiedItems);
+			GeneratedNetworkCode._ReadStructSyncListItemInfo_Inventory(reader, this.items);
 			this.curItem = (int)reader.ReadPackedUInt32();
+			this.itemUniq = (int)reader.ReadPackedUInt32();
 			return;
 		}
 		int num = (int)reader.ReadPackedUInt32();
 		if ((num & 1) != 0)
 		{
-			SyncListInt.ReadReference(reader, this.verifiedItems);
+			GeneratedNetworkCode._ReadStructSyncListItemInfo_Inventory(reader, this.items);
 		}
 		if ((num & 2) != 0)
 		{
 			this.SetCurItem((int)reader.ReadPackedUInt32());
 		}
+		if ((num & 4) != 0)
+		{
+			this.SetUniq((int)reader.ReadPackedUInt32());
+		}
 	}
 
+	public Inventory.SyncListItemInfo items = new Inventory.SyncListItemInfo();
+
 	public Item[] availableItems;
-
-	public List<Item> items = new List<Item>();
-
-	[SyncVar(hook = "SyncVerItems")]
-	public SyncListInt verifiedItems = new SyncListInt();
 
 	private AnimationController ac;
 
@@ -331,7 +460,8 @@ public class Inventory : NetworkBehaviour
 
 	public GameObject kamera;
 
-	public Item localInventoryItem;
+	[SyncVar(hook = "SetUniq")]
+	public int itemUniq;
 
 	public GameObject pickupPrefab;
 
@@ -339,9 +469,56 @@ public class Inventory : NetworkBehaviour
 
 	private CharacterClassManager ccm;
 
+	private static int uniqid;
+
 	private int prevIt = -10;
 
-	private static int kListverifiedItems;
+	private static int kListitems;
 
-	private static int kCmdCmdSetPickup = 1938936418;
+	private static int kCmdCmdSetUnic = 1995465433;
+
+	private static int kCmdCmdSyncItem;
+
+	private static int kCmdCmdDropItem;
+
+	[Serializable]
+	public struct SyncItemInfo
+	{
+		public int id;
+
+		public float durability;
+
+		public int uniq;
+	}
+
+	public class SyncListItemInfo : SyncListStruct<Inventory.SyncItemInfo>
+	{
+		public SyncListItemInfo()
+		{
+		}
+
+		public void ModifyDuration(int index, float value)
+		{
+			Inventory.SyncItemInfo value2 = base[index];
+			value2.durability = value;
+			base[index] = value2;
+		}
+
+		public override void SerializeItem(NetworkWriter writer, Inventory.SyncItemInfo item)
+		{
+			writer.WritePackedUInt32((uint)item.id);
+			writer.Write(item.durability);
+			writer.WritePackedUInt32((uint)item.uniq);
+		}
+
+		public override Inventory.SyncItemInfo DeserializeItem(NetworkReader reader)
+		{
+			return new Inventory.SyncItemInfo
+			{
+				id = (int)reader.ReadPackedUInt32(),
+				durability = reader.ReadSingle(),
+				uniq = (int)reader.ReadPackedUInt32()
+			};
+		}
+	}
 }

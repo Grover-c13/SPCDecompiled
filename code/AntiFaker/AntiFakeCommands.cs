@@ -16,6 +16,8 @@ namespace AntiFaker
 
 		private void Start()
 		{
+			this.scp173 = base.GetComponent<Scp173PlayerScript>();
+			this.scp096 = base.GetComponent<Scp096PlayerScript>();
 			if (TutorialManager.status)
 			{
 				return;
@@ -41,13 +43,17 @@ namespace AntiFaker
 			float num = 0f;
 			if (this.ccm.curClass == 0)
 			{
-				num = base.GetComponent<Scp173PlayerScript>().boost_teleportDistance.Evaluate(base.GetComponent<PlayerStats>().GetHealthPercent()) * 2f;
+				num = this.scp173.boost_teleportDistance.Evaluate(base.GetComponent<PlayerStats>().GetHealthPercent()) * 2f;
 			}
 			else if (this.ccm.curClass > 0)
 			{
 				num = this.ccm.klasy[this.ccm.curClass].runSpeed;
 			}
-			if (this.distanceTraveled < num * 1.3f || this.SpeedhackJustification(pos))
+			if (this.ccm.curClass == 9 && this.scp096.enraged == Scp096PlayerScript.RageState.Enraged)
+			{
+				num *= 4.9f;
+			}
+			if (this.distanceTraveled < num * 1.3f || this.SpeedhackJustification(pos) || (base.isLocalPlayer && base.isServer))
 			{
 				this.prevPos = pos;
 				return true;
@@ -76,6 +82,34 @@ namespace AntiFaker
 			{
 				if (Vector3.Distance(pos, transform.position) < 10f)
 				{
+					if (transform.tag == "SP_CDP" && curClass != 1)
+					{
+						return false;
+					}
+					if (transform.tag == "SP_173" && curClass != 0)
+					{
+						return false;
+					}
+					if (transform.tag == "SP_106" && curClass != 3)
+					{
+						return false;
+					}
+					if (transform.tag == "SP_049" && curClass != 5)
+					{
+						return false;
+					}
+					if (transform.tag == "SP_MTF" && this.ccm.klasy[curClass].team != Team.MTF)
+					{
+						return false;
+					}
+					if (transform.tag == "SP_RSC" && curClass != 6)
+					{
+						return false;
+					}
+					if (transform.tag == "SP_CI" && curClass != 8)
+					{
+						return false;
+					}
 					return true;
 				}
 			}
@@ -95,6 +129,7 @@ namespace AntiFaker
 			this.AddTypeToList("SP_MTF");
 			this.AddTypeToList("SP_RSC");
 			this.AddTypeToList("SP_079");
+			this.AddTypeToList("SCP_096");
 			this.AddTypeToList("PD_EXIT");
 			this.AddTypeToList("SP_CI");
 			this.AddTypeToList("LiftTarget");
@@ -131,6 +166,10 @@ namespace AntiFaker
 		private static List<Transform> allowedTeleportPositions = new List<Transform>();
 
 		private static AntiFakeCommands host;
+
+		private Scp173PlayerScript scp173;
+
+		private Scp096PlayerScript scp096;
 
 		private PlyMovementSync pms;
 

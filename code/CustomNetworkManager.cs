@@ -101,6 +101,12 @@ public class CustomNetworkManager : NetworkManager
 		}
 	}
 
+	public override void OnClientConnect(NetworkConnection conn)
+	{
+		base.OnClientConnect(conn);
+		base.GetComponent<StaffLogin>().UpdateServer();
+	}
+
 	private void Start()
 	{
 		this.console = GameConsole.Console.singleton;

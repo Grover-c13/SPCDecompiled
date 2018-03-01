@@ -76,9 +76,12 @@ public class MainMenuScript : MonoBehaviour
 
 	public void Connect()
 	{
-		NetworkServer.Reset();
-		this.mng.ShowLog(13);
-		this.mng.StartClient();
+		if (!CrashDetector.Show())
+		{
+			NetworkServer.Reset();
+			this.mng.ShowLog(13);
+			this.mng.StartClient();
+		}
 	}
 
 	public GameObject[] submenus;

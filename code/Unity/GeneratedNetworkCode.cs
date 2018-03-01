@@ -11,6 +11,26 @@ namespace Unity
 		{
 		}
 
+		public static void _ReadStructSyncListItemInfo_Inventory(NetworkReader reader, Inventory.SyncListItemInfo instance)
+		{
+			ushort num = reader.ReadUInt16();
+			instance.Clear();
+			for (ushort num2 = 0; num2 < num; num2 += 1)
+			{
+				instance.AddInternal(instance.DeserializeItem(reader));
+			}
+		}
+
+		public static void _WriteStructSyncListItemInfo_Inventory(NetworkWriter writer, Inventory.SyncListItemInfo value)
+		{
+			ushort count = value.Count;
+			writer.Write(count);
+			for (ushort num = 0; num < count; num += 1)
+			{
+				value.SerializeItem(writer, value.GetItem((int)num));
+			}
+		}
+
 		public static GrenadeManager.GrenadeSpawnInfo _ReadGrenadeSpawnInfo_GrenadeManager(NetworkReader reader)
 		{
 			return new GrenadeManager.GrenadeSpawnInfo

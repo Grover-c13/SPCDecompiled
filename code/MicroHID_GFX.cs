@@ -22,11 +22,10 @@ public class MicroHID_GFX : NetworkBehaviour
 
 	private void Update()
 	{
-		if (base.isLocalPlayer && Input.GetButtonDown("Fire1") && base.GetComponent<Inventory>().curItem == 16 && !this.onFire && base.GetComponent<WeaponManager>().inventoryCooldown <= 0f && base.GetComponent<Inventory>().localInventoryItem.durability > 0f)
+		if (base.isLocalPlayer && Input.GetButtonDown("Fire1") && base.GetComponent<Inventory>().curItem == 16 && !this.onFire && base.GetComponent<WeaponManager>().inventoryCooldown <= 0f && base.GetComponent<Inventory>().items[base.GetComponent<Inventory>().GetItemIndex()].durability > 0f)
 		{
 			this.onFire = true;
-			base.GetComponent<Inventory>().localInventoryItem.durability = 0f;
-			this.CallCmdDoAnimation("Shoot");
+			this.CallCmdUse();
 			base.StartCoroutine(this.PlayAnimation());
 		}
 	}
@@ -77,25 +76,33 @@ public class MicroHID_GFX : NetworkBehaviour
 	[Command(channel = 11)]
 	private void CmdHurtPlayersInRange(GameObject ply)
 	{
-		if (base.GetComponent<AnimationController>().item == 16 && Vector3.Distance(base.GetComponent<PlyMovementSync>().position, ply.transform.position) < this.range && base.GetComponent<WeaponManager>().GetShootPermission(ply.GetComponent<CharacterClassManager>()))
+		if (base.GetComponent<Inventory>().curItem == 16 && Vector3.Distance(base.GetComponent<PlyMovementSync>().position, ply.transform.position) < this.range && base.GetComponent<WeaponManager>().GetShootPermission(ply.GetComponent<CharacterClassManager>()))
 		{
 			base.GetComponent<PlayerStats>().HurtPlayer(new PlayerStats.HitInfo((float)UnityEngine.Random.Range(200, 300), string.Empty, "TESLA"), ply);
 		}
 	}
 
-	[Command(channel = 1)]
-	private void CmdDoAnimation(string triggername)
+	[Command(channel = 2)]
+	private void CmdUse()
 	{
-		this.CallRpcSyncAnim(triggername);
+		Inventory component = base.GetComponent<Inventory>();
+		for (int i = 0; i < (int)component.items.Count; i++)
+		{
+			if (component.items[i].id == 16)
+			{
+				component.items.ModifyDuration(i, 0f);
+			}
+		}
+		this.CallRpcSyncAnim();
 	}
 
 	[ClientRpc(channel = 1)]
-	private void RpcSyncAnim(string triggername)
+	private void RpcSyncAnim()
 	{
 		if (!base.isLocalPlayer)
 		{
 			base.GetComponent<AnimationController>().PlaySound("HID_Shoot", true);
-			base.GetComponent<AnimationController>().DoAnimation(triggername);
+			base.GetComponent<AnimationController>().DoAnimation("Shoot");
 		}
 	}
 
@@ -128,14 +135,14 @@ public class MicroHID_GFX : NetworkBehaviour
 		((MicroHID_GFX)obj).CmdHurtPlayersInRange(reader.ReadGameObject());
 	}
 
-	protected static void InvokeCmdCmdDoAnimation(NetworkBehaviour obj, NetworkReader reader)
+	protected static void InvokeCmdCmdUse(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdDoAnimation called on client.");
+			UnityEngine.Debug.LogError("Command CmdUse called on client.");
 			return;
 		}
-		((MicroHID_GFX)obj).CmdDoAnimation(reader.ReadString());
+		((MicroHID_GFX)obj).CmdUse();
 	}
 
 	public void CallCmdHurtPlayersInRange(GameObject ply)
@@ -159,25 +166,24 @@ public class MicroHID_GFX : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 11, "CmdHurtPlayersInRange");
 	}
 
-	public void CallCmdDoAnimation(string triggername)
+	public void CallCmdUse()
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdDoAnimation called on server.");
+			UnityEngine.Debug.LogError("Command function CmdUse called on server.");
 			return;
 		}
 		if (base.isServer)
 		{
-			this.CmdDoAnimation(triggername);
+			this.CmdUse();
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
 		networkWriter.Write(0);
 		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)MicroHID_GFX.kCmdCmdDoAnimation);
+		networkWriter.WritePackedUInt32((uint)MicroHID_GFX.kCmdCmdUse);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(triggername);
-		base.SendCommandInternal(networkWriter, 1, "CmdDoAnimation");
+		base.SendCommandInternal(networkWriter, 2, "CmdUse");
 	}
 
 	protected static void InvokeRpcRpcSyncAnim(NetworkBehaviour obj, NetworkReader reader)
@@ -187,10 +193,10 @@ public class MicroHID_GFX : NetworkBehaviour
 			UnityEngine.Debug.LogError("RPC RpcSyncAnim called on server.");
 			return;
 		}
-		((MicroHID_GFX)obj).RpcSyncAnim(reader.ReadString());
+		((MicroHID_GFX)obj).RpcSyncAnim();
 	}
 
-	public void CallRpcSyncAnim(string triggername)
+	public void CallRpcSyncAnim()
 	{
 		if (!NetworkServer.active)
 		{
@@ -202,15 +208,14 @@ public class MicroHID_GFX : NetworkBehaviour
 		networkWriter.Write((short)((ushort)2));
 		networkWriter.WritePackedUInt32((uint)MicroHID_GFX.kRpcRpcSyncAnim);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(triggername);
 		this.SendRPCInternal(networkWriter, 1, "RpcSyncAnim");
 	}
 
 	static MicroHID_GFX()
 	{
 		NetworkBehaviour.RegisterCommandDelegate(typeof(MicroHID_GFX), MicroHID_GFX.kCmdCmdHurtPlayersInRange, new NetworkBehaviour.CmdDelegate(MicroHID_GFX.InvokeCmdCmdHurtPlayersInRange));
-		MicroHID_GFX.kCmdCmdDoAnimation = 1828045792;
-		NetworkBehaviour.RegisterCommandDelegate(typeof(MicroHID_GFX), MicroHID_GFX.kCmdCmdDoAnimation, new NetworkBehaviour.CmdDelegate(MicroHID_GFX.InvokeCmdCmdDoAnimation));
+		MicroHID_GFX.kCmdCmdUse = -1833499346;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(MicroHID_GFX), MicroHID_GFX.kCmdCmdUse, new NetworkBehaviour.CmdDelegate(MicroHID_GFX.InvokeCmdCmdUse));
 		MicroHID_GFX.kRpcRpcSyncAnim = -572266021;
 		NetworkBehaviour.RegisterRpcDelegate(typeof(MicroHID_GFX), MicroHID_GFX.kRpcRpcSyncAnim, new NetworkBehaviour.CmdDelegate(MicroHID_GFX.InvokeRpcRpcSyncAnim));
 		NetworkCRC.RegisterBehaviour("MicroHID_GFX", 0);
@@ -250,7 +255,7 @@ public class MicroHID_GFX : NetworkBehaviour
 
 	private static int kCmdCmdHurtPlayersInRange = 1650017390;
 
-	private static int kCmdCmdDoAnimation;
+	private static int kCmdCmdUse;
 
 	private static int kRpcRpcSyncAnim;
 

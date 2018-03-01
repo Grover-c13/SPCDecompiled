@@ -67,7 +67,7 @@ public class Searching : NetworkBehaviour
 			if (this.timeToPickUp <= 0f)
 			{
 				this.progressGO.SetActive(false);
-				this.CallCmdPickupItem(this.pickup, base.gameObject);
+				this.CallCmdPickupItem(this.pickup);
 				this.fpc.isSearching = false;
 				this.pickup = null;
 			}
@@ -135,7 +135,7 @@ public class Searching : NetworkBehaviour
 	}
 
 	[Command(channel = 2)]
-	private void CmdPickupItem(GameObject t, GameObject taker)
+	private void CmdPickupItem(GameObject t)
 	{
 		int id = 0;
 		Pickup component = t.GetComponent<Pickup>();
@@ -150,40 +150,38 @@ public class Searching : NetworkBehaviour
 			id = component2.GetItem();
 			component2.SetTaken(true);
 		}
-		this.CallRpcPickupItem(taker, id, (!(t.GetComponent<Pickup>() == null)) ? component.durability : -1f);
-	}
-
-	[ClientRpc(channel = 2)]
-	private void RpcPickupItem(GameObject who, int id, float dur)
-	{
-		if (who == null)
-		{
-			return;
-		}
-		if (who.GetComponent<Locker>() != null && who.GetComponent<Locker>().isTaken)
-		{
-			return;
-		}
-		who.GetComponent<Searching>().AddItem(id, dur);
+		this.AddItem(id, (!(t.GetComponent<Pickup>() == null)) ? component.durability : -1f);
 	}
 
 	public void AddItem(int id, float dur)
 	{
-		if (base.isLocalPlayer)
+		if (id != -1)
 		{
 			if (!this.inv.availableItems[id].noEquipable)
 			{
-				this.inv.AddItem(id, (dur != -1f) ? dur : this.inv.availableItems[id].durability);
+				this.inv.AddNewItem(id, (dur != -1f) ? dur : this.inv.availableItems[id].durability);
 			}
 			else
 			{
-				foreach (AmmoBox.AmmoType ammoType in this.ammobox.types)
+				string[] array = this.ammobox.amount.Split(new char[]
 				{
-					if (ammoType.inventoryID == id)
+					':'
+				});
+				for (int i = 0; i < 3; i++)
+				{
+					if (this.ammobox.types[i].inventoryID == id)
 					{
-						ammoType.quantity += (int)dur;
+						array[i] = ((float)this.ammobox.GetAmmo(i) + dur).ToString();
 					}
 				}
+				this.ammobox.Networkamount = string.Concat(new string[]
+				{
+					array[0],
+					":",
+					array[1],
+					":",
+					array[2]
+				});
 			}
 		}
 	}
@@ -199,10 +197,10 @@ public class Searching : NetworkBehaviour
 			Debug.LogError("Command CmdPickupItem called on client.");
 			return;
 		}
-		((Searching)obj).CmdPickupItem(reader.ReadGameObject(), reader.ReadGameObject());
+		((Searching)obj).CmdPickupItem(reader.ReadGameObject());
 	}
 
-	public void CallCmdPickupItem(GameObject t, GameObject taker)
+	public void CallCmdPickupItem(GameObject t)
 	{
 		if (!NetworkClient.active)
 		{
@@ -211,7 +209,7 @@ public class Searching : NetworkBehaviour
 		}
 		if (base.isServer)
 		{
-			this.CmdPickupItem(t, taker);
+			this.CmdPickupItem(t);
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -220,43 +218,12 @@ public class Searching : NetworkBehaviour
 		networkWriter.WritePackedUInt32((uint)Searching.kCmdCmdPickupItem);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
 		networkWriter.Write(t);
-		networkWriter.Write(taker);
 		base.SendCommandInternal(networkWriter, 2, "CmdPickupItem");
-	}
-
-	protected static void InvokeRpcRpcPickupItem(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkClient.active)
-		{
-			Debug.LogError("RPC RpcPickupItem called on server.");
-			return;
-		}
-		((Searching)obj).RpcPickupItem(reader.ReadGameObject(), (int)reader.ReadPackedUInt32(), reader.ReadSingle());
-	}
-
-	public void CallRpcPickupItem(GameObject who, int id, float dur)
-	{
-		if (!NetworkServer.active)
-		{
-			Debug.LogError("RPC Function RpcPickupItem called on client.");
-			return;
-		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)2));
-		networkWriter.WritePackedUInt32((uint)Searching.kRpcRpcPickupItem);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(who);
-		networkWriter.WritePackedUInt32((uint)id);
-		networkWriter.Write(dur);
-		this.SendRPCInternal(networkWriter, 2, "RpcPickupItem");
 	}
 
 	static Searching()
 	{
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Searching), Searching.kCmdCmdPickupItem, new NetworkBehaviour.CmdDelegate(Searching.InvokeCmdCmdPickupItem));
-		Searching.kRpcRpcPickupItem = -114936833;
-		NetworkBehaviour.RegisterRpcDelegate(typeof(Searching), Searching.kRpcRpcPickupItem, new NetworkBehaviour.CmdDelegate(Searching.InvokeRpcRpcPickupItem));
 		NetworkCRC.RegisterBehaviour("Searching", 0);
 	}
 
@@ -297,6 +264,4 @@ public class Searching : NetworkBehaviour
 	public float rayDistance;
 
 	private static int kCmdCmdPickupItem = 2021286825;
-
-	private static int kRpcRpcPickupItem;
 }

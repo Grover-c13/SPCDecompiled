@@ -41,7 +41,11 @@ public class InventoryDisplay : MonoBehaviour
 		{
 			this.hoveredID = -1;
 		}
-		this.items = this.localplayer.GetComponent<Inventory>().items;
+		this.items.Clear();
+		foreach (Inventory.SyncItemInfo syncItemInfo in this.localplayer.items)
+		{
+			this.items.Add(new Item(this.localplayer.availableItems[syncItemInfo.id]));
+		}
 		if (Input.GetButtonDown("Cancel") || this.isSCP)
 		{
 			this.rootObject.SetActive(false);
@@ -58,12 +62,19 @@ public class InventoryDisplay : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.Mouse1) && this.hoveredID >= 0 && this.rootObject.activeSelf)
 		{
-			this.localplayer.GetComponent<Inventory>().DropItem(this.hoveredID);
+			this.localplayer.DropItem(this.hoveredID);
 		}
 		if (Input.GetKeyDown(KeyCode.Mouse0) && this.rootObject.activeSelf)
 		{
-			this.localplayer.GetComponent<Inventory>().localInventoryItem = ((this.hoveredID < 0) ? null : this.localplayer.GetComponent<Inventory>().items[this.hoveredID]);
-			this.localplayer.GetComponent<Inventory>().NetworkcurItem = ((this.hoveredID < 0) ? this.hoveredID : this.items[this.hoveredID].id);
+			if (this.hoveredID >= 0)
+			{
+				this.localplayer.CallCmdSetUnic(this.localplayer.items[this.hoveredID].uniq);
+			}
+			else
+			{
+				this.localplayer.CallCmdSetUnic(-1);
+			}
+			this.localplayer.NetworkcurItem = ((this.hoveredID < 0) ? this.hoveredID : this.items[this.hoveredID].id);
 			this.localplayer.GetComponent<FirstPersonController>().m_MouseLook.isOpenEq = false;
 			CursorManager.eqOpen = false;
 			this.rootObject.SetActive(false);
@@ -82,7 +93,7 @@ public class InventoryDisplay : MonoBehaviour
 	}
 
 	[HideInInspector]
-	public GameObject localplayer;
+	public Inventory localplayer;
 
 	public GameObject rootObject;
 

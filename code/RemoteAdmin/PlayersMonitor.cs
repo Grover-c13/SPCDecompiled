@@ -89,7 +89,7 @@ namespace RemoteAdmin
 
 		public void Request()
 		{
-			PlayerManager.localPlayer.GetComponent<QueryProcessor>().CallCmdSendQuery("GetPlayers", PasswordHolder.password);
+			PlayerManager.localPlayer.GetComponent<QueryProcessor>().CallCmdSendQuery("GetPlayers");
 		}
 
 		private Ban component_ban;
@@ -108,7 +108,7 @@ namespace RemoteAdmin
 				this.playerInfo = info;
 				this.record = UnityEngine.Object.Instantiate<GameObject>(template, parent.transform).GetComponent<PlayerRecord>();
 				this.record.gameObject.transform.localScale = Vector3.one;
-				this.record.Setup(id, (!(this.playerInfo.instance == null)) ? this.playerInfo.instance.GetComponent<NicknameSync>().myNick : "(unconnected)");
+				this.record.Setup(id, (!(this.playerInfo.instance == null)) ? ("Player: " + this.playerInfo.instance.GetComponent<NicknameSync>().myNick) : "(unconnected)");
 			}
 
 			public void SetSelected(bool b)

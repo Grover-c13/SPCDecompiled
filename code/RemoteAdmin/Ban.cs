@@ -113,7 +113,7 @@ namespace RemoteAdmin
 
 		public void Confirm()
 		{
-			PlayerManager.localPlayer.GetComponent<QueryProcessor>().CallCmdSendQuery(this.command, PasswordHolder.password);
+			PlayerManager.localPlayer.GetComponent<QueryProcessor>().CallCmdSendQuery(this.command);
 			base.StartCoroutine(this.WaitForRespond());
 		}
 

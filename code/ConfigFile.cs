@@ -62,21 +62,31 @@ public class ConfigFile : MonoBehaviour
 		{
 			try
 			{
-				text = text.Remove(0, text.IndexOf(key));
+				while (!text.ToLower().Replace(" ", string.Empty).StartsWith(key.ToLower() + "="))
+				{
+					if (!text.Contains(Environment.NewLine))
+					{
+						return defaultValue;
+					}
+					text = text.Remove(0, text.IndexOf(Environment.NewLine) + Environment.NewLine.Length).TrimStart(new char[]
+					{
+						' '
+					});
+				}
 				text = text.Remove(0, text.IndexOf("=") + 1);
-				text = ConfigFile.RemoveSpacesBefore(text);
-				text = text.Remove(text.IndexOf(";"));
+				text = text.TrimStart(new char[]
+				{
+					' '
+				});
+				return text.Remove(text.IndexOf(";"));
 			}
 			catch
 			{
-				text = defaultValue;
+				return defaultValue;
 			}
+			return defaultValue;
 		}
-		else
-		{
-			text = defaultValue;
-		}
-		return text;
+		return defaultValue;
 	}
 
 	private static string RemoveSpacesBefore(string s)

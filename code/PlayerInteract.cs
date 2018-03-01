@@ -22,38 +22,25 @@ public class PlayerInteract : NetworkBehaviour
 			{
 				this.CallCmdOpenDoor(raycastHit.transform.GetComponentInParent<Door>().gameObject);
 			}
-			else if (raycastHit.transform.CompareTag("914_knob"))
-			{
-				this.CallCmdChange914_State(raycastHit.transform.name);
-			}
-			else if (raycastHit.transform.CompareTag("914_use"))
-			{
-				base.GetComponent<Scp914_Controller>().Refine(raycastHit.transform.name);
-			}
-			else if (raycastHit.transform.CompareTag("Lever"))
-			{
-				this.CallCmdChangeLeverState(GameObject.Find(raycastHit.transform.name + "_Controller"));
-			}
 			else if (raycastHit.transform.CompareTag("AW_Button"))
 			{
 				if (this.inv.curItem != 0)
 				{
-					foreach (string a in this.inv.availableItems[this.inv.curItem].permissions)
+					foreach (string a in this.inv.availableItems[Mathf.Clamp(this.inv.curItem, 0, this.inv.availableItems.Length - 1)].permissions)
 					{
 						if (a == "CONT_LVL_3")
 						{
-							this.CallCmdSwitchAWButton(raycastHit.transform.name);
+							this.CallCmdSwitchAWButton();
 							return;
 						}
 					}
 				}
 				GameObject.Find("Keycard Denied Text").GetComponent<Text>().enabled = true;
 				base.Invoke("DisableDeniedText", 1f);
-				this.CallCmdSwitchAWButton("DENIED");
 			}
 			else if (raycastHit.transform.CompareTag("AW_Detonation"))
 			{
-				if (GameObject.Find("Lever_Alpha_Controller").GetComponent<LeverButton>().GetState())
+				if (AlphaWarheadOutsitePanel.nukeside.enabled && !AlphaWarheadController.host.detonationInProgress)
 				{
 					this.CallCmdDetonateWarhead();
 				}
@@ -62,6 +49,18 @@ public class PlayerInteract : NetworkBehaviour
 					GameObject.Find("Alpha Denied Text").GetComponent<Text>().enabled = true;
 					base.Invoke("DisableAlphaText", 1f);
 				}
+			}
+			else if (raycastHit.transform.CompareTag("AW_Panel"))
+			{
+				this.CallCmdUsePanel(raycastHit.transform.name);
+			}
+			else if (raycastHit.transform.CompareTag("914_use"))
+			{
+				this.CallCmdUse914();
+			}
+			else if (raycastHit.transform.CompareTag("914_knob"))
+			{
+				this.CallCmdChange914knob();
 			}
 			else if (raycastHit.transform.CompareTag("ElevatorButton"))
 			{
@@ -76,27 +75,6 @@ public class PlayerInteract : NetworkBehaviour
 					}
 				}
 			}
-			else if (raycastHit.transform.CompareTag("294"))
-			{
-				Inventory component = base.GetComponent<Inventory>();
-				if (component.curItem == 17)
-				{
-					for (int l = 0; l < component.items.Count; l++)
-					{
-						if (component.items[l].id == 17)
-						{
-							component.items.RemoveAt(l);
-							this.CallCmdUse294(raycastHit.transform.name);
-							component.NetworkcurItem = -1;
-							break;
-						}
-					}
-				}
-				else
-				{
-					HintManager.singleton.AddHint(3);
-				}
-			}
 			else if (raycastHit.transform.CompareTag("FemurBreaker"))
 			{
 				this.CallCmdConatin106();
@@ -105,13 +83,51 @@ public class PlayerInteract : NetworkBehaviour
 	}
 
 	[Command(channel = 4)]
-	private void CmdChange914_State(string label)
+	private void CmdUse914()
 	{
-		GameObject gameObject = GameObject.Find(label);
-		if (this.ChckDis(gameObject.transform.position))
+		if (!Scp914.singleton.working && this.ChckDis(GameObject.FindGameObjectWithTag("914_use").transform.position))
 		{
-			gameObject.GetComponentInParent<Scp914>().IncrementState();
+			this.CallRpcUse914();
 		}
+	}
+
+	[Command(channel = 4)]
+	private void CmdChange914knob()
+	{
+		if (!Scp914.singleton.working && this.ChckDis(GameObject.FindGameObjectWithTag("914_use").transform.position))
+		{
+			Scp914.singleton.ChangeKnobStatus();
+		}
+	}
+
+	[ClientRpc(channel = 4)]
+	private void RpcUse914()
+	{
+		Scp914.singleton.StartRefining();
+	}
+
+	[Command(channel = 4)]
+	private void CmdUsePanel(string n)
+	{
+		AlphaWarheadNukesitePanel nukeside = AlphaWarheadOutsitePanel.nukeside;
+		if (this.ChckDis(nukeside.transform.position))
+		{
+			if (n.Contains("cancel"))
+			{
+				AlphaWarheadController.host.CancelDetonation();
+			}
+			else if (n.Contains("lever") && nukeside.AllowChangeLevelState())
+			{
+				nukeside.Networkenabled = !nukeside.enabled;
+				this.CallRpcLeverSound();
+			}
+		}
+	}
+
+	[ClientRpc(channel = 4)]
+	private void RpcLeverSound()
+	{
+		AlphaWarheadOutsitePanel.nukeside.lever.GetComponent<AudioSource>().Play();
 	}
 
 	[Command(channel = 4)]
@@ -127,16 +143,16 @@ public class PlayerInteract : NetworkBehaviour
 	}
 
 	[Command(channel = 4)]
-	private void CmdSwitchAWButton(string label)
+	private void CmdSwitchAWButton()
 	{
-		GameObject gameObject = GameObject.Find("DetonationController");
+		GameObject gameObject = GameObject.Find("OutsitePanelScript");
 		if (this.ChckDis(gameObject.transform.position))
 		{
-			foreach (string a in this.inv.availableItems[base.GetComponent<AnimationController>().item].permissions)
+			foreach (string a in this.inv.availableItems[this.inv.curItem].permissions)
 			{
 				if (a == "CONT_LVL_3")
 				{
-					gameObject.GetComponentInParent<AlphaWarheadButtonUnlocker>().ChangeButtonStage(label);
+					gameObject.GetComponentInParent<AlphaWarheadOutsitePanel>().SetKeycardState(true);
 					return;
 				}
 			}
@@ -146,9 +162,10 @@ public class PlayerInteract : NetworkBehaviour
 	[Command(channel = 4)]
 	private void CmdDetonateWarhead()
 	{
-		if (this.ChckDis(GameObject.Find("DetonationController").transform.position))
+		GameObject gameObject = GameObject.Find("OutsitePanelScript");
+		if (this.ChckDis(gameObject.transform.position) && AlphaWarheadOutsitePanel.nukeside.enabled && gameObject.GetComponent<AlphaWarheadOutsitePanel>().keycardEntered)
 		{
-			GameObject.Find("Host").GetComponent<AlphaWarheadDetonationController>().StartDetonation();
+			AlphaWarheadController.host.StartDetonation();
 		}
 	}
 
@@ -173,6 +190,12 @@ public class PlayerInteract : NetworkBehaviour
 		}
 		if (flag)
 		{
+			Scp096PlayerScript component2 = base.GetComponent<Scp096PlayerScript>();
+			if (component.destroyedPrefab != null && (!component.isOpen || component.curCooldown > 0f) && component2.iAm096 && component2.enraged == Scp096PlayerScript.RageState.Enraged)
+			{
+				component.DestroyDoor(true);
+				return;
+			}
 			if (component.permissionLevel.ToUpper() == "CHCKPOINT_ACC" && base.GetComponent<CharacterClassManager>().klasy[base.GetComponent<CharacterClassManager>().curClass].team == Team.SCP)
 			{
 				component.ChangeState();
@@ -186,7 +209,7 @@ public class PlayerInteract : NetworkBehaviour
 				}
 				else
 				{
-					foreach (string a in this.inv.availableItems[base.GetComponent<AnimationController>().item].permissions)
+					foreach (string a in this.inv.availableItems[this.inv.curItem].permissions)
 					{
 						if (a == component.permissionLevel)
 						{
@@ -213,16 +236,6 @@ public class PlayerInteract : NetworkBehaviour
 	private bool ChckDis(Vector3 pos)
 	{
 		return TutorialManager.status || Vector3.Distance(base.GetComponent<PlyMovementSync>().position, pos) < this.raycastMaxDistance * 1.5f;
-	}
-
-	[Command(channel = 4)]
-	private void CmdChangeLeverState(GameObject lever)
-	{
-		LeverButton component = lever.GetComponent<LeverButton>();
-		if (this.ChckDis(component.lever.transform.position))
-		{
-			component.Switch();
-		}
 	}
 
 	[Command(channel = 4)]
@@ -269,12 +282,6 @@ public class PlayerInteract : NetworkBehaviour
 		}
 	}
 
-	[Command(channel = 4)]
-	private void CmdUse294(string label)
-	{
-		GameObject.Find(label).GetComponent<Scp294>().Buy();
-	}
-
 	private void Start()
 	{
 		this.inv = base.GetComponent<Inventory>();
@@ -301,14 +308,34 @@ public class PlayerInteract : NetworkBehaviour
 	{
 	}
 
-	protected static void InvokeCmdCmdChange914_State(NetworkBehaviour obj, NetworkReader reader)
+	protected static void InvokeCmdCmdUse914(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdChange914_State called on client.");
+			UnityEngine.Debug.LogError("Command CmdUse914 called on client.");
 			return;
 		}
-		((PlayerInteract)obj).CmdChange914_State(reader.ReadString());
+		((PlayerInteract)obj).CmdUse914();
+	}
+
+	protected static void InvokeCmdCmdChange914knob(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			UnityEngine.Debug.LogError("Command CmdChange914knob called on client.");
+			return;
+		}
+		((PlayerInteract)obj).CmdChange914knob();
+	}
+
+	protected static void InvokeCmdCmdUsePanel(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			UnityEngine.Debug.LogError("Command CmdUsePanel called on client.");
+			return;
+		}
+		((PlayerInteract)obj).CmdUsePanel(reader.ReadString());
 	}
 
 	protected static void InvokeCmdCmdUseElevator(NetworkBehaviour obj, NetworkReader reader)
@@ -328,7 +355,7 @@ public class PlayerInteract : NetworkBehaviour
 			UnityEngine.Debug.LogError("Command CmdSwitchAWButton called on client.");
 			return;
 		}
-		((PlayerInteract)obj).CmdSwitchAWButton(reader.ReadString());
+		((PlayerInteract)obj).CmdSwitchAWButton();
 	}
 
 	protected static void InvokeCmdCmdDetonateWarhead(NetworkBehaviour obj, NetworkReader reader)
@@ -351,16 +378,6 @@ public class PlayerInteract : NetworkBehaviour
 		((PlayerInteract)obj).CmdOpenDoor(reader.ReadGameObject());
 	}
 
-	protected static void InvokeCmdCmdChangeLeverState(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkServer.active)
-		{
-			UnityEngine.Debug.LogError("Command CmdChangeLeverState called on client.");
-			return;
-		}
-		((PlayerInteract)obj).CmdChangeLeverState(reader.ReadGameObject());
-	}
-
 	protected static void InvokeCmdCmdConatin106(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
@@ -371,35 +388,65 @@ public class PlayerInteract : NetworkBehaviour
 		((PlayerInteract)obj).CmdConatin106();
 	}
 
-	protected static void InvokeCmdCmdUse294(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkServer.active)
-		{
-			UnityEngine.Debug.LogError("Command CmdUse294 called on client.");
-			return;
-		}
-		((PlayerInteract)obj).CmdUse294(reader.ReadString());
-	}
-
-	public void CallCmdChange914_State(string label)
+	public void CallCmdUse914()
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdChange914_State called on server.");
+			UnityEngine.Debug.LogError("Command function CmdUse914 called on server.");
 			return;
 		}
 		if (base.isServer)
 		{
-			this.CmdChange914_State(label);
+			this.CmdUse914();
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
 		networkWriter.Write(0);
 		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdChange914_State);
+		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdUse914);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(label);
-		base.SendCommandInternal(networkWriter, 4, "CmdChange914_State");
+		base.SendCommandInternal(networkWriter, 4, "CmdUse914");
+	}
+
+	public void CallCmdChange914knob()
+	{
+		if (!NetworkClient.active)
+		{
+			UnityEngine.Debug.LogError("Command function CmdChange914knob called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdChange914knob();
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdChange914knob);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		base.SendCommandInternal(networkWriter, 4, "CmdChange914knob");
+	}
+
+	public void CallCmdUsePanel(string n)
+	{
+		if (!NetworkClient.active)
+		{
+			UnityEngine.Debug.LogError("Command function CmdUsePanel called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdUsePanel(n);
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdUsePanel);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		networkWriter.Write(n);
+		base.SendCommandInternal(networkWriter, 4, "CmdUsePanel");
 	}
 
 	public void CallCmdUseElevator(GameObject elevator)
@@ -423,7 +470,7 @@ public class PlayerInteract : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 4, "CmdUseElevator");
 	}
 
-	public void CallCmdSwitchAWButton(string label)
+	public void CallCmdSwitchAWButton()
 	{
 		if (!NetworkClient.active)
 		{
@@ -432,7 +479,7 @@ public class PlayerInteract : NetworkBehaviour
 		}
 		if (base.isServer)
 		{
-			this.CmdSwitchAWButton(label);
+			this.CmdSwitchAWButton();
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -440,7 +487,6 @@ public class PlayerInteract : NetworkBehaviour
 		networkWriter.Write((short)((ushort)5));
 		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdSwitchAWButton);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(label);
 		base.SendCommandInternal(networkWriter, 4, "CmdSwitchAWButton");
 	}
 
@@ -485,27 +531,6 @@ public class PlayerInteract : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 14, "CmdOpenDoor");
 	}
 
-	public void CallCmdChangeLeverState(GameObject lever)
-	{
-		if (!NetworkClient.active)
-		{
-			UnityEngine.Debug.LogError("Command function CmdChangeLeverState called on server.");
-			return;
-		}
-		if (base.isServer)
-		{
-			this.CmdChangeLeverState(lever);
-			return;
-		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdChangeLeverState);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(lever);
-		base.SendCommandInternal(networkWriter, 4, "CmdChangeLeverState");
-	}
-
 	public void CallCmdConatin106()
 	{
 		if (!NetworkClient.active)
@@ -526,25 +551,24 @@ public class PlayerInteract : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 4, "CmdConatin106");
 	}
 
-	public void CallCmdUse294(string label)
+	protected static void InvokeRpcRpcUse914(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdUse294 called on server.");
+			UnityEngine.Debug.LogError("RPC RpcUse914 called on server.");
 			return;
 		}
-		if (base.isServer)
+		((PlayerInteract)obj).RpcUse914();
+	}
+
+	protected static void InvokeRpcRpcLeverSound(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkClient.active)
 		{
-			this.CmdUse294(label);
+			UnityEngine.Debug.LogError("RPC RpcLeverSound called on server.");
 			return;
 		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)PlayerInteract.kCmdCmdUse294);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(label);
-		base.SendCommandInternal(networkWriter, 4, "CmdUse294");
+		((PlayerInteract)obj).RpcLeverSound();
 	}
 
 	protected static void InvokeRpcRpcDenied(NetworkBehaviour obj, NetworkReader reader)
@@ -565,6 +589,36 @@ public class PlayerInteract : NetworkBehaviour
 			return;
 		}
 		((PlayerInteract)obj).RpcContain106();
+	}
+
+	public void CallRpcUse914()
+	{
+		if (!NetworkServer.active)
+		{
+			UnityEngine.Debug.LogError("RPC Function RpcUse914 called on client.");
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)2));
+		networkWriter.WritePackedUInt32((uint)PlayerInteract.kRpcRpcUse914);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		this.SendRPCInternal(networkWriter, 4, "RpcUse914");
+	}
+
+	public void CallRpcLeverSound()
+	{
+		if (!NetworkServer.active)
+		{
+			UnityEngine.Debug.LogError("RPC Function RpcLeverSound called on client.");
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)2));
+		networkWriter.WritePackedUInt32((uint)PlayerInteract.kRpcRpcLeverSound);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		this.SendRPCInternal(networkWriter, 4, "RpcLeverSound");
 	}
 
 	public void CallRpcDenied(GameObject door)
@@ -600,7 +654,11 @@ public class PlayerInteract : NetworkBehaviour
 
 	static PlayerInteract()
 	{
-		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdChange914_State, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdChange914_State));
+		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdUse914, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdUse914));
+		PlayerInteract.kCmdCmdChange914knob = -845424245;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdChange914knob, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdChange914knob));
+		PlayerInteract.kCmdCmdUsePanel = 1853207668;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdUsePanel, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdUsePanel));
 		PlayerInteract.kCmdCmdUseElevator = 339400830;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdUseElevator, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdUseElevator));
 		PlayerInteract.kCmdCmdSwitchAWButton = -710673229;
@@ -609,12 +667,12 @@ public class PlayerInteract : NetworkBehaviour
 		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdDetonateWarhead, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdDetonateWarhead));
 		PlayerInteract.kCmdCmdOpenDoor = 1645579471;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdOpenDoor, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdOpenDoor));
-		PlayerInteract.kCmdCmdChangeLeverState = -1161998418;
-		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdChangeLeverState, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdChangeLeverState));
 		PlayerInteract.kCmdCmdConatin106 = 1945901204;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdConatin106, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdConatin106));
-		PlayerInteract.kCmdCmdUse294 = -1419329187;
-		NetworkBehaviour.RegisterCommandDelegate(typeof(PlayerInteract), PlayerInteract.kCmdCmdUse294, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeCmdCmdUse294));
+		PlayerInteract.kRpcRpcUse914 = -637254142;
+		NetworkBehaviour.RegisterRpcDelegate(typeof(PlayerInteract), PlayerInteract.kRpcRpcUse914, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeRpcRpcUse914));
+		PlayerInteract.kRpcRpcLeverSound = -829118990;
+		NetworkBehaviour.RegisterRpcDelegate(typeof(PlayerInteract), PlayerInteract.kRpcRpcLeverSound, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeRpcRpcLeverSound));
 		PlayerInteract.kRpcRpcDenied = -1136563096;
 		NetworkBehaviour.RegisterRpcDelegate(typeof(PlayerInteract), PlayerInteract.kRpcRpcDenied, new NetworkBehaviour.CmdDelegate(PlayerInteract.InvokeRpcRpcDenied));
 		PlayerInteract.kRpcRpcContain106 = -1051575568;
@@ -640,7 +698,15 @@ public class PlayerInteract : NetworkBehaviour
 
 	private Inventory inv;
 
-	private static int kCmdCmdChange914_State = -1072213689;
+	private static int kCmdCmdUse914 = -1419322708;
+
+	private static int kCmdCmdChange914knob;
+
+	private static int kRpcRpcUse914;
+
+	private static int kCmdCmdUsePanel;
+
+	private static int kRpcRpcLeverSound;
 
 	private static int kCmdCmdUseElevator;
 
@@ -652,13 +718,9 @@ public class PlayerInteract : NetworkBehaviour
 
 	private static int kRpcRpcDenied;
 
-	private static int kCmdCmdChangeLeverState;
-
 	private static int kCmdCmdConatin106;
 
 	private static int kRpcRpcContain106;
-
-	private static int kCmdCmdUse294;
 
 	[CompilerGenerated]
 	private sealed class <Kill106>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>

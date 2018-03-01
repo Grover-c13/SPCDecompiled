@@ -45,22 +45,24 @@ public class WeaponManager : NetworkBehaviour
 	private void CalculateCurWeapon()
 	{
 		this.curWeapon = -1;
-		for (int i = 0; i < this.weapons.Length; i++)
+		if (this.inv.items.Count > 0 && this.inv.curItem > 0)
 		{
-			if (this.weapons[i].itemID == ((!base.isLocalPlayer) ? base.GetComponent<AnimationController>().item : this.inv.curItem))
+			for (int i = 0; i < this.weapons.Length; i++)
 			{
-				this.curWeapon = i;
-				this.curItem = this.inv.localInventoryItem;
+				if (this.weapons[i].itemID == this.inv.curItem)
+				{
+					this.curWeapon = i;
+					this.curItem = this.inv.GetItemIndex();
+				}
 			}
 		}
 	}
 
 	private void Shoot()
 	{
-		if (this.curItem.durability > 0f)
+		if (this.curWeapon != -1 && this.curItem != -1 && this.inv.items[this.curItem].durability > 0f)
 		{
 			this.CallCmdDoAnimation("Shoot");
-			this.curItem.durability -= 1f;
 			this.weapons[this.curWeapon].cooldown = 1f / this.weapons[this.curWeapon].fireRate;
 			this.weapons[this.curWeapon].model.SetTrigger("Shoot");
 			this.weapons[this.curWeapon].model.GetComponent<AudioSource>().PlayOneShot(this.weapons[this.curWeapon].shootAudio);
@@ -97,7 +99,7 @@ public class WeaponManager : NetworkBehaviour
 				this.weapons[this.curWeapon].cooldown = 1f / this.weapons[this.curWeapon].fireRate;
 				this.weapons[this.curWeapon].model.GetComponent<AudioSource>().PlayOneShot(this.weapons[this.curWeapon].ammoAudio);
 			}
-			if (TutorialManager.status && this.ammoBox.types[this.weapons[this.curWeapon].ammoType].quantity == 0)
+			if (TutorialManager.status && this.ammoBox.GetAmmo(this.weapons[this.curWeapon].ammoType) == 0)
 			{
 				NoammoTrigger[] array = UnityEngine.Object.FindObjectsOfType<NoammoTrigger>();
 				NoammoTrigger noammoTrigger = null;
@@ -127,6 +129,7 @@ public class WeaponManager : NetworkBehaviour
 		{
 			this.CallRpcSyncAudio(this.weapons[this.curWeapon].shootAudio_aac, false);
 			this.CallRpcSyncAnim("Shoot");
+			Scp096PlayerScript instance = Scp096PlayerScript.instance;
 			this.servercd = 1f / this.weapons[this.curWeapon].fireRate * 0.9f;
 			if (!string.IsNullOrEmpty(hitboxid))
 			{
@@ -156,6 +159,7 @@ public class WeaponManager : NetworkBehaviour
 			{
 				this.CallRpcMakeHole(this.curWeapon, hit_point, Quaternion.FromToRotation(Vector3.up, hit_normal), itemname);
 			}
+			this.inv.items.ModifyDuration(this.curItem, this.inv.items[this.curItem].durability - 1f);
 		}
 		else
 		{
@@ -165,7 +169,7 @@ public class WeaponManager : NetworkBehaviour
 
 	private IEnumerator Reload()
 	{
-		if (this.curItem.durability < (float)this.weapons[this.curWeapon].magSize && this.ammoBox.types[this.weapons[this.curWeapon].ammoType].quantity > 0)
+		if (this.inv.items[this.curItem].durability < (float)this.weapons[this.curWeapon].magSize && this.ammoBox.GetAmmo(this.weapons[this.curWeapon].ammoType) > 0)
 		{
 			if (TutorialManager.status)
 			{
@@ -181,14 +185,36 @@ public class WeaponManager : NetworkBehaviour
 			this.weapons[startWeapon].model.SetBool("Reloading", false);
 			if (startWeapon == this.curWeapon)
 			{
-				while (this.curItem.durability < (float)this.weapons[this.curWeapon].magSize && this.ammoBox.types[this.weapons[this.curWeapon].ammoType].quantity > 0)
-				{
-					this.curItem.durability += 1f;
-					this.ammoBox.types[this.weapons[this.curWeapon].ammoType].quantity--;
-				}
+				this.CallCmdReload(this.weapons[this.curWeapon].ammoType);
 			}
 		}
 		yield break;
+	}
+
+	[Command(channel = 2)]
+	private void CmdReload(int type)
+	{
+		string text = string.Empty;
+		string[] array = this.ammoBox.amount.Split(new char[]
+		{
+			':'
+		});
+		int num = this.ammoBox.GetAmmo(type);
+		while (this.inv.items[this.curItem].durability < (float)this.weapons[this.curWeapon].magSize && num > 0)
+		{
+			num--;
+			this.inv.items.ModifyDuration(this.curItem, this.inv.items[this.curItem].durability + 1f);
+		}
+		array[type] = num.ToString();
+		for (int i = 0; i < 3; i++)
+		{
+			text += array[i];
+			if (i != 2)
+			{
+				text += ":";
+			}
+		}
+		this.ammoBox.Networkamount = text;
 	}
 
 	private void FixedUpdate()
@@ -412,6 +438,8 @@ public class WeaponManager : NetworkBehaviour
 		NetworkBehaviour.RegisterCommandDelegate(typeof(WeaponManager), WeaponManager.kCmdCmdSyncFF, new NetworkBehaviour.CmdDelegate(WeaponManager.InvokeCmdCmdSyncFF));
 		WeaponManager.kCmdCmdShoot = -1101833074;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(WeaponManager), WeaponManager.kCmdCmdShoot, new NetworkBehaviour.CmdDelegate(WeaponManager.InvokeCmdCmdShoot));
+		WeaponManager.kCmdCmdReload = 171423498;
+		NetworkBehaviour.RegisterCommandDelegate(typeof(WeaponManager), WeaponManager.kCmdCmdReload, new NetworkBehaviour.CmdDelegate(WeaponManager.InvokeCmdCmdReload));
 		WeaponManager.kCmdCmdDoAnimation = -349526936;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(WeaponManager), WeaponManager.kCmdCmdDoAnimation, new NetworkBehaviour.CmdDelegate(WeaponManager.InvokeCmdCmdDoAnimation));
 		WeaponManager.kCmdCmdDoAudio = 1725773498;
@@ -466,6 +494,16 @@ public class WeaponManager : NetworkBehaviour
 			return;
 		}
 		((WeaponManager)obj).CmdShoot(reader.ReadString(), reader.ReadGameObject(), reader.ReadVector3(), reader.ReadVector3(), reader.ReadString());
+	}
+
+	protected static void InvokeCmdCmdReload(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			UnityEngine.Debug.LogError("Command CmdReload called on client.");
+			return;
+		}
+		((WeaponManager)obj).CmdReload((int)reader.ReadPackedUInt32());
 	}
 
 	protected static void InvokeCmdCmdDoAnimation(NetworkBehaviour obj, NetworkReader reader)
@@ -532,6 +570,27 @@ public class WeaponManager : NetworkBehaviour
 		networkWriter.Write(hit_normal);
 		networkWriter.Write(itemname);
 		base.SendCommandInternal(networkWriter, 11, "CmdShoot");
+	}
+
+	public void CallCmdReload(int type)
+	{
+		if (!NetworkClient.active)
+		{
+			UnityEngine.Debug.LogError("Command function CmdReload called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdReload(type);
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)WeaponManager.kCmdCmdReload);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		networkWriter.WritePackedUInt32((uint)type);
+		base.SendCommandInternal(networkWriter, 2, "CmdReload");
 	}
 
 	public void CallCmdDoAnimation(string triggername)
@@ -728,7 +787,7 @@ public class WeaponManager : NetworkBehaviour
 
 	public int curWeapon;
 
-	private Item curItem;
+	private int curItem;
 
 	private float timeToZoom;
 
@@ -757,6 +816,8 @@ public class WeaponManager : NetworkBehaviour
 	private static int kCmdCmdSyncFF = 218570252;
 
 	private static int kCmdCmdShoot;
+
+	private static int kCmdCmdReload;
 
 	private static int kRpcRpcMakeHole;
 
@@ -846,7 +907,7 @@ public class WeaponManager : NetworkBehaviour
 			switch (num)
 			{
 			case 0u:
-				if (this.$this.curItem.durability < (float)this.$this.weapons[this.$this.curWeapon].magSize && this.$this.ammoBox.types[this.$this.weapons[this.$this.curWeapon].ammoType].quantity > 0)
+				if (this.$this.inv.items[this.$this.curItem].durability < (float)this.$this.weapons[this.$this.curWeapon].magSize && this.$this.ammoBox.GetAmmo(this.$this.weapons[this.$this.curWeapon].ammoType) > 0)
 				{
 					if (TutorialManager.status)
 					{
@@ -870,11 +931,7 @@ public class WeaponManager : NetworkBehaviour
 				this.$this.weapons[this.<startWeapon>__1].model.SetBool("Reloading", false);
 				if (this.<startWeapon>__1 == this.$this.curWeapon)
 				{
-					while (this.$this.curItem.durability < (float)this.$this.weapons[this.$this.curWeapon].magSize && this.$this.ammoBox.types[this.$this.weapons[this.$this.curWeapon].ammoType].quantity > 0)
-					{
-						this.$this.curItem.durability += 1f;
-						this.$this.ammoBox.types[this.$this.weapons[this.$this.curWeapon].ammoType].quantity--;
-					}
+					this.$this.CallCmdReload(this.$this.weapons[this.$this.curWeapon].ammoType);
 				}
 				break;
 			default:

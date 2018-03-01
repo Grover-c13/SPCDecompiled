@@ -58,6 +58,53 @@ public class Door : NetworkBehaviour
 		this.ForceCooldown(this.cooldown);
 	}
 
+	public void DestroyDoor(bool b)
+	{
+		if (b && this.destroyedPrefab != null)
+		{
+			this.Networkdestroyed = true;
+		}
+		else
+		{
+			this.Networkdestroyed = false;
+		}
+	}
+
+	private void RefreshDestroyAnimation()
+	{
+		foreach (Animator animator in this.parts)
+		{
+			if (animator.gameObject.activeSelf)
+			{
+				animator.gameObject.SetActive(false);
+				GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.destroyedPrefab, animator.transform);
+				gameObject.transform.localPosition = Vector3.zero;
+				gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
+				gameObject.transform.localScale = Vector3.one;
+				gameObject.transform.parent = null;
+				int num = 0;
+				this.destoryedRb = gameObject.GetComponentsInChildren<Rigidbody>();
+				foreach (Rigidbody rigidbody in this.destoryedRb)
+				{
+					rigidbody.transform.localScale *= 0.9f;
+					rigidbody.transform.parent = null;
+					rigidbody.AddForce(((num != 1 && num != 2) ? Vector3.one : (-Vector3.one)) * UnityEngine.Random.Range(3.4f, 5f), ForceMode.VelocityChange);
+					num++;
+				}
+			}
+		}
+		base.Invoke("FreezeRbs", 5f);
+	}
+
+	private void FreezeRbs()
+	{
+		foreach (Rigidbody rigidbody in this.destoryedRb)
+		{
+			rigidbody.isKinematic = true;
+			rigidbody.GetComponent<Collider>().enabled = false;
+		}
+	}
+
 	private IEnumerator Start()
 	{
 		this.SetActiveStatus(0);
@@ -109,7 +156,7 @@ public class Door : NetworkBehaviour
 
 	public void OpenWarhead()
 	{
-		if (this.curCooldown < 0f && !this.moving.moving)
+		if (this.curCooldown < 0f && !this.moving.moving && this.permissionLevel != "CONT_LVL_3" && this.permissionLevel != "UNACCESSIBLE")
 		{
 			this.moving.moving = true;
 			this.SetState(true);
@@ -158,6 +205,14 @@ public class Door : NetworkBehaviour
 
 	private void LateUpdate()
 	{
+		if (this.prevDestroyed != this.destroyed)
+		{
+			GameObject gameObject = GameObject.Find("Host");
+			if (gameObject != null && gameObject.GetComponent<RandomSeedSync>().generated)
+			{
+				this.RefreshDestroyAnimation();
+			}
+		}
 		if (this.curCooldown >= 0f)
 		{
 			this.curCooldown -= Time.deltaTime;
@@ -220,6 +275,25 @@ public class Door : NetworkBehaviour
 		}
 	}
 
+	public bool Networkdestroyed
+	{
+		get
+		{
+			return this.destroyed;
+		}
+		set
+		{
+			uint dirtyBit = 2u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.DestroyDoor(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.destroyed, dirtyBit);
+		}
+	}
+
 	protected static void InvokeRpcRpcDoSound(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkClient.active)
@@ -256,6 +330,7 @@ public class Door : NetworkBehaviour
 		if (forceAll)
 		{
 			writer.Write(this.isOpen);
+			writer.Write(this.destroyed);
 			return true;
 		}
 		bool flag = false;
@@ -267,6 +342,15 @@ public class Door : NetworkBehaviour
 				flag = true;
 			}
 			writer.Write(this.isOpen);
+		}
+		if ((base.syncVarDirtyBits & 2u) != 0u)
+		{
+			if (!flag)
+			{
+				writer.WritePackedUInt32(base.syncVarDirtyBits);
+				flag = true;
+			}
+			writer.Write(this.destroyed);
 		}
 		if (!flag)
 		{
@@ -280,12 +364,17 @@ public class Door : NetworkBehaviour
 		if (initialState)
 		{
 			this.isOpen = reader.ReadBoolean();
+			this.destroyed = reader.ReadBoolean();
 			return;
 		}
 		int num = (int)reader.ReadPackedUInt32();
 		if ((num & 1) != 0)
 		{
 			this.SetState(reader.ReadBoolean());
+		}
+		if ((num & 2) != 0)
+		{
+			this.DestroyDoor(reader.ReadBoolean());
 		}
 	}
 
@@ -324,6 +413,15 @@ public class Door : NetworkBehaviour
 	public Vector3 localPos;
 
 	public Quaternion localRot;
+
+	public GameObject destroyedPrefab;
+
+	private Rigidbody[] destoryedRb;
+
+	[SyncVar(hook = "DestroyDoor")]
+	public bool destroyed;
+
+	private bool prevDestroyed;
 
 	private int status = -1;
 

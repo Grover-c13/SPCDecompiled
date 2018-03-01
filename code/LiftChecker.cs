@@ -12,58 +12,52 @@ public class LiftChecker : NetworkBehaviour
 	{
 	}
 
-	private IEnumerator ServerCoroutine()
+	private IEnumerator PlayerCoroutine()
 	{
 		for (;;)
 		{
-			foreach (GameObject player in PlayerManager.singleton.players)
+			foreach (Lift lift in this.lifts)
 			{
-				foreach (Lift lift in this.lifts)
+				if (lift.status != Lift.Status.Moving)
 				{
-					if (lift.status != Lift.Status.Moving)
+					foreach (Lift.Elevator item in lift.elevators)
 					{
-						foreach (Lift.Elevator item in lift.elevators)
+						if (!item.door.GetBool("isOpen") && lift.operative)
 						{
-							if (!item.door.GetBool("isOpen") && lift.operative)
+							bool found = true;
+							if (Mathf.Abs(item.target.position.x - base.transform.position.x) > lift.maxDistance)
 							{
-								bool found = true;
-								if (Mathf.Abs(item.target.position.x - player.transform.position.x) > lift.maxDistance)
+								found = false;
+							}
+							yield return new WaitForEndOfFrame();
+							if (found && Mathf.Abs(item.target.position.y - base.transform.position.y) > lift.maxDistance)
+							{
+								found = false;
+							}
+							yield return new WaitForEndOfFrame();
+							if (found && Mathf.Abs(item.target.position.z - base.transform.position.z) > lift.maxDistance)
+							{
+								found = false;
+							}
+							yield return new WaitForEndOfFrame();
+							if (found)
+							{
+								Transform transform = null;
+								GameObject gameObject = item.target.gameObject;
+								foreach (Lift.Elevator elevator in lift.elevators)
 								{
-									found = false;
-								}
-								yield return new WaitForEndOfFrame();
-								if (found && Mathf.Abs(item.target.position.y - player.transform.position.y) > lift.maxDistance)
-								{
-									found = false;
-								}
-								yield return new WaitForEndOfFrame();
-								if (found && Mathf.Abs(item.target.position.z - player.transform.position.z) > lift.maxDistance)
-								{
-									found = false;
-								}
-								yield return new WaitForEndOfFrame();
-								if (found)
-								{
-									Transform transform = null;
-									GameObject gameObject = item.target.gameObject;
-									foreach (Lift.Elevator elevator in lift.elevators)
+									if (elevator.target.gameObject != gameObject)
 									{
-										if (elevator.target.gameObject != gameObject)
-										{
-											transform = elevator.target;
-										}
+										transform = elevator.target;
 									}
-									Transform transform2 = player.transform;
-									transform2.parent = gameObject.transform;
-									Vector3 localPosition = transform2.transform.localPosition;
-									transform2.parent = transform.transform;
-									transform2.localPosition = localPosition;
-									transform2.parent = null;
-									this.MovePlayer(player, transform2.position);
 								}
+								base.transform.parent = gameObject.transform;
+								Vector3 localPosition = base.transform.transform.localPosition;
+								base.transform.parent = transform.transform;
+								base.transform.localPosition = localPosition;
+								base.transform.parent = null;
 							}
 						}
-						yield return new WaitForEndOfFrame();
 					}
 					yield return new WaitForEndOfFrame();
 				}
@@ -80,10 +74,7 @@ public class LiftChecker : NetworkBehaviour
 		this.lifts = UnityEngine.Object.FindObjectsOfType<Lift>();
 		if (base.isLocalPlayer)
 		{
-			if (base.isServer)
-			{
-				base.StartCoroutine(this.ServerCoroutine());
-			}
+			base.StartCoroutine(this.PlayerCoroutine());
 			base.StartCoroutine(this.AmInElevator());
 		}
 	}
@@ -119,57 +110,8 @@ public class LiftChecker : NetworkBehaviour
 		yield break;
 	}
 
-	[ServerCallback]
-	private void MovePlayer(GameObject player, Vector3 pos)
-	{
-		if (!NetworkServer.active)
-		{
-			return;
-		}
-		this.CallRpcMovePlayer(player, pos);
-	}
-
-	[ClientRpc]
-	private void RpcMovePlayer(GameObject player, Vector3 pos)
-	{
-		player.transform.position = pos;
-	}
-
 	private void UNetVersion()
 	{
-	}
-
-	protected static void InvokeRpcRpcMovePlayer(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkClient.active)
-		{
-			UnityEngine.Debug.LogError("RPC RpcMovePlayer called on server.");
-			return;
-		}
-		((LiftChecker)obj).RpcMovePlayer(reader.ReadGameObject(), reader.ReadVector3());
-	}
-
-	public void CallRpcMovePlayer(GameObject player, Vector3 pos)
-	{
-		if (!NetworkServer.active)
-		{
-			UnityEngine.Debug.LogError("RPC Function RpcMovePlayer called on client.");
-			return;
-		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)2));
-		networkWriter.WritePackedUInt32((uint)LiftChecker.kRpcRpcMovePlayer);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(player);
-		networkWriter.Write(pos);
-		this.SendRPCInternal(networkWriter, 0, "RpcMovePlayer");
-	}
-
-	static LiftChecker()
-	{
-		NetworkBehaviour.RegisterRpcDelegate(typeof(LiftChecker), LiftChecker.kRpcRpcMovePlayer, new NetworkBehaviour.CmdDelegate(LiftChecker.InvokeRpcRpcMovePlayer));
-		NetworkCRC.RegisterBehaviour("LiftChecker", 0);
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)
@@ -186,13 +128,11 @@ public class LiftChecker : NetworkBehaviour
 
 	private ExplosionCameraShake glitch;
 
-	private static int kRpcRpcMovePlayer = -1644545198;
-
 	[CompilerGenerated]
-	private sealed class <ServerCoroutine>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	private sealed class <PlayerCoroutine>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
 	{
 		[DebuggerHidden]
-		public <ServerCoroutine>c__Iterator0()
+		public <PlayerCoroutine>c__Iterator0()
 		{
 		}
 
@@ -205,9 +145,9 @@ public class LiftChecker : NetworkBehaviour
 			case 0u:
 				break;
 			case 1u:
-				if (this.<found>__4 && Mathf.Abs(this.<item>__3.target.position.y - this.<player>__1.transform.position.y) > this.<lift>__2.maxDistance)
+				if (this.<found>__3 && Mathf.Abs(this.<item>__2.target.position.y - this.$this.transform.position.y) > this.<lift>__1.maxDistance)
 				{
-					this.<found>__4 = false;
+					this.<found>__3 = false;
 				}
 				this.$current = new WaitForEndOfFrame();
 				if (!this.$disposing)
@@ -216,9 +156,9 @@ public class LiftChecker : NetworkBehaviour
 				}
 				return true;
 			case 2u:
-				if (this.<found>__4 && Mathf.Abs(this.<item>__3.target.position.z - this.<player>__1.transform.position.z) > this.<lift>__2.maxDistance)
+				if (this.<found>__3 && Mathf.Abs(this.<item>__2.target.position.z - this.$this.transform.position.z) > this.<lift>__1.maxDistance)
 				{
-					this.<found>__4 = false;
+					this.<found>__3 = false;
 				}
 				this.$current = new WaitForEndOfFrame();
 				if (!this.$disposing)
@@ -227,29 +167,27 @@ public class LiftChecker : NetworkBehaviour
 				}
 				return true;
 			case 3u:
-				if (this.<found>__4)
+				if (this.<found>__3)
 				{
 					Transform transform = null;
-					GameObject gameObject = this.<item>__3.target.gameObject;
-					foreach (Lift.Elevator elevator in this.<lift>__2.elevators)
+					GameObject gameObject = this.<item>__2.target.gameObject;
+					foreach (Lift.Elevator elevator in this.<lift>__1.elevators)
 					{
 						if (elevator.target.gameObject != gameObject)
 						{
 							transform = elevator.target;
 						}
 					}
-					Transform transform2 = this.<player>__1.transform;
-					transform2.parent = gameObject.transform;
-					Vector3 localPosition = transform2.transform.localPosition;
-					transform2.parent = transform.transform;
-					transform2.localPosition = localPosition;
-					transform2.parent = null;
-					this.$this.MovePlayer(this.<player>__1, transform2.position);
-					goto IL_347;
+					this.$this.transform.parent = gameObject.transform;
+					Vector3 localPosition = this.$this.transform.transform.localPosition;
+					this.$this.transform.parent = transform.transform;
+					this.$this.transform.localPosition = localPosition;
+					this.$this.transform.parent = null;
+					goto IL_31C;
 				}
-				goto IL_347;
+				goto IL_31C;
 			case 4u:
-				IL_387:
+				IL_35C:
 				this.$current = new WaitForEndOfFrame();
 				if (!this.$disposing)
 				{
@@ -257,23 +195,20 @@ public class LiftChecker : NetworkBehaviour
 				}
 				return true;
 			case 5u:
-				this.$locvar3++;
-				goto IL_3B4;
-			case 6u:
 				this.$locvar1++;
-				goto IL_3F4;
-			case 7u:
+				goto IL_389;
+			case 6u:
 				break;
 			default:
 				return false;
 			}
-			this.$locvar0 = PlayerManager.singleton.players;
+			this.$locvar0 = this.$this.lifts;
 			this.$locvar1 = 0;
-			goto IL_3F4;
-			IL_347:
-			this.$locvar5++;
-			IL_355:
-			if (this.$locvar5 >= this.$locvar4.Length)
+			goto IL_389;
+			IL_31C:
+			this.$locvar3++;
+			IL_32A:
+			if (this.$locvar3 >= this.$locvar2.Length)
 			{
 				this.$current = new WaitForEndOfFrame();
 				if (!this.$disposing)
@@ -282,13 +217,13 @@ public class LiftChecker : NetworkBehaviour
 				}
 				return true;
 			}
-			this.<item>__3 = this.$locvar4[this.$locvar5];
-			if (!this.<item>__3.door.GetBool("isOpen") && this.<lift>__2.operative)
+			this.<item>__2 = this.$locvar2[this.$locvar3];
+			if (!this.<item>__2.door.GetBool("isOpen") && this.<lift>__1.operative)
 			{
-				this.<found>__4 = true;
-				if (Mathf.Abs(this.<item>__3.target.position.x - this.<player>__1.transform.position.x) > this.<lift>__2.maxDistance)
+				this.<found>__3 = true;
+				if (Mathf.Abs(this.<item>__2.target.position.x - this.$this.transform.position.x) > this.<lift>__1.maxDistance)
 				{
-					this.<found>__4 = false;
+					this.<found>__3 = false;
 				}
 				this.$current = new WaitForEndOfFrame();
 				if (!this.$disposing)
@@ -297,37 +232,26 @@ public class LiftChecker : NetworkBehaviour
 				}
 				return true;
 			}
-			goto IL_347;
-			IL_3B4:
-			if (this.$locvar3 >= this.$locvar2.Length)
+			goto IL_31C;
+			IL_389:
+			if (this.$locvar1 >= this.$locvar0.Length)
 			{
 				this.$current = new WaitForEndOfFrame();
 				if (!this.$disposing)
 				{
 					this.$PC = 6;
 				}
-				return true;
 			}
-			this.<lift>__2 = this.$locvar2[this.$locvar3];
-			if (this.<lift>__2.status != Lift.Status.Moving)
+			else
 			{
-				this.$locvar4 = this.<lift>__2.elevators;
-				this.$locvar5 = 0;
-				goto IL_355;
-			}
-			goto IL_387;
-			IL_3F4:
-			if (this.$locvar1 < this.$locvar0.Length)
-			{
-				this.<player>__1 = this.$locvar0[this.$locvar1];
-				this.$locvar2 = this.$this.lifts;
-				this.$locvar3 = 0;
-				goto IL_3B4;
-			}
-			this.$current = new WaitForEndOfFrame();
-			if (!this.$disposing)
-			{
-				this.$PC = 7;
+				this.<lift>__1 = this.$locvar0[this.$locvar1];
+				if (this.<lift>__1.status != Lift.Status.Moving)
+				{
+					this.$locvar2 = this.<lift>__1.elevators;
+					this.$locvar3 = 0;
+					goto IL_32A;
+				}
+				goto IL_35C;
 			}
 			return true;
 		}
@@ -363,25 +287,19 @@ public class LiftChecker : NetworkBehaviour
 			throw new NotSupportedException();
 		}
 
-		internal GameObject[] $locvar0;
+		internal Lift[] $locvar0;
 
 		internal int $locvar1;
 
-		internal GameObject <player>__1;
+		internal Lift <lift>__1;
 
-		internal Lift[] $locvar2;
+		internal Lift.Elevator[] $locvar2;
 
 		internal int $locvar3;
 
-		internal Lift <lift>__2;
+		internal Lift.Elevator <item>__2;
 
-		internal Lift.Elevator[] $locvar4;
-
-		internal int $locvar5;
-
-		internal Lift.Elevator <item>__3;
-
-		internal bool <found>__4;
+		internal bool <found>__3;
 
 		internal LiftChecker $this;
 

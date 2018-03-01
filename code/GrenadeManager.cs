@@ -34,13 +34,9 @@ public class GrenadeManager : NetworkBehaviour
 				{
 					try
 					{
-						if (this.inv.curItem == this.grenades[i].inventoryID)
+						if (this.inv.curItem == this.grenades[i].inventoryID && !base.GetComponent<MicroHID_GFX>().onFire)
 						{
-							this.inv.items.Remove(this.inv.localInventoryItem);
-							if (!base.GetComponent<MicroHID_GFX>().onFire)
-							{
-								base.StartCoroutine(this.Throw(i));
-							}
+							base.StartCoroutine(this.Throw(i));
 						}
 					}
 					catch
@@ -53,18 +49,41 @@ public class GrenadeManager : NetworkBehaviour
 	}
 
 	[Command(channel = 2)]
-	private void CmdThrowGrenade(int gId)
+	private void CmdThrowGrenade(int gId, int itemIndex)
 	{
 		CharacterClassManager component = base.GetComponent<CharacterClassManager>();
-		if (component.klasy[component.curClass].team != Team.SCP)
+		if (component.IsHuman())
 		{
-			Vector3 spawnPos = this.plyCam.position + this.plyCam.forward * 0.2f + this.plyCam.right * 0.2f;
-			Quaternion rotation = this.plyCam.rotation;
-			this.plyCam.localRotation = Quaternion.Euler(Vector3.right * base.GetComponent<PlyMovementSync>().rotX);
-			GrenadeManager.GrenadeSpawnInfo g = new GrenadeManager.GrenadeSpawnInfo(gId, spawnPos, this.plyCam.forward * this.throwSpeed, this.grenades[gId].timeToExplode, component.curClass);
-			this.plyCam.rotation = rotation;
-			this.cooldown = 1f;
-			this.CallRpcThrowGrenade(g);
+			foreach (Inventory.SyncItemInfo syncItemInfo in this.inv.items)
+			{
+				if (syncItemInfo.id == this.grenades[gId].inventoryID)
+				{
+					Vector3 spawnPos = this.plyCam.position + this.plyCam.forward * 0.2f + this.plyCam.right * 0.2f;
+					Quaternion rotation = this.plyCam.rotation;
+					this.plyCam.localRotation = Quaternion.Euler(Vector3.right * base.GetComponent<PlyMovementSync>().rotX);
+					GrenadeManager.GrenadeSpawnInfo g = new GrenadeManager.GrenadeSpawnInfo(gId, spawnPos, this.plyCam.forward * this.throwSpeed, this.grenades[gId].timeToExplode, component.curClass);
+					this.plyCam.rotation = rotation;
+					this.cooldown = 1f;
+					this.CallRpcThrowGrenade(g);
+					if (this.inv.items[itemIndex].id == this.grenades[gId].inventoryID)
+					{
+						this.inv.items.RemoveAt(itemIndex);
+					}
+					else
+					{
+						int num = 0;
+						foreach (Inventory.SyncItemInfo syncItemInfo2 in this.inv.items)
+						{
+							if (syncItemInfo2.id == this.grenades[gId].inventoryID)
+							{
+								this.inv.items.RemoveAt(num);
+							}
+							num++;
+						}
+					}
+					break;
+				}
+			}
 		}
 	}
 
@@ -97,12 +116,12 @@ public class GrenadeManager : NetworkBehaviour
 
 	private IEnumerator Throw(int i)
 	{
-		this.inv.localInventoryItem.firstpersonModel.GetComponent<Animator>().SetTrigger("Throw");
+		this.inv.availableItems[this.inv.curItem].firstpersonModel.GetComponent<Animator>().SetTrigger("Throw");
 		base.GetComponent<MicroHID_GFX>().onFire = true;
 		yield return new WaitForSeconds(this.grenades[i].throwAnimationTime);
-		this.CallCmdThrowGrenade(i);
-		this.inv.NetworkcurItem = -1;
+		this.CallCmdThrowGrenade(i, this.inv.GetItemIndex());
 		base.GetComponent<MicroHID_GFX>().onFire = false;
+		this.inv.SetCurItem(-1);
 		yield break;
 	}
 
@@ -117,10 +136,10 @@ public class GrenadeManager : NetworkBehaviour
 			UnityEngine.Debug.LogError("Command CmdThrowGrenade called on client.");
 			return;
 		}
-		((GrenadeManager)obj).CmdThrowGrenade((int)reader.ReadPackedUInt32());
+		((GrenadeManager)obj).CmdThrowGrenade((int)reader.ReadPackedUInt32(), (int)reader.ReadPackedUInt32());
 	}
 
-	public void CallCmdThrowGrenade(int gId)
+	public void CallCmdThrowGrenade(int gId, int itemIndex)
 	{
 		if (!NetworkClient.active)
 		{
@@ -129,7 +148,7 @@ public class GrenadeManager : NetworkBehaviour
 		}
 		if (base.isServer)
 		{
-			this.CmdThrowGrenade(gId);
+			this.CmdThrowGrenade(gId, itemIndex);
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -138,6 +157,7 @@ public class GrenadeManager : NetworkBehaviour
 		networkWriter.WritePackedUInt32((uint)GrenadeManager.kCmdCmdThrowGrenade);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
 		networkWriter.WritePackedUInt32((uint)gId);
+		networkWriter.WritePackedUInt32((uint)itemIndex);
 		base.SendCommandInternal(networkWriter, 2, "CmdThrowGrenade");
 	}
 
@@ -326,7 +346,7 @@ public class GrenadeManager : NetworkBehaviour
 			switch (num)
 			{
 			case 0u:
-				this.$this.inv.localInventoryItem.firstpersonModel.GetComponent<Animator>().SetTrigger("Throw");
+				this.$this.inv.availableItems[this.$this.inv.curItem].firstpersonModel.GetComponent<Animator>().SetTrigger("Throw");
 				this.$this.GetComponent<MicroHID_GFX>().onFire = true;
 				this.$current = new WaitForSeconds(this.$this.grenades[this.i].throwAnimationTime);
 				if (!this.$disposing)
@@ -335,9 +355,9 @@ public class GrenadeManager : NetworkBehaviour
 				}
 				return true;
 			case 1u:
-				this.$this.CallCmdThrowGrenade(this.i);
-				this.$this.inv.NetworkcurItem = -1;
+				this.$this.CallCmdThrowGrenade(this.i, this.$this.inv.GetItemIndex());
 				this.$this.GetComponent<MicroHID_GFX>().onFire = false;
+				this.$this.inv.SetCurItem(-1);
 				this.$PC = -1;
 				break;
 			}

@@ -18,7 +18,7 @@ public class PocketDimensionTeleport : MonoBehaviour
 		NetworkIdentity component = other.GetComponent<NetworkIdentity>();
 		if (component != null && component.isLocalPlayer)
 		{
-			if ((this.type == PocketDimensionTeleport.PDTeleportType.Killer || UnityEngine.Object.FindObjectOfType<BlastDoor>().isClosed) && !Input.GetKey(KeyCode.P))
+			if (this.type == PocketDimensionTeleport.PDTeleportType.Killer || UnityEngine.Object.FindObjectOfType<BlastDoor>().isClosed)
 			{
 				component.GetComponent<CharacterClassManager>().CallCmdSuicide(new PlayerStats.HitInfo(999999f, "WORLD", "POCKET"));
 			}

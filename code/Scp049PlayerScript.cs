@@ -98,8 +98,7 @@ public class Scp049PlayerScript : NetworkBehaviour
 		}
 	}
 
-	[Command(channel = 2)]
-	private void CmdDestroyPlayer(GameObject recallingRagdoll)
+	private void DestroyPlayer(GameObject recallingRagdoll)
 	{
 		if (recallingRagdoll.CompareTag("Ragdoll"))
 		{
@@ -115,8 +114,7 @@ public class Scp049PlayerScript : NetworkBehaviour
 			this.recallProgress += Time.deltaTime / this.boost_recallTime.Evaluate(base.GetComponent<PlayerStats>().GetHealthPercent());
 			if (this.recallProgress >= 1f)
 			{
-				this.CallCmdRecallPlayer(this.recallingObject, base.gameObject);
-				this.CallCmdDestroyPlayer(this.recallingRagdoll.gameObject);
+				this.CallCmdRecallPlayer(this.recallingObject, this.recallingRagdoll.gameObject);
 				this.recallProgress = 0f;
 				this.recallingObject = null;
 			}
@@ -156,28 +154,20 @@ public class Scp049PlayerScript : NetworkBehaviour
 	}
 
 	[Command(channel = 2)]
-	private void CmdRecallPlayer(GameObject target, GameObject sender)
+	private void CmdRecallPlayer(GameObject target, GameObject ragdoll)
 	{
 		CharacterClassManager component = target.GetComponent<CharacterClassManager>();
-		if (component.curClass == 2 && sender.GetComponent<CharacterClassManager>().curClass == 5)
+		Ragdoll component2 = ragdoll.GetComponent<Ragdoll>();
+		if (component2 != null && component != null && component.curClass == 2 && base.GetComponent<CharacterClassManager>().curClass == 5 && component2.owner.deathCause.tool == "SCP:049")
 		{
 			component.SetClassID(10);
 			target.GetComponent<PlayerStats>().Networkhealth = component.klasy[10].maxHP;
+			this.DestroyPlayer(ragdoll);
 		}
 	}
 
 	private void UNetVersion()
 	{
-	}
-
-	protected static void InvokeCmdCmdDestroyPlayer(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkServer.active)
-		{
-			Debug.LogError("Command CmdDestroyPlayer called on client.");
-			return;
-		}
-		((Scp049PlayerScript)obj).CmdDestroyPlayer(reader.ReadGameObject());
 	}
 
 	protected static void InvokeCmdCmdInfectPlayer(NetworkBehaviour obj, NetworkReader reader)
@@ -198,27 +188,6 @@ public class Scp049PlayerScript : NetworkBehaviour
 			return;
 		}
 		((Scp049PlayerScript)obj).CmdRecallPlayer(reader.ReadGameObject(), reader.ReadGameObject());
-	}
-
-	public void CallCmdDestroyPlayer(GameObject recallingRagdoll)
-	{
-		if (!NetworkClient.active)
-		{
-			Debug.LogError("Command function CmdDestroyPlayer called on server.");
-			return;
-		}
-		if (base.isServer)
-		{
-			this.CmdDestroyPlayer(recallingRagdoll);
-			return;
-		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)5));
-		networkWriter.WritePackedUInt32((uint)Scp049PlayerScript.kCmdCmdDestroyPlayer);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(recallingRagdoll);
-		base.SendCommandInternal(networkWriter, 2, "CmdDestroyPlayer");
 	}
 
 	public void CallCmdInfectPlayer(GameObject target, string id)
@@ -243,7 +212,7 @@ public class Scp049PlayerScript : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 2, "CmdInfectPlayer");
 	}
 
-	public void CallCmdRecallPlayer(GameObject target, GameObject sender)
+	public void CallCmdRecallPlayer(GameObject target, GameObject ragdoll)
 	{
 		if (!NetworkClient.active)
 		{
@@ -252,7 +221,7 @@ public class Scp049PlayerScript : NetworkBehaviour
 		}
 		if (base.isServer)
 		{
-			this.CmdRecallPlayer(target, sender);
+			this.CmdRecallPlayer(target, ragdoll);
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -261,7 +230,7 @@ public class Scp049PlayerScript : NetworkBehaviour
 		networkWriter.WritePackedUInt32((uint)Scp049PlayerScript.kCmdCmdRecallPlayer);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
 		networkWriter.Write(target);
-		networkWriter.Write(sender);
+		networkWriter.Write(ragdoll);
 		base.SendCommandInternal(networkWriter, 2, "CmdRecallPlayer");
 	}
 
@@ -294,8 +263,6 @@ public class Scp049PlayerScript : NetworkBehaviour
 
 	static Scp049PlayerScript()
 	{
-		NetworkBehaviour.RegisterCommandDelegate(typeof(Scp049PlayerScript), Scp049PlayerScript.kCmdCmdDestroyPlayer, new NetworkBehaviour.CmdDelegate(Scp049PlayerScript.InvokeCmdCmdDestroyPlayer));
-		Scp049PlayerScript.kCmdCmdInfectPlayer = -2004090729;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Scp049PlayerScript), Scp049PlayerScript.kCmdCmdInfectPlayer, new NetworkBehaviour.CmdDelegate(Scp049PlayerScript.InvokeCmdCmdInfectPlayer));
 		Scp049PlayerScript.kCmdCmdRecallPlayer = 1670066835;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Scp049PlayerScript), Scp049PlayerScript.kCmdCmdRecallPlayer, new NetworkBehaviour.CmdDelegate(Scp049PlayerScript.InvokeCmdCmdRecallPlayer));
@@ -348,9 +315,7 @@ public class Scp049PlayerScript : NetworkBehaviour
 
 	public AnimationCurve boost_infectTime;
 
-	private static int kCmdCmdDestroyPlayer = 1834329690;
-
-	private static int kCmdCmdInfectPlayer;
+	private static int kCmdCmdInfectPlayer = -2004090729;
 
 	private static int kRpcRpcInfectPlayer;
 

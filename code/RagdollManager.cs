@@ -122,6 +122,10 @@ public class RagdollManager : NetworkBehaviour
 			{
 				result = TranslationReader.Get("Death_Causes", 9);
 			}
+			else if (num == 96)
+			{
+				result = TranslationReader.Get("Death_Causes", 13);
+			}
 			else if (num == 49 || num == 492)
 			{
 				result = TranslationReader.Get("Death_Causes", 10);

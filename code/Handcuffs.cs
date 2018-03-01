@@ -36,9 +36,9 @@ public class Handcuffs : NetworkBehaviour
 		if (this.cuffTarget != null)
 		{
 			bool flag = false;
-			foreach (Item item in this.inv.items)
+			foreach (Inventory.SyncItemInfo syncItemInfo in this.inv.items)
 			{
-				if (item.id == 27)
+				if (syncItemInfo.id == 27)
 				{
 					flag = true;
 				}
@@ -124,27 +124,20 @@ public class Handcuffs : NetworkBehaviour
 	[Command(channel = 2)]
 	public void CmdTarget(GameObject t)
 	{
-		this.SetTarget(t);
-		this.CallRpcDropItems(t);
+		if (t == null || (Vector3.Distance(base.transform.position, t.transform.position) < 3f && this.inv.curItem == 27))
+		{
+			this.SetTarget(t);
+			if (t != null)
+			{
+				t.GetComponent<Inventory>().ServerDropAll();
+			}
+		}
 	}
 
 	[Command(channel = 2)]
 	public void CmdResetTarget(GameObject t)
 	{
 		t.GetComponent<Handcuffs>().SetTarget(null);
-	}
-
-	[ClientRpc(channel = 2)]
-	private void RpcDropItems(GameObject ply)
-	{
-		foreach (GameObject gameObject in PlayerManager.singleton.players)
-		{
-			if (ply == gameObject && gameObject.GetComponent<NetworkIdentity>().isLocalPlayer)
-			{
-				ply.GetComponent<Inventory>().DropAll();
-				break;
-			}
-		}
 	}
 
 	private void SetTarget(GameObject t)
@@ -263,39 +256,11 @@ public class Handcuffs : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 2, "CmdResetTarget");
 	}
 
-	protected static void InvokeRpcRpcDropItems(NetworkBehaviour obj, NetworkReader reader)
-	{
-		if (!NetworkClient.active)
-		{
-			Debug.LogError("RPC RpcDropItems called on server.");
-			return;
-		}
-		((Handcuffs)obj).RpcDropItems(reader.ReadGameObject());
-	}
-
-	public void CallRpcDropItems(GameObject ply)
-	{
-		if (!NetworkServer.active)
-		{
-			Debug.LogError("RPC Function RpcDropItems called on client.");
-			return;
-		}
-		NetworkWriter networkWriter = new NetworkWriter();
-		networkWriter.Write(0);
-		networkWriter.Write((short)((ushort)2));
-		networkWriter.WritePackedUInt32((uint)Handcuffs.kRpcRpcDropItems);
-		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(ply);
-		this.SendRPCInternal(networkWriter, 2, "RpcDropItems");
-	}
-
 	static Handcuffs()
 	{
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Handcuffs), Handcuffs.kCmdCmdTarget, new NetworkBehaviour.CmdDelegate(Handcuffs.InvokeCmdCmdTarget));
 		Handcuffs.kCmdCmdResetTarget = -1476369842;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Handcuffs), Handcuffs.kCmdCmdResetTarget, new NetworkBehaviour.CmdDelegate(Handcuffs.InvokeCmdCmdResetTarget));
-		Handcuffs.kRpcRpcDropItems = -710722295;
-		NetworkBehaviour.RegisterRpcDelegate(typeof(Handcuffs), Handcuffs.kRpcRpcDropItems, new NetworkBehaviour.CmdDelegate(Handcuffs.InvokeRpcRpcDropItems));
 		NetworkCRC.RegisterBehaviour("Handcuffs", 0);
 	}
 
@@ -371,6 +336,4 @@ public class Handcuffs : NetworkBehaviour
 	private static int kCmdCmdTarget = 624996931;
 
 	private static int kCmdCmdResetTarget;
-
-	private static int kRpcRpcDropItems;
 }

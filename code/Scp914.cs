@@ -12,85 +12,117 @@ public class Scp914 : NetworkBehaviour
 	{
 	}
 
-	public void SetProcessing(bool p)
+	private void Awake()
 	{
-		this.NetworkisProcessing = p;
-		if (p)
+		Scp914.singleton = this;
+	}
+
+	private void SetStatus(int i)
+	{
+		this.NetworksyncStatus = i;
+	}
+
+	public void ChangeKnobStatus()
+	{
+		if (!this.working && this.cooldown < 0f)
 		{
-			base.StartCoroutine(this.StartProcessing());
+			this.cooldown = 0.2f;
+			this.NetworksyncStatus = this.syncStatus + 1;
+			if (this.syncStatus >= 5)
+			{
+				this.NetworksyncStatus = 0;
+			}
 		}
 	}
 
-	public void ChangeState(int st)
+	public void StartRefining()
 	{
-		this.Networkstate = st;
-		this.knob.GetComponent<AudioSource>().Play();
-	}
-
-	public void Refine()
-	{
-		if (!this.isProcessing)
+		if (!this.working)
 		{
-			this.SetProcessing(true);
+			this.working = true;
+			base.StartCoroutine(this.Animation());
 		}
-	}
-
-	private IEnumerator StartProcessing()
-	{
-		this.source.Play();
-		yield return new WaitForSeconds(1f);
-		while (this.doors.transform.localPosition.x > 0f)
-		{
-			this.doors.transform.localPosition -= Vector3.right * Time.deltaTime * 1.8f * ((!base.isServer) ? 1f : 0.5f);
-			yield return new WaitForEndOfFrame();
-		}
-		yield return new WaitForSeconds(11.7f);
-		while (this.doors.transform.localPosition.x < 1.74f)
-		{
-			this.doors.transform.localPosition += Vector3.right * Time.deltaTime * 1.5f * ((!base.isServer) ? 1f : 0.5f);
-			yield return new WaitForEndOfFrame();
-		}
-		this.SetProcessing(false);
-		yield break;
-	}
-
-	public void IncrementState()
-	{
-		if (this.cooldown > 0f || this.isProcessing)
-		{
-			return;
-		}
-		if (this.state + 1 > 4)
-		{
-			this.Networkstate = 0;
-		}
-		else
-		{
-			this.Networkstate = this.state + 1;
-		}
-		this.cooldown = 0.2f;
 	}
 
 	private void Update()
 	{
-		if (this.cooldown > 0f)
+		if (this.syncStatus != (int)this.status)
+		{
+			this.knob.GetComponent<AudioSource>().Play();
+			this.status = (Scp914.Scp914_Status)this.syncStatus;
+		}
+		if (this.cooldown >= 0f)
 		{
 			this.cooldown -= Time.deltaTime;
 		}
-		this.knob.transform.localRotation = Quaternion.LerpUnclamped(this.knob.transform.localRotation, Quaternion.Euler(0f, 0f, (float)(45 * this.state - 90)), Time.deltaTime * 5f);
-		base.transform.localPosition = Vector3.right * 20.62f;
-		base.transform.localRotation = Quaternion.Euler(Vector3.down * 90f);
+		this.knob.transform.localRotation = Quaternion.Lerp(this.knob.transform.localRotation, Quaternion.Euler(Vector3.forward * Mathf.Lerp(-89f, 89f, (float)this.status / 4f)), Time.deltaTime * 4f);
+	}
+
+	private IEnumerator Animation()
+	{
+		this.soundSource.Play();
+		yield return new WaitForSeconds(1f);
+		float t = 0f;
+		while (t < 1f)
+		{
+			t += Time.fixedDeltaTime * 0.85f;
+			this.doors.transform.localPosition = Vector3.right * Mathf.Lerp(1.74f, 0f, t);
+			yield return new WaitForFixedUpdate();
+		}
+		yield return new WaitForSeconds(6.28f);
+		this.UpgradeItems();
+		yield return new WaitForSeconds(5.5f);
+		while (t > 0f)
+		{
+			t -= Time.fixedDeltaTime * 0.85f;
+			this.SetDoorPos(t);
+			yield return new WaitForFixedUpdate();
+		}
+		yield return new WaitForSeconds(1f);
+		this.working = false;
+		yield break;
+	}
+
+	[ServerCallback]
+	private void UpgradeItems()
+	{
+		if (!NetworkServer.active)
+		{
+			return;
+		}
+		foreach (Collider collider in Physics.OverlapBox(this.intake_obj.position, Vector3.one * this.colliderSize / 2f))
+		{
+			Pickup component = collider.GetComponent<Pickup>();
+			if (component != null)
+			{
+				component.SetPosition(component.transform.position + (this.output_obj.position - this.intake_obj.position));
+				if (component.id < this.recipes.Length)
+				{
+					int[] array2 = this.recipes[component.id].outputs[this.syncStatus].outputs.ToArray();
+					component.SetID(array2[UnityEngine.Random.Range(0, array2.Length)]);
+				}
+				else
+				{
+					component.SetID(component.id);
+				}
+			}
+		}
+	}
+
+	private void SetDoorPos(float t)
+	{
+		this.doors.transform.localPosition = Vector3.right * Mathf.Lerp(1.74f, 0f, t);
 	}
 
 	private void UNetVersion()
 	{
 	}
 
-	public int Networkstate
+	public int NetworksyncStatus
 	{
 		get
 		{
-			return this.state;
+			return this.syncStatus;
 		}
 		set
 		{
@@ -98,29 +130,10 @@ public class Scp914 : NetworkBehaviour
 			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
 			{
 				base.syncVarHookGuard = true;
-				this.ChangeState(value);
+				this.SetStatus(value);
 				base.syncVarHookGuard = false;
 			}
-			base.SetSyncVar<int>(value, ref this.state, dirtyBit);
-		}
-	}
-
-	public bool NetworkisProcessing
-	{
-		get
-		{
-			return this.isProcessing;
-		}
-		set
-		{
-			uint dirtyBit = 2u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetProcessing(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.isProcessing, dirtyBit);
+			base.SetSyncVar<int>(value, ref this.syncStatus, dirtyBit);
 		}
 	}
 
@@ -128,8 +141,7 @@ public class Scp914 : NetworkBehaviour
 	{
 		if (forceAll)
 		{
-			writer.WritePackedUInt32((uint)this.state);
-			writer.Write(this.isProcessing);
+			writer.WritePackedUInt32((uint)this.syncStatus);
 			return true;
 		}
 		bool flag = false;
@@ -140,16 +152,7 @@ public class Scp914 : NetworkBehaviour
 				writer.WritePackedUInt32(base.syncVarDirtyBits);
 				flag = true;
 			}
-			writer.WritePackedUInt32((uint)this.state);
-		}
-		if ((base.syncVarDirtyBits & 2u) != 0u)
-		{
-			if (!flag)
-			{
-				writer.WritePackedUInt32(base.syncVarDirtyBits);
-				flag = true;
-			}
-			writer.Write(this.isProcessing);
+			writer.WritePackedUInt32((uint)this.syncStatus);
 		}
 		if (!flag)
 		{
@@ -162,42 +165,77 @@ public class Scp914 : NetworkBehaviour
 	{
 		if (initialState)
 		{
-			this.state = (int)reader.ReadPackedUInt32();
-			this.isProcessing = reader.ReadBoolean();
+			this.syncStatus = (int)reader.ReadPackedUInt32();
 			return;
 		}
 		int num = (int)reader.ReadPackedUInt32();
 		if ((num & 1) != 0)
 		{
-			this.ChangeState((int)reader.ReadPackedUInt32());
-		}
-		if ((num & 2) != 0)
-		{
-			this.SetProcessing(reader.ReadBoolean());
+			this.SetStatus((int)reader.ReadPackedUInt32());
 		}
 	}
 
-	public GameObject knob;
+	public static Scp914 singleton;
 
-	public GameObject outputPlace;
+	public Texture burntIcon;
 
-	public GameObject doors;
+	public AudioSource soundSource;
 
-	public AudioSource source;
+	public Transform doors;
 
-	[SyncVar(hook = "ChangeState")]
-	public int state;
+	public Transform knob;
+
+	public Transform intake_obj;
+
+	public Transform output_obj;
+
+	public float colliderSize;
+
+	public Scp914.Recipe[] recipes;
+
+	[SyncVar(hook = "SetStatus")]
+	public int syncStatus;
+
+	public Scp914.Scp914_Status status;
 
 	private float cooldown;
 
-	[SyncVar(hook = "SetProcessing")]
-	public bool isProcessing;
+	public bool working;
+
+	[Serializable]
+	public class Recipe
+	{
+		public Recipe()
+		{
+		}
+
+		public List<Scp914.Recipe.Output> outputs = new List<Scp914.Recipe.Output>();
+
+		[Serializable]
+		public class Output
+		{
+			public Output()
+			{
+			}
+
+			public List<int> outputs = new List<int>();
+		}
+	}
+
+	public enum Scp914_Status
+	{
+		Rough,
+		Coarse,
+		OneToOne,
+		Fine,
+		VeryFine
+	}
 
 	[CompilerGenerated]
-	private sealed class <StartProcessing>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
+	private sealed class <Animation>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
 	{
 		[DebuggerHidden]
-		public <StartProcessing>c__Iterator0()
+		public <Animation>c__Iterator0()
 		{
 		}
 
@@ -208,7 +246,7 @@ public class Scp914 : NetworkBehaviour
 			switch (num)
 			{
 			case 0u:
-				this.$this.source.Play();
+				this.$this.soundSource.Play();
 				this.$current = new WaitForSeconds(1f);
 				if (!this.$disposing)
 				{
@@ -216,46 +254,64 @@ public class Scp914 : NetworkBehaviour
 				}
 				return true;
 			case 1u:
+				this.<t>__0 = 0f;
 				break;
 			case 2u:
 				break;
 			case 3u:
-				goto IL_1AE;
+				this.$this.UpgradeItems();
+				this.$current = new WaitForSeconds(5.5f);
+				if (!this.$disposing)
+				{
+					this.$PC = 4;
+				}
+				return true;
 			case 4u:
-				goto IL_1AE;
+				goto IL_194;
+			case 5u:
+				goto IL_194;
+			case 6u:
+				this.$this.working = false;
+				this.$PC = -1;
+				return false;
 			default:
 				return false;
 			}
-			if (this.$this.doors.transform.localPosition.x <= 0f)
+			if (this.<t>__0 >= 1f)
 			{
-				this.$current = new WaitForSeconds(11.7f);
+				this.$current = new WaitForSeconds(6.28f);
 				if (!this.$disposing)
 				{
 					this.$PC = 3;
 				}
 				return true;
 			}
-			this.$this.doors.transform.localPosition -= Vector3.right * Time.deltaTime * 1.8f * ((!this.$this.isServer) ? 1f : 0.5f);
-			this.$current = new WaitForEndOfFrame();
+			this.<t>__0 += Time.fixedDeltaTime * 0.85f;
+			this.$this.doors.transform.localPosition = Vector3.right * Mathf.Lerp(1.74f, 0f, this.<t>__0);
+			this.$current = new WaitForFixedUpdate();
 			if (!this.$disposing)
 			{
 				this.$PC = 2;
 			}
 			return true;
-			IL_1AE:
-			if (this.$this.doors.transform.localPosition.x < 1.74f)
+			IL_194:
+			if (this.<t>__0 <= 0f)
 			{
-				this.$this.doors.transform.localPosition += Vector3.right * Time.deltaTime * 1.5f * ((!this.$this.isServer) ? 1f : 0.5f);
-				this.$current = new WaitForEndOfFrame();
+				this.$current = new WaitForSeconds(1f);
 				if (!this.$disposing)
 				{
-					this.$PC = 4;
+					this.$PC = 6;
 				}
 				return true;
 			}
-			this.$this.SetProcessing(false);
-			this.$PC = -1;
-			return false;
+			this.<t>__0 -= Time.fixedDeltaTime * 0.85f;
+			this.$this.SetDoorPos(this.<t>__0);
+			this.$current = new WaitForFixedUpdate();
+			if (!this.$disposing)
+			{
+				this.$PC = 5;
+			}
+			return true;
 		}
 
 		object IEnumerator<object>.Current
@@ -288,6 +344,8 @@ public class Scp914 : NetworkBehaviour
 		{
 			throw new NotSupportedException();
 		}
+
+		internal float <t>__0;
 
 		internal Scp914 $this;
 

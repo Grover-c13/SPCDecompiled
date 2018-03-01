@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-[ExecuteInEditMode]
 [AddComponentMenu("UBER/Global Params")]
+[ExecuteInEditMode]
 public class UBER_GlobalParams : MonoBehaviour
 {
 	public UBER_GlobalParams()
@@ -325,8 +325,8 @@ public class UBER_GlobalParams : MonoBehaviour
 	public const float SNOW_DECREASE_RATE = 0.01f;
 
 	[Range(0f, 1f)]
-	[Tooltip("You can control global water level (multiplied by material value)")]
 	[Header("Global Water & Rain")]
+	[Tooltip("You can control global water level (multiplied by material value)")]
 	public float WaterLevel = 1f;
 
 	[Range(0f, 1f)]
@@ -353,8 +353,8 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Tooltip("You can control global frost")]
 	public float Frost = 1f;
 
-	[Range(0f, 4f)]
 	[Tooltip("Global snow dissolve value")]
+	[Range(0f, 4f)]
 	public float SnowDissolve = 2f;
 
 	[Range(0.001f, 0.2f)]
@@ -367,27 +367,27 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Tooltip("Global snow glitter color/spec boost")]
 	public Color SnowGlitterColor = new Color(0.8f, 0.8f, 0.8f, 0.2f);
 
-	[Header("Global Snow - cover state")]
-	[HideInInspector]
 	[Range(0f, 4f)]
+	[HideInInspector]
+	[Header("Global Snow - cover state")]
 	public float SnowDissolveCover = 2f;
 
+	[Range(0.001f, 0.2f)]
 	[HideInInspector]
 	[Tooltip("Global snow dissolve value")]
-	[Range(0.001f, 0.2f)]
 	public float SnowBumpMicroCover = 0.08f;
 
-	[Tooltip("Global snow spec (RGB) & Gloss (A)")]
 	[HideInInspector]
+	[Tooltip("Global snow spec (RGB) & Gloss (A)")]
 	public Color SnowSpecGlossCover = new Color(0.1f, 0.1f, 0.1f, 0.15f);
 
 	[HideInInspector]
 	[Tooltip("Global snow glitter color/spec boost")]
 	public Color SnowGlitterColorCover = new Color(0.8f, 0.8f, 0.8f, 0.2f);
 
-	[Header("Global Snow - melt state")]
 	[Range(0f, 4f)]
 	[HideInInspector]
+	[Header("Global Snow - melt state")]
 	public float SnowDissolveMelt = 0.3f;
 
 	[Range(0.001f, 0.2f)]
@@ -399,8 +399,8 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Tooltip("Global snow spec (RGB) & Gloss (A)")]
 	public Color SnowSpecGlossMelt = new Color(0.15f, 0.15f, 0.15f, 0.6f);
 
-	[HideInInspector]
 	[Tooltip("Global snow glitter color/spec boost")]
+	[HideInInspector]
 	public Color SnowGlitterColorMelt = new Color(0.1f, 0.1f, 0.1f, 0.03f);
 
 	[Header("Rainfall/snowfall controller")]
@@ -409,12 +409,12 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Range(0f, 1f)]
 	public float fallIntensity;
 
-	[Tooltip("Temperature (influences melt/freeze/evaporation speed) - 0 means water freeze")]
 	[Range(-50f, 50f)]
+	[Tooltip("Temperature (influences melt/freeze/evaporation speed) - 0 means water freeze")]
 	public float temperature = 20f;
 
-	[Range(0f, 1f)]
 	[Tooltip("Wind (1 means 4x faster evaporation and freeze rate)")]
+	[Range(0f, 1f)]
 	public float wind;
 
 	[Range(0f, 1f)]

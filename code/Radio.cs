@@ -15,10 +15,11 @@ public class Radio : NetworkBehaviour
 		base.InvokeRepeating("UpdateClass", 0.3f, 0.3f);
 		this.ccm = base.GetComponent<CharacterClassManager>();
 		this.noiseSource = GameObject.Find("RadioNoiseSound").GetComponent<AudioSource>();
+		this.inv = base.GetComponent<Inventory>();
 		if (base.isLocalPlayer)
 		{
 			Radio.localRadio = this;
-			this.inv = base.GetComponent<Inventory>();
+			base.InvokeRepeating("UseBattery", 1f, 1f);
 		}
 		this.icon = base.GetComponentInChildren<SpeakerIcon>();
 	}
@@ -48,19 +49,31 @@ public class Radio : NetworkBehaviour
 		{
 			this.host = GameObject.Find("Host");
 		}
+		if (this.inv.GetItemIndex() != -1 && this.inv.items[this.inv.GetItemIndex()].id == 12)
+		{
+			this.myRadio = this.inv.GetItemIndex();
+		}
+		else
+		{
+			this.myRadio = -1;
+		}
 		if (base.isLocalPlayer)
 		{
 			this.noiseSource.volume = Radio.noiseIntensity * this.noiseMultiplier;
 			Radio.noiseIntensity = 0f;
 			this.GetInput();
-			this.UseBattery();
-			if (this.inv.localInventoryItem != null && this.inv.localInventoryItem.id == 12)
+			if (this.myRadio != -1)
 			{
-				this.myRadio = this.inv.localInventoryItem;
+				RadioDisplay.battery = Mathf.Clamp(Mathf.CeilToInt(this.inv.items[this.myRadio].durability), 0, 100).ToString();
+				RadioDisplay.power = this.presets[this.curPreset].powerText;
+				RadioDisplay.label = this.presets[this.curPreset].label;
 			}
-			if (!this.inv.items.Contains(this.myRadio))
+			foreach (Inventory.SyncItemInfo syncItemInfo in this.inv.items)
 			{
-				this.myRadio = null;
+				if (syncItemInfo.id == 12)
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -69,22 +82,16 @@ public class Radio : NetworkBehaviour
 	{
 		if (this.CheckRadio())
 		{
-			this.myRadio.durability -= 1.67f * (1f / this.presets[this.curPreset].powerTime) * Time.deltaTime * (float)((!this.isTransmitting) ? 1 : 3);
-			if (this.myRadio.durability == 0f)
-			{
-				this.myRadio.durability = -1f;
-			}
-			if (this.myRadio.durability < 0f)
-			{
-				this.beepSource.PlayOneShot(this.b_battery);
-				this.myRadio.durability = 0f;
-			}
+			this.CallCmdUseRadio(this.myRadio);
 		}
-		if (this.myRadio != null)
+	}
+
+	[Command(channel = 16)]
+	private void CmdUseRadio(int id)
+	{
+		if (this.inv.items[this.myRadio].id == 12)
 		{
-			RadioDisplay.battery = Mathf.Clamp(Mathf.CeilToInt(this.myRadio.durability), 0, 100).ToString();
-			RadioDisplay.power = this.presets[this.curPreset].powerText;
-			RadioDisplay.label = this.presets[this.curPreset].label;
+			this.inv.items.ModifyDuration(this.myRadio, this.inv.items[this.myRadio].durability - 1.67f * (1f / this.presets[this.curPreset].powerTime) * (float)((!this.isTransmitting) ? 1 : 3));
 		}
 	}
 
@@ -203,7 +210,7 @@ public class Radio : NetworkBehaviour
 
 	public bool CheckRadio()
 	{
-		return this.myRadio != null && this.myRadio.durability > 0f && this.voiceInfo.isAliveHuman && this.curPreset > 0;
+		return this.myRadio != -1 && this.inv.items[this.myRadio].durability > 0f && this.voiceInfo.isAliveHuman && this.curPreset > 0;
 	}
 
 	[Command(channel = 6)]
@@ -278,6 +285,16 @@ public class Radio : NetworkBehaviour
 		}
 	}
 
+	protected static void InvokeCmdCmdUseRadio(NetworkBehaviour obj, NetworkReader reader)
+	{
+		if (!NetworkServer.active)
+		{
+			Debug.LogError("Command CmdUseRadio called on client.");
+			return;
+		}
+		((Radio)obj).CmdUseRadio((int)reader.ReadPackedUInt32());
+	}
+
 	protected static void InvokeCmdCmdSyncTransmitionStatus(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
@@ -296,6 +313,27 @@ public class Radio : NetworkBehaviour
 			return;
 		}
 		((Radio)obj).CmdUpdatePreset((int)reader.ReadPackedUInt32());
+	}
+
+	public void CallCmdUseRadio(int id)
+	{
+		if (!NetworkClient.active)
+		{
+			Debug.LogError("Command function CmdUseRadio called on server.");
+			return;
+		}
+		if (base.isServer)
+		{
+			this.CmdUseRadio(id);
+			return;
+		}
+		NetworkWriter networkWriter = new NetworkWriter();
+		networkWriter.Write(0);
+		networkWriter.Write((short)((ushort)5));
+		networkWriter.WritePackedUInt32((uint)Radio.kCmdCmdUseRadio);
+		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
+		networkWriter.WritePackedUInt32((uint)id);
+		base.SendCommandInternal(networkWriter, 16, "CmdUseRadio");
 	}
 
 	public void CallCmdSyncTransmitionStatus(bool b, Vector3 myPos)
@@ -370,6 +408,8 @@ public class Radio : NetworkBehaviour
 
 	static Radio()
 	{
+		NetworkBehaviour.RegisterCommandDelegate(typeof(Radio), Radio.kCmdCmdUseRadio, new NetworkBehaviour.CmdDelegate(Radio.InvokeCmdCmdUseRadio));
+		Radio.kCmdCmdSyncTransmitionStatus = 860412084;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Radio), Radio.kCmdCmdSyncTransmitionStatus, new NetworkBehaviour.CmdDelegate(Radio.InvokeCmdCmdSyncTransmitionStatus));
 		Radio.kCmdCmdUpdatePreset = -1209260349;
 		NetworkBehaviour.RegisterCommandDelegate(typeof(Radio), Radio.kCmdCmdUpdatePreset, new NetworkBehaviour.CmdDelegate(Radio.InvokeCmdCmdUpdatePreset));
@@ -461,7 +501,7 @@ public class Radio : NetworkBehaviour
 	[SyncVar]
 	public bool isTransmitting;
 
-	private Item myRadio;
+	private int myRadio = -1;
 
 	private float timeToNextTransmition;
 
@@ -487,7 +527,9 @@ public class Radio : NetworkBehaviour
 
 	private CharacterClassManager ccm;
 
-	private static int kCmdCmdSyncTransmitionStatus = 860412084;
+	private static int kCmdCmdUseRadio = 1237871087;
+
+	private static int kCmdCmdSyncTransmitionStatus;
 
 	private static int kRpcRpcPlaySound;
 

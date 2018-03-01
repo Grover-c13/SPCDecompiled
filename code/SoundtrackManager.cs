@@ -13,16 +13,21 @@ public class SoundtrackManager : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		bool flag = false;
+		if (AlphaWarheadController.host != null)
+		{
+			flag = AlphaWarheadController.host.detonationInProgress;
+		}
 		if (this.nooneSawTime > 140f && !this.overlayPlaying)
 		{
 			for (int i = 0; i < this.mainTracks.Length; i++)
 			{
-				this.mainTracks[i].playing = (i == 3);
+				this.mainTracks[i].playing = (i == 3 && !flag);
 				this.mainTracks[i].Update();
 			}
 			for (int j = 0; j < this.overlayTracks.Length; j++)
 			{
-				this.overlayTracks[j].playing = (this.overlayPlaying && j == this.overlayIndex);
+				this.overlayTracks[j].playing = (this.overlayPlaying && j == this.overlayIndex && !flag);
 				this.overlayTracks[j].Update();
 			}
 		}
@@ -30,12 +35,12 @@ public class SoundtrackManager : MonoBehaviour
 		{
 			for (int k = 0; k < this.overlayTracks.Length; k++)
 			{
-				this.overlayTracks[k].playing = (this.overlayPlaying && k == this.overlayIndex);
+				this.overlayTracks[k].playing = (this.overlayPlaying && k == this.overlayIndex && !flag);
 				this.overlayTracks[k].Update();
 			}
 			for (int l = 0; l < this.mainTracks.Length; l++)
 			{
-				this.mainTracks[l].playing = (!this.overlayPlaying && l == this.mainIndex);
+				this.mainTracks[l].playing = (!this.overlayPlaying && l == this.mainIndex && !flag);
 				this.mainTracks[l].Update();
 			}
 		}

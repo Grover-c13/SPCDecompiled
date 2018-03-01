@@ -13,13 +13,14 @@ public class ServerFilters : MonoBehaviour
 		{
 			return true;
 		}
+		this.nameFilter = this.nameFilter.ToUpper();
 		int num = 0;
 		int num2 = 0;
 		foreach (char c in this.nameFilter)
 		{
 			for (int j = num2; j < server_name.Length; j++)
 			{
-				if (server_name[j] == c)
+				if (server_name.ToUpper()[j] == c)
 				{
 					num2 = j;
 					num++;

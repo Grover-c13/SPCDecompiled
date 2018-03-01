@@ -7,9 +7,17 @@ public class ButtonWallAdjuster : MonoBehaviour
 	{
 	}
 
+	private void Start()
+	{
+		if (this.onAwake)
+		{
+			this.Adjust();
+		}
+	}
+
 	public void Adjust()
 	{
-		if (this.adjusted)
+		if (this.adjusted && !this.onAwake)
 		{
 			return;
 		}
@@ -26,4 +34,6 @@ public class ButtonWallAdjuster : MonoBehaviour
 	public float offset = 0.1f;
 
 	private bool adjusted;
+
+	public bool onAwake;
 }

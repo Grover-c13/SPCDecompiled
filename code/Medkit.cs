@@ -31,16 +31,8 @@ public class Medkit : NetworkBehaviour
 			if (this.inventoryCooldown <= 0f && Input.GetButtonDown("Fire1") && this.inv.curItem == 14 && this.time < 0f)
 			{
 				this.CallCmdUseMedkit();
-				this.time = 3f;
+				this.time = 1f;
 				this.inv.SetCurItem(-1);
-				foreach (Item item in this.inv.items)
-				{
-					if (item.id == 14)
-					{
-						this.inv.items.Remove(item);
-						break;
-					}
-				}
 			}
 		}
 	}
@@ -48,12 +40,19 @@ public class Medkit : NetworkBehaviour
 	[Command(channel = 2)]
 	private void CmdUseMedkit()
 	{
-		Team team = this.ccm.klasy[this.ccm.curClass].team;
-		if (team != Team.SCP && team != Team.RIP && this.time < 0f)
+		foreach (Inventory.SyncItemInfo item in this.inv.items)
 		{
-			this.ps.Networkhealth = Mathf.Clamp(this.ps.health + UnityEngine.Random.Range(50, 85), 0, this.ccm.klasy[this.ccm.curClass].maxHP);
+			if (item.id == 14)
+			{
+				Team team = this.ccm.klasy[this.ccm.curClass].team;
+				if (team != Team.SCP && team != Team.RIP && this.time < 0f)
+				{
+					this.ps.Networkhealth = Mathf.Clamp(this.ps.health + UnityEngine.Random.Range(50, 85), 0, this.ccm.klasy[this.ccm.curClass].maxHP);
+				}
+				this.time = 1f;
+				this.inv.items.Remove(item);
+			}
 		}
-		this.time = 3f;
 	}
 
 	private void UNetVersion()

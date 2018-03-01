@@ -17,44 +17,47 @@ public class QueryProcessor : NetworkBehaviour
 	}
 
 	[Command(channel = 15)]
-	public void CmdSendQuery(string query, string admin_password)
+	public void CmdSendQuery(string query)
 	{
-		string @string = ConfigFile.GetString("administrator_password", "none");
-		if (@string != "none")
+		if (ConfigFile.GetString("administrator_password", "none") != "none" && base.GetComponent<ServerRoles>().GetAccessToRemoteAdmin())
 		{
-			if (admin_password == @string && admin_password != string.Empty)
-			{
-				this.ProcessQuery(base.GetComponent<NetworkIdentity>().connectionToClient, query);
-			}
-			else
-			{
-				base.GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
-			}
+			this.ProcessQuery(base.GetComponent<NetworkIdentity>().connectionToClient, query);
 		}
 	}
 
 	[Command(channel = 15)]
 	public void CmdCheckPassword(string admin_password)
 	{
-		string @string = ConfigFile.GetString("administrator_password", "none");
-		if (admin_password == @string && admin_password != string.Empty && @string != "none")
+		if (base.GetComponent<ServerRoles>().GetAccessToRemoteAdmin())
 		{
 			this.CallTargetReturnValue(base.GetComponent<NetworkIdentity>().connectionToClient, new string[]
 			{
 				"_PasswordCheck_True"
 			});
 		}
-		else if (this.passwordTries >= 3)
-		{
-			BanPlayer.BanConnection(base.GetComponent<NetworkIdentity>().connectionToClient, 1);
-		}
 		else
 		{
-			this.CallTargetReturnValue(base.GetComponent<NetworkIdentity>().connectionToClient, new string[]
+			string @string = ConfigFile.GetString("administrator_password", "none");
+			if (admin_password == @string && admin_password != string.Empty && @string != "none")
 			{
-				"_PasswordCheck_False"
-			});
-			this.passwordTries++;
+				base.GetComponent<ServerRoles>().SetRole(5);
+				this.CallTargetReturnValue(base.GetComponent<NetworkIdentity>().connectionToClient, new string[]
+				{
+					"_PasswordCheck_True"
+				});
+			}
+			else if (this.passwordTries >= 3)
+			{
+				BanPlayer.BanConnection(base.GetComponent<NetworkIdentity>().connectionToClient, 1);
+			}
+			else
+			{
+				this.CallTargetReturnValue(base.GetComponent<NetworkIdentity>().connectionToClient, new string[]
+				{
+					"_PasswordCheck_False"
+				});
+				this.passwordTries++;
+			}
 		}
 	}
 
@@ -67,7 +70,7 @@ public class QueryProcessor : NetworkBehaviour
 			{
 				string sesTime = "#UNCONNECTED#";
 				GameObject gameObject = GameConsole.Console.FindConnectedRoot(networkConnection);
-				if (target != null)
+				if (gameObject != null)
 				{
 					try
 					{
@@ -193,7 +196,7 @@ public class QueryProcessor : NetworkBehaviour
 			Debug.LogError("Command CmdSendQuery called on client.");
 			return;
 		}
-		((QueryProcessor)obj).CmdSendQuery(reader.ReadString(), reader.ReadString());
+		((QueryProcessor)obj).CmdSendQuery(reader.ReadString());
 	}
 
 	protected static void InvokeCmdCmdCheckPassword(NetworkBehaviour obj, NetworkReader reader)
@@ -206,7 +209,7 @@ public class QueryProcessor : NetworkBehaviour
 		((QueryProcessor)obj).CmdCheckPassword(reader.ReadString());
 	}
 
-	public void CallCmdSendQuery(string query, string admin_password)
+	public void CallCmdSendQuery(string query)
 	{
 		if (!NetworkClient.active)
 		{
@@ -215,7 +218,7 @@ public class QueryProcessor : NetworkBehaviour
 		}
 		if (base.isServer)
 		{
-			this.CmdSendQuery(query, admin_password);
+			this.CmdSendQuery(query);
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -224,7 +227,6 @@ public class QueryProcessor : NetworkBehaviour
 		networkWriter.WritePackedUInt32((uint)QueryProcessor.kCmdCmdSendQuery);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
 		networkWriter.Write(query);
-		networkWriter.Write(admin_password);
 		base.SendCommandInternal(networkWriter, 15, "CmdSendQuery");
 	}
 

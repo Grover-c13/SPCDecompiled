@@ -2,8 +2,8 @@
 
 namespace Dissonance
 {
-	[Obsolete("Use [ContractAnnotation('=> halt')] instead")]
 	[AttributeUsage(AttributeTargets.Method)]
+	[Obsolete("Use [ContractAnnotation('=> halt')] instead")]
 	internal sealed class TerminatesProgramAttribute : Attribute
 	{
 		public TerminatesProgramAttribute()
