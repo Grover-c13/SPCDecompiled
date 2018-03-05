@@ -147,7 +147,10 @@ public class RoundSummary : NetworkBehaviour
 	[Command(channel = 15)]
 	private void CmdSetSummary(RoundSummary.Summary sum, int posttime)
 	{
-		this.CallRpcSetSummary(sum, posttime);
+		if (base.GetComponent<NetworkIdentity>().isServer)
+		{
+			this.CallRpcSetSummary(sum, posttime);
+		}
 	}
 
 	[ClientRpc(channel = 15)]

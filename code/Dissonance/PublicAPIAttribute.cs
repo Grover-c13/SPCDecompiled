@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
 	[MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
 	internal sealed class PublicAPIAttribute : Attribute
 	{
+		[CanBeNull]
+		public string Comment { get; private set; }
+
 		public PublicAPIAttribute()
 		{
 		}
@@ -14,23 +16,5 @@ namespace Dissonance
 		{
 			this.Comment = comment;
 		}
-
-		[CanBeNull]
-		public string Comment
-		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<Comment>k__BackingField;
-			}
-			[CompilerGenerated]
-			private set
-			{
-				this.<Comment>k__BackingField = value;
-			}
-		}
-
-		[CompilerGenerated]
-		private string <Comment>k__BackingField;
 	}
 }

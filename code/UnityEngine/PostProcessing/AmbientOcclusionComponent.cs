@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class AmbientOcclusionComponent : PostProcessingComponentCommandBuffer<AmbientOcclusionModel>
 	{
-		public AmbientOcclusionComponent()
-		{
-		}
-
 		private AmbientOcclusionComponent.OcclusionSource occlusionSource
 		{
 			get
@@ -39,6 +35,10 @@ namespace UnityEngine.PostProcessing
 			{
 				return base.model.enabled && base.model.settings.intensity > 0f && !this.context.interrupted;
 			}
+		}
+
+		public AmbientOcclusionComponent()
+		{
 		}
 
 		public override DepthTextureMode GetCameraFlags()

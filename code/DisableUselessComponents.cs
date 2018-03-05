@@ -4,6 +4,44 @@ using UnityEngine.Networking;
 
 public class DisableUselessComponents : NetworkBehaviour
 {
+	public string Networklabel
+	{
+		get
+		{
+			return this.label;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetName(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<string>(value, ref this.label, dirtyBit);
+		}
+	}
+
+	public bool NetworkisDedicated
+	{
+		get
+		{
+			return this.isDedicated;
+		}
+		set
+		{
+			uint dirtyBit = 2u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetServer(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.isDedicated, dirtyBit);
+		}
+	}
+
 	public DisableUselessComponents()
 	{
 	}
@@ -82,44 +120,6 @@ public class DisableUselessComponents : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public string Networklabel
-	{
-		get
-		{
-			return this.label;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetName(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<string>(value, ref this.label, dirtyBit);
-		}
-	}
-
-	public bool NetworkisDedicated
-	{
-		get
-		{
-			return this.isDedicated;
-		}
-		set
-		{
-			uint dirtyBit = 2u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetServer(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.isDedicated, dirtyBit);
-		}
 	}
 
 	protected static void InvokeCmdCmdSetName(NetworkBehaviour obj, NetworkReader reader)

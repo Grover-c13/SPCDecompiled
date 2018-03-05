@@ -1,13 +1,30 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Scp914 : NetworkBehaviour
 {
+	public int NetworkknobStatus
+	{
+		get
+		{
+			return this.knobStatus;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetStatus(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.knobStatus, dirtyBit);
+		}
+	}
+
 	public Scp914()
 	{
 	}
@@ -19,7 +36,7 @@ public class Scp914 : NetworkBehaviour
 
 	private void SetStatus(int i)
 	{
-		this.NetworksyncStatus = i;
+		this.NetworkknobStatus = i;
 	}
 
 	public void ChangeKnobStatus()
@@ -27,10 +44,10 @@ public class Scp914 : NetworkBehaviour
 		if (!this.working && this.cooldown < 0f)
 		{
 			this.cooldown = 0.2f;
-			this.NetworksyncStatus = this.syncStatus + 1;
-			if (this.syncStatus >= 5)
+			this.NetworkknobStatus = this.knobStatus + 1;
+			if (this.knobStatus >= 5)
 			{
-				this.NetworksyncStatus = 0;
+				this.NetworkknobStatus = 0;
 			}
 		}
 	}
@@ -46,16 +63,16 @@ public class Scp914 : NetworkBehaviour
 
 	private void Update()
 	{
-		if (this.syncStatus != (int)this.status)
+		if (this.knobStatus != this.prevStatus)
 		{
 			this.knob.GetComponent<AudioSource>().Play();
-			this.status = (Scp914.Scp914_Status)this.syncStatus;
+			this.prevStatus = this.knobStatus;
 		}
 		if (this.cooldown >= 0f)
 		{
 			this.cooldown -= Time.deltaTime;
 		}
-		this.knob.transform.localRotation = Quaternion.Lerp(this.knob.transform.localRotation, Quaternion.Euler(Vector3.forward * Mathf.Lerp(-89f, 89f, (float)this.status / 4f)), Time.deltaTime * 4f);
+		this.knob.transform.localRotation = Quaternion.Lerp(this.knob.transform.localRotation, Quaternion.Euler(Vector3.forward * Mathf.Lerp(-89f, 89f, (float)this.knobStatus / 4f)), Time.deltaTime * 4f);
 	}
 
 	private IEnumerator Animation()
@@ -98,8 +115,20 @@ public class Scp914 : NetworkBehaviour
 				component.SetPosition(component.transform.position + (this.output_obj.position - this.intake_obj.position));
 				if (component.id < this.recipes.Length)
 				{
-					int[] array2 = this.recipes[component.id].outputs[this.syncStatus].outputs.ToArray();
-					component.SetID(array2[UnityEngine.Random.Range(0, array2.Length)]);
+					int[] array2 = this.recipes[component.id].outputs[this.knobStatus].outputs.ToArray();
+					int num = array2[UnityEngine.Random.Range(0, array2.Length)];
+					if (num < 0)
+					{
+						component.SetPosition(Vector3.down * 4000f);
+						if (TutorialManager.status)
+						{
+							UnityEngine.Object.FindObjectOfType<TutorialManager>().Tutorial3_KeycardBurnt();
+						}
+					}
+					else
+					{
+						component.SetID(num);
+					}
 				}
 				else
 				{
@@ -118,30 +147,11 @@ public class Scp914 : NetworkBehaviour
 	{
 	}
 
-	public int NetworksyncStatus
-	{
-		get
-		{
-			return this.syncStatus;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetStatus(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.syncStatus, dirtyBit);
-		}
-	}
-
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)
 	{
 		if (forceAll)
 		{
-			writer.WritePackedUInt32((uint)this.syncStatus);
+			writer.WritePackedUInt32((uint)this.knobStatus);
 			return true;
 		}
 		bool flag = false;
@@ -152,7 +162,7 @@ public class Scp914 : NetworkBehaviour
 				writer.WritePackedUInt32(base.syncVarDirtyBits);
 				flag = true;
 			}
-			writer.WritePackedUInt32((uint)this.syncStatus);
+			writer.WritePackedUInt32((uint)this.knobStatus);
 		}
 		if (!flag)
 		{
@@ -165,7 +175,7 @@ public class Scp914 : NetworkBehaviour
 	{
 		if (initialState)
 		{
-			this.syncStatus = (int)reader.ReadPackedUInt32();
+			this.knobStatus = (int)reader.ReadPackedUInt32();
 			return;
 		}
 		int num = (int)reader.ReadPackedUInt32();
@@ -194,9 +204,9 @@ public class Scp914 : NetworkBehaviour
 	public Scp914.Recipe[] recipes;
 
 	[SyncVar(hook = "SetStatus")]
-	public int syncStatus;
+	public int knobStatus;
 
-	public Scp914.Scp914_Status status;
+	private int prevStatus = -1;
 
 	private float cooldown;
 
@@ -220,139 +230,5 @@ public class Scp914 : NetworkBehaviour
 
 			public List<int> outputs = new List<int>();
 		}
-	}
-
-	public enum Scp914_Status
-	{
-		Rough,
-		Coarse,
-		OneToOne,
-		Fine,
-		VeryFine
-	}
-
-	[CompilerGenerated]
-	private sealed class <Animation>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <Animation>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.$this.soundSource.Play();
-				this.$current = new WaitForSeconds(1f);
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			case 1u:
-				this.<t>__0 = 0f;
-				break;
-			case 2u:
-				break;
-			case 3u:
-				this.$this.UpgradeItems();
-				this.$current = new WaitForSeconds(5.5f);
-				if (!this.$disposing)
-				{
-					this.$PC = 4;
-				}
-				return true;
-			case 4u:
-				goto IL_194;
-			case 5u:
-				goto IL_194;
-			case 6u:
-				this.$this.working = false;
-				this.$PC = -1;
-				return false;
-			default:
-				return false;
-			}
-			if (this.<t>__0 >= 1f)
-			{
-				this.$current = new WaitForSeconds(6.28f);
-				if (!this.$disposing)
-				{
-					this.$PC = 3;
-				}
-				return true;
-			}
-			this.<t>__0 += Time.fixedDeltaTime * 0.85f;
-			this.$this.doors.transform.localPosition = Vector3.right * Mathf.Lerp(1.74f, 0f, this.<t>__0);
-			this.$current = new WaitForFixedUpdate();
-			if (!this.$disposing)
-			{
-				this.$PC = 2;
-			}
-			return true;
-			IL_194:
-			if (this.<t>__0 <= 0f)
-			{
-				this.$current = new WaitForSeconds(1f);
-				if (!this.$disposing)
-				{
-					this.$PC = 6;
-				}
-				return true;
-			}
-			this.<t>__0 -= Time.fixedDeltaTime * 0.85f;
-			this.$this.SetDoorPos(this.<t>__0);
-			this.$current = new WaitForFixedUpdate();
-			if (!this.$disposing)
-			{
-				this.$PC = 5;
-			}
-			return true;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal float <t>__0;
-
-		internal Scp914 $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
 	}
 }

@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class DitheringComponent : PostProcessingComponentRenderTexture<DitheringModel>
 	{
-		public DitheringComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && !this.context.interrupted;
 			}
+		}
+
+		public DitheringComponent()
+		{
 		}
 
 		public override void OnDisable()

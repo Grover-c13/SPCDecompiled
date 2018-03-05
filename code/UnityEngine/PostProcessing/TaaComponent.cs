@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class TaaComponent : PostProcessingComponentRenderTexture<AntialiasingModel>
 	{
-		public TaaComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && base.model.settings.method == AntialiasingModel.Method.Taa && SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGBHalf) && SystemInfo.supportsMotionVectors && !this.context.interrupted;
 			}
+		}
+
+		public TaaComponent()
+		{
 		}
 
 		public override DepthTextureMode GetCameraFlags()

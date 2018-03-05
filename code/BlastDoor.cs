@@ -5,23 +5,6 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(NetworkIdentity))]
 public class BlastDoor : NetworkBehaviour
 {
-	public BlastDoor()
-	{
-	}
-
-	public void SetClosed(bool b)
-	{
-		this.NetworkisClosed = b;
-		if (this.isClosed)
-		{
-			base.GetComponent<Animator>().SetTrigger("Close");
-		}
-	}
-
-	private void UNetVersion()
-	{
-	}
-
 	public bool NetworkisClosed
 	{
 		get
@@ -39,6 +22,23 @@ public class BlastDoor : NetworkBehaviour
 			}
 			base.SetSyncVar<bool>(value, ref this.isClosed, dirtyBit);
 		}
+	}
+
+	public BlastDoor()
+	{
+	}
+
+	public void SetClosed(bool b)
+	{
+		this.NetworkisClosed = b;
+		if (this.isClosed)
+		{
+			base.GetComponent<Animator>().SetTrigger("Close");
+		}
+	}
+
+	private void UNetVersion()
+	{
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

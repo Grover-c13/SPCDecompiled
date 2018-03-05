@@ -5,6 +5,25 @@ using UnityEngine.UI;
 
 public class AlphaWarheadOutsitePanel : NetworkBehaviour
 {
+	public bool NetworkkeycardEntered
+	{
+		get
+		{
+			return this.keycardEntered;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetKeycardState(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.keycardEntered, dirtyBit);
+		}
+	}
+
 	public AlphaWarheadOutsitePanel()
 	{
 	}
@@ -85,25 +104,6 @@ public class AlphaWarheadOutsitePanel : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public bool NetworkkeycardEntered
-	{
-		get
-		{
-			return this.keycardEntered;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetKeycardState(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.keycardEntered, dirtyBit);
-		}
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

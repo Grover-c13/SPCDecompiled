@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,6 +8,25 @@ using UnityStandardAssets.ImageEffects;
 
 public class Scp106PlayerScript : NetworkBehaviour
 {
+	public Vector3 NetworkportalPosition
+	{
+		get
+		{
+			return this.portalPosition;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetPortalPosition(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<Vector3>(value, ref this.portalPosition, dirtyBit);
+		}
+	}
+
 	public Scp106PlayerScript()
 	{
 	}
@@ -412,30 +428,11 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 	}
 
-	public Vector3 NetworkportalPosition
-	{
-		get
-		{
-			return this.portalPosition;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetPortalPosition(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<Vector3>(value, ref this.portalPosition, dirtyBit);
-		}
-	}
-
 	protected static void InvokeCmdCmdMakePortal(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdMakePortal called on client.");
+			Debug.LogError("Command CmdMakePortal called on client.");
 			return;
 		}
 		((Scp106PlayerScript)obj).CmdMakePortal(reader.ReadGameObject());
@@ -445,7 +442,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdMovePlayer called on client.");
+			Debug.LogError("Command CmdMovePlayer called on client.");
 			return;
 		}
 		((Scp106PlayerScript)obj).CmdMovePlayer(reader.ReadGameObject(), (int)reader.ReadPackedUInt32());
@@ -455,7 +452,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdMakePortal called on server.");
+			Debug.LogError("Command function CmdMakePortal called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -476,7 +473,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdMovePlayer called on server.");
+			Debug.LogError("Command function CmdMovePlayer called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -498,7 +495,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("RPC RpcMovePlayer called on server.");
+			Debug.LogError("RPC RpcMovePlayer called on server.");
 			return;
 		}
 		((Scp106PlayerScript)obj).RpcMovePlayer(reader.ReadGameObject());
@@ -508,7 +505,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("RPC RpcAnnounceContaining called on server.");
+			Debug.LogError("RPC RpcAnnounceContaining called on server.");
 			return;
 		}
 		((Scp106PlayerScript)obj).RpcAnnounceContaining();
@@ -518,7 +515,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("RPC Function RpcMovePlayer called on client.");
+			Debug.LogError("RPC Function RpcMovePlayer called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -534,7 +531,7 @@ public class Scp106PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("RPC Function RpcAnnounceContaining called on client.");
+			Debug.LogError("RPC Function RpcAnnounceContaining called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -647,425 +644,4 @@ public class Scp106PlayerScript : NetworkBehaviour
 	private static int kRpcRpcMovePlayer;
 
 	private static int kRpcRpcAnnounceContaining;
-
-	[CompilerGenerated]
-	private sealed class <ContainAnimation>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <ContainAnimation>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.$this.NetworkportalPosition = Vector3.zero;
-				this.<vaca>__0 = this.$this.GetComponentInChildren<VignetteAndChromaticAberration>();
-				this.$this.fpc.m_JumpSpeed = 0f;
-				this.$this.goingViaThePortal = true;
-				this.$current = new WaitForSeconds(15f);
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			case 1u:
-				this.<y>__0 = this.$this.transform.position.y - 2.5f;
-				this.$this.fpc.noclip = true;
-				break;
-			case 2u:
-				break;
-			default:
-				return false;
-			}
-			if (this.$this.transform.position.y > this.<y>__0 && this.$this.ccm.curClass != 2)
-			{
-				if (this.$this.transform.position.y - 2f < this.<y>__0)
-				{
-					this.<vaca>__0.intensity += Time.deltaTime / 2f;
-				}
-				this.<vaca>__0.intensity = Mathf.Clamp(this.<vaca>__0.intensity, 0.036f, 1f);
-				this.$this.transform.position += Vector3.down * Time.deltaTime / 2f;
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			}
-			this.$this.fpc.noclip = false;
-			if (this.b)
-			{
-				this.$this.Kill();
-			}
-			this.$this.goingViaThePortal = false;
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal VignetteAndChromaticAberration <vaca>__0;
-
-		internal float <y>__0;
-
-		internal bool b;
-
-		internal Scp106PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <HighlightPointsText>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <HighlightPointsText>c__Iterator1()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				if (this.$this.isHighlightingPoints)
-				{
-					goto IL_14D;
-				}
-				this.$this.isHighlightingPoints = true;
-				break;
-			case 1u:
-				break;
-			case 2u:
-				goto IL_11A;
-			default:
-				return false;
-			}
-			if ((double)this.$this.pointsText.color.g > 0.05)
-			{
-				this.$this.pointsText.color = Color.Lerp(this.$this.pointsText.color, Color.red, 10f * Time.deltaTime);
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			IL_11A:
-			if ((double)this.$this.pointsText.color.g < 0.95)
-			{
-				this.$this.pointsText.color = Color.Lerp(this.$this.pointsText.color, Color.white, 10f * Time.deltaTime);
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			}
-			this.$this.isHighlightingPoints = false;
-			IL_14D:
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Scp106PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <DoPortalSetupAnimation>c__Iterator2 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <DoPortalSetupAnimation>c__Iterator2()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				break;
-			case 1u:
-				break;
-			case 2u:
-				this.$this.portalPrefab.transform.position = this.$this.portalPosition;
-				this.<portalAnim>__1.SetBool("activated", true);
-				goto IL_11A;
-			default:
-				return false;
-			}
-			if (!(this.$this.portalPrefab == null))
-			{
-				if (!(this.$this.portalPosition != this.$this.portalPrefab.transform.position))
-				{
-					goto IL_11A;
-				}
-				this.<portalAnim>__1 = this.$this.portalPrefab.GetComponent<Animator>();
-				this.<portalAnim>__1.SetBool("activated", false);
-				this.$current = new WaitForSeconds(1f);
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-			}
-			else
-			{
-				this.$this.portalPrefab = GameObject.Find("SCP106_PORTAL");
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-			}
-			return true;
-			IL_11A:
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Animator <portalAnim>__1;
-
-		internal Scp106PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <DoTeleportAnimation>c__Iterator3 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <DoTeleportAnimation>c__Iterator3()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				if (!(this.$this.portalPrefab != null) || this.$this.goingViaThePortal)
-				{
-					goto IL_3A3;
-				}
-				this.$this.goingViaThePortal = true;
-				this.<vaca>__1 = this.$this.GetComponentInChildren<VignetteAndChromaticAberration>();
-				this.$this.fpc.noclip = true;
-				this.<y>__1 = this.$this.transform.position.y - 2.5f;
-				this.<duration>__1 = 0f;
-				break;
-			case 1u:
-				break;
-			case 2u:
-				goto IL_352;
-			default:
-				return false;
-			}
-			if (this.$this.transform.position.y > this.<y>__1 && this.<duration>__1 < 5f)
-			{
-				this.<duration>__1 += Time.fixedDeltaTime;
-				if (this.$this.transform.position.y - 2f < this.<y>__1)
-				{
-					this.<vaca>__1.intensity += Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
-				}
-				this.<vaca>__1.intensity = Mathf.Clamp(this.<vaca>__1.intensity, 0.036f, 1f);
-				this.$this.transform.position += Vector3.down * Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
-				this.$current = new WaitForFixedUpdate();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			if (this.$this.portalPosition == Vector3.zero)
-			{
-				this.$this.GetComponent<PlayerStats>().Explode(true);
-			}
-			this.$this.transform.position = this.$this.portalPrefab.transform.position - Vector3.up * 1.5f;
-			this.<y>__1 = this.$this.transform.position.y + 3f;
-			this.<duration>__1 = 0f;
-			IL_352:
-			if (this.$this.transform.position.y < this.<y>__1 && this.<duration>__1 < 5f)
-			{
-				this.<duration>__1 += Time.fixedDeltaTime;
-				this.$this.transform.position += Vector3.up * Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
-				if (this.$this.transform.position.y + 2f > this.<y>__1)
-				{
-					this.<vaca>__1.intensity -= Time.fixedDeltaTime / 2f * this.$this.teleportSpeed;
-				}
-				this.<vaca>__1.intensity = Mathf.Clamp(this.<vaca>__1.intensity, 0.036f, 1f);
-				this.$current = new WaitForFixedUpdate();
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			}
-			this.$this.fpc.noclip = false;
-			this.$this.goingViaThePortal = false;
-			IL_3A3:
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal VignetteAndChromaticAberration <vaca>__1;
-
-		internal float <y>__1;
-
-		internal float <duration>__1;
-
-		internal Scp106PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
 }

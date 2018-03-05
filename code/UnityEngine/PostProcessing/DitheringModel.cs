@@ -6,10 +6,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class DitheringModel : PostProcessingModel
 	{
-		public DitheringModel()
-		{
-		}
-
 		public DitheringModel.Settings settings
 		{
 			get
@@ -20,6 +16,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public DitheringModel()
+		{
 		}
 
 		public override void Reset()

@@ -4,6 +4,25 @@ using UnityEngine.Networking;
 
 public class ChopperAutostart : NetworkBehaviour
 {
+	public bool NetworkisLanded
+	{
+		get
+		{
+			return this.isLanded;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetState(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.isLanded, dirtyBit);
+		}
+	}
+
 	public ChopperAutostart()
 	{
 	}
@@ -26,25 +45,6 @@ public class ChopperAutostart : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public bool NetworkisLanded
-	{
-		get
-		{
-			return this.isLanded;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetState(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.isLanded, dirtyBit);
-		}
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

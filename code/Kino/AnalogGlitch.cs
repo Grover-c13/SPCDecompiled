@@ -3,15 +3,11 @@ using UnityEngine;
 
 namespace Kino
 {
+	[AddComponentMenu("Kino Image Effects/Analog Glitch")]
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Camera))]
-	[AddComponentMenu("Kino Image Effects/Analog Glitch")]
 	public class AnalogGlitch : MonoBehaviour
 	{
-		public AnalogGlitch()
-		{
-		}
-
 		public float scanLineJitter
 		{
 			get
@@ -58,6 +54,10 @@ namespace Kino
 			{
 				this._colorDrift = value;
 			}
+		}
+
+		public AnalogGlitch()
+		{
 		}
 
 		private void OnRenderImage(RenderTexture source, RenderTexture destination)

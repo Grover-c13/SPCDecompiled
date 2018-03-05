@@ -7,6 +7,25 @@ using UnityEngine.UI;
 
 public class NicknameSync : NetworkBehaviour
 {
+	public string NetworkmyNick
+	{
+		get
+		{
+			return this.myNick;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetNick(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<string>(value, ref this.myNick, dirtyBit);
+		}
+	}
+
 	public NicknameSync()
 	{
 	}
@@ -55,15 +74,18 @@ public class NicknameSync : NetworkBehaviour
 					CharacterClassManager component2 = component.GetComponent<CharacterClassManager>();
 					CharacterClassManager component3 = base.GetComponent<CharacterClassManager>();
 					flag = true;
-					this.n_text.color = component2.klasy[component2.curClass].classColor;
-					this.n_text.text = component.role.GetColoredRoleString() + "\n";
-					Text text = this.n_text;
-					text.text += component.myNick;
-					Text text2 = this.n_text;
-					text2.text = text2.text + "\n" + component2.klasy[component2.curClass].fullName;
+					if (component2.curClass != -1 && !TutorialManager.status)
+					{
+						this.n_text.color = component2.klasy[component2.curClass].classColor;
+						this.n_text.text = component.role.GetColoredRoleString() + "\n";
+						Text text = this.n_text;
+						text.text += component.myNick;
+						Text text2 = this.n_text;
+						text2.text = text2.text + "\n" + component2.klasy[component2.curClass].fullName;
+					}
 					try
 					{
-						if (component2.klasy[component2.curClass].team == Team.MTF && component3.klasy[component3.curClass].team == Team.MTF)
+						if (component2.curClass >= 0 && component2.klasy[component2.curClass].team == Team.MTF && component3.klasy[component3.curClass].team == Team.MTF)
 						{
 							int num = 0;
 							int num2 = 0;
@@ -158,25 +180,6 @@ public class NicknameSync : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public string NetworkmyNick
-	{
-		get
-		{
-			return this.myNick;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetNick(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<string>(value, ref this.myNick, dirtyBit);
-		}
 	}
 
 	protected static void InvokeCmdCmdSetNick(NetworkBehaviour obj, NetworkReader reader)

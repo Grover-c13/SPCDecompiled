@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Dissonance.Integrations.UNet_HLAPI;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -94,7 +91,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdHurtPlayer called on client.");
+			Debug.LogError("Command CmdHurtPlayer called on client.");
 			return;
 		}
 		((Scp049_2PlayerScript)obj).CmdHurtPlayer(reader.ReadGameObject(), reader.ReadString());
@@ -104,7 +101,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdShootAnim called on client.");
+			Debug.LogError("Command CmdShootAnim called on client.");
 			return;
 		}
 		((Scp049_2PlayerScript)obj).CmdShootAnim();
@@ -114,7 +111,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdHurtPlayer called on server.");
+			Debug.LogError("Command function CmdHurtPlayer called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -136,7 +133,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdShootAnim called on server.");
+			Debug.LogError("Command function CmdShootAnim called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -156,7 +153,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("RPC RpcShootAnim called on server.");
+			Debug.LogError("RPC RpcShootAnim called on server.");
 			return;
 		}
 		((Scp049_2PlayerScript)obj).RpcShootAnim();
@@ -166,7 +163,7 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("RPC Function RpcShootAnim called on client.");
+			Debug.LogError("RPC Function RpcShootAnim called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -219,99 +216,4 @@ public class Scp049_2PlayerScript : NetworkBehaviour
 	private static int kCmdCmdShootAnim;
 
 	private static int kRpcRpcShootAnim;
-
-	[CompilerGenerated]
-	private sealed class <UpdateInput>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <UpdateInput>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				break;
-			case 1u:
-				this.$this.Attack();
-				this.$current = new WaitForSeconds(1f / this.<mt>__1);
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			case 2u:
-				goto IL_105;
-			case 3u:
-				break;
-			default:
-				return false;
-			}
-			if (Input.GetButton("Fire1") && this.$this.iAm049_2)
-			{
-				this.<mt>__1 = this.$this.multiplier.Evaluate(this.$this.GetComponent<PlayerStats>().GetHealthPercent());
-				this.$this.CallCmdShootAnim();
-				this.$this.animator.SetTrigger("Shoot");
-				this.$this.animator.speed = this.<mt>__1;
-				this.$current = new WaitForSeconds(0.65f / this.<mt>__1);
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			IL_105:
-			this.$current = new WaitForEndOfFrame();
-			if (!this.$disposing)
-			{
-				this.$PC = 3;
-			}
-			return true;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal float <mt>__1;
-
-		internal Scp049_2PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
 }

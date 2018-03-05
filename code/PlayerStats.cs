@@ -7,6 +7,25 @@ using UnityEngine.Networking;
 
 public class PlayerStats : NetworkBehaviour
 {
+	public int Networkhealth
+	{
+		get
+		{
+			return this.health;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetHPAmount(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.health, dirtyBit);
+		}
+	}
+
 	public PlayerStats()
 	{
 	}
@@ -82,6 +101,7 @@ public class PlayerStats : NetworkBehaviour
 		playerStats.Networkhealth = playerStats.health - Mathf.CeilToInt(info.amount);
 		if (component.health < 1 && component2.curClass != 2)
 		{
+			go.GetComponent<Inventory>().ServerDropAll();
 			if (component2.curClass == 3)
 			{
 				go.GetComponent<Scp106PlayerScript>().CallRpcAnnounceContaining();
@@ -151,25 +171,6 @@ public class PlayerStats : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public int Networkhealth
-	{
-		get
-		{
-			return this.health;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetHPAmount(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.health, dirtyBit);
-		}
 	}
 
 	protected static void InvokeCmdCmdSelfDeduct(NetworkBehaviour obj, NetworkReader reader)

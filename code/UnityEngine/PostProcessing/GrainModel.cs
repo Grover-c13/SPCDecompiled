@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class GrainModel : PostProcessingModel
 	{
-		public GrainModel()
-		{
-		}
-
 		public GrainModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public GrainModel()
+		{
 		}
 
 		public override void Reset()

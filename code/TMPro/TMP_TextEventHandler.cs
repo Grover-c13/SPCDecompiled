@@ -7,10 +7,6 @@ namespace TMPro
 {
 	public class TMP_TextEventHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IEventSystemHandler
 	{
-		public TMP_TextEventHandler()
-		{
-		}
-
 		public TMP_TextEventHandler.CharacterSelectionEvent onCharacterSelection
 		{
 			get
@@ -57,6 +53,10 @@ namespace TMPro
 			{
 				this.m_OnLinkSelection = value;
 			}
+		}
+
+		public TMP_TextEventHandler()
+		{
 		}
 
 		private void Awake()

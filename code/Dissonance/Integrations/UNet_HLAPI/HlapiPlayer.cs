@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,23 +7,7 @@ namespace Dissonance.Integrations.UNet_HLAPI
 	[RequireComponent(typeof(NetworkIdentity))]
 	public class HlapiPlayer : NetworkBehaviour, IDissonancePlayer
 	{
-		public HlapiPlayer()
-		{
-		}
-
-		public bool IsTracking
-		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<IsTracking>k__BackingField;
-			}
-			[CompilerGenerated]
-			private set
-			{
-				this.<IsTracking>k__BackingField = value;
-			}
-		}
+		public bool IsTracking { get; private set; }
 
 		public string PlayerId
 		{
@@ -56,6 +39,22 @@ namespace Dissonance.Integrations.UNet_HLAPI
 			{
 				return (!base.isLocalPlayer) ? NetworkPlayerType.Remote : NetworkPlayerType.Local;
 			}
+		}
+
+		public string Network_playerId
+		{
+			get
+			{
+				return this._playerId;
+			}
+			set
+			{
+				base.SetSyncVar<string>(value, ref this._playerId, 1u);
+			}
+		}
+
+		public HlapiPlayer()
+		{
 		}
 
 		public void OnDestroy()
@@ -171,18 +170,6 @@ namespace Dissonance.Integrations.UNet_HLAPI
 		{
 		}
 
-		public string Network_playerId
-		{
-			get
-			{
-				return this._playerId;
-			}
-			set
-			{
-				base.SetSyncVar<string>(value, ref this._playerId, 1u);
-			}
-		}
-
 		protected static void InvokeCmdCmdSetPlayerName(NetworkBehaviour obj, NetworkReader reader)
 		{
 			if (!NetworkServer.active)
@@ -281,9 +268,6 @@ namespace Dissonance.Integrations.UNet_HLAPI
 		private static readonly Log Log = Logs.Create(LogCategory.Network, "HLAPI Player Component");
 
 		private DissonanceComms _comms;
-
-		[CompilerGenerated]
-		private bool <IsTracking>k__BackingField;
 
 		[SyncVar]
 		private string _playerId;

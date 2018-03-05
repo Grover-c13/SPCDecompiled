@@ -2,14 +2,10 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[ImageEffectAllowedInSceneView]
 [ExecuteInEditMode]
+[ImageEffectAllowedInSceneView]
 public class NGSS_ContactShadows : MonoBehaviour
 {
-	public NGSS_ContactShadows()
-	{
-	}
-
 	private Camera mCamera
 	{
 		get
@@ -54,6 +50,10 @@ public class NGSS_ContactShadows : MonoBehaviour
 			}
 			return this._mMaterial;
 		}
+	}
+
+	public NGSS_ContactShadows()
+	{
 	}
 
 	private void AddCommandBuffers()

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -178,75 +176,5 @@ namespace AntiFaker
 		private float distanceTraveled;
 
 		private Vector3 prevPos = Vector3.zero;
-
-		[CompilerGenerated]
-		private sealed class <AntiSpeedhack>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-		{
-			[DebuggerHidden]
-			public <AntiSpeedhack>c__Iterator0()
-			{
-			}
-
-			public bool MoveNext()
-			{
-				uint num = (uint)this.$PC;
-				this.$PC = -1;
-				switch (num)
-				{
-				case 0u:
-					break;
-				case 1u:
-					break;
-				default:
-					return false;
-				}
-				this.$this.distanceTraveled = 0f;
-				this.$current = new WaitForSeconds(1f);
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-
-			object IEnumerator<object>.Current
-			{
-				[DebuggerHidden]
-				get
-				{
-					return this.$current;
-				}
-			}
-
-			object IEnumerator.Current
-			{
-				[DebuggerHidden]
-				get
-				{
-					return this.$current;
-				}
-			}
-
-			[DebuggerHidden]
-			public void Dispose()
-			{
-				this.$disposing = true;
-				this.$PC = -1;
-			}
-
-			[DebuggerHidden]
-			public void Reset()
-			{
-				throw new NotSupportedException();
-			}
-
-			internal AntiFakeCommands $this;
-
-			internal object $current;
-
-			internal bool $disposing;
-
-			internal int $PC;
-		}
 	}
 }

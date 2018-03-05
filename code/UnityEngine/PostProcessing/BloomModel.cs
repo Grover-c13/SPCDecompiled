@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class BloomModel : PostProcessingModel
 	{
-		public BloomModel()
-		{
-		}
-
 		public BloomModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public BloomModel()
+		{
 		}
 
 		public override void Reset()

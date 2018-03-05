@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class EyeAdaptationModel : PostProcessingModel
 	{
-		public EyeAdaptationModel()
-		{
-		}
-
 		public EyeAdaptationModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public EyeAdaptationModel()
+		{
 		}
 
 		public override void Reset()
@@ -59,12 +59,12 @@ namespace UnityEngine.PostProcessing
 				}
 			}
 
-			[Tooltip("Filters the dark part of the histogram when computing the average luminance to avoid very dark pixels from contributing to the auto exposure. Unit is in percent.")]
 			[Range(1f, 99f)]
+			[Tooltip("Filters the dark part of the histogram when computing the average luminance to avoid very dark pixels from contributing to the auto exposure. Unit is in percent.")]
 			public float lowPercent;
 
-			[Tooltip("Filters the bright part of the histogram when computing the average luminance to avoid very dark pixels from contributing to the auto exposure. Unit is in percent.")]
 			[Range(1f, 99f)]
+			[Tooltip("Filters the bright part of the histogram when computing the average luminance to avoid very dark pixels from contributing to the auto exposure. Unit is in percent.")]
 			public float highPercent;
 
 			[Tooltip("Minimum average luminance to consider for auto exposure (in EV).")]
@@ -73,8 +73,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Maximum average luminance to consider for auto exposure (in EV).")]
 			public float maxLuminance;
 
-			[Tooltip("Exposure bias. Use this to control the global exposure of the scene.")]
 			[Min(0f)]
+			[Tooltip("Exposure bias. Use this to control the global exposure of the scene.")]
 			public float keyValue;
 
 			[Tooltip("Set this to true to let Unity handle the key value automatically based on average luminance.")]

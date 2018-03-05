@@ -5,6 +5,42 @@ using UnityEngine.Networking;
 
 public class PlyMovementSync : NetworkBehaviour
 {
+	public float Networkrotation
+	{
+		get
+		{
+			return this.rotation;
+		}
+		set
+		{
+			base.SetSyncVar<float>(value, ref this.rotation, 1u);
+		}
+	}
+
+	public Vector3 Networkposition
+	{
+		get
+		{
+			return this.position;
+		}
+		set
+		{
+			base.SetSyncVar<Vector3>(value, ref this.position, 2u);
+		}
+	}
+
+	public float NetworkrotX
+	{
+		get
+		{
+			return this.rotX;
+		}
+		set
+		{
+			base.SetSyncVar<float>(value, ref this.rotX, 4u);
+		}
+	}
+
 	public PlyMovementSync()
 	{
 	}
@@ -122,42 +158,6 @@ public class PlyMovementSync : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public float Networkrotation
-	{
-		get
-		{
-			return this.rotation;
-		}
-		set
-		{
-			base.SetSyncVar<float>(value, ref this.rotation, 1u);
-		}
-	}
-
-	public Vector3 Networkposition
-	{
-		get
-		{
-			return this.position;
-		}
-		set
-		{
-			base.SetSyncVar<Vector3>(value, ref this.position, 2u);
-		}
-	}
-
-	public float NetworkrotX
-	{
-		get
-		{
-			return this.rotX;
-		}
-		set
-		{
-			base.SetSyncVar<float>(value, ref this.rotX, 4u);
-		}
 	}
 
 	protected static void InvokeCmdCmdSyncData(NetworkBehaviour obj, NetworkReader reader)

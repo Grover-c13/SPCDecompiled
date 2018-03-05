@@ -36,29 +36,32 @@ public class RadioInitializator : NetworkBehaviour
 					RadioInitializator component = gameObject.GetComponent<RadioInitializator>();
 					component.radio.SetRelationship();
 					string playerId = component.hlapiPlayer.PlayerId;
-					VoicePlayback component2 = component.radio.mySource.GetComponent<VoicePlayback>();
-					bool flag = component.radio.mySource.spatialBlend == 0f && component2.Priority != ChannelPriority.None && (component.radio.ShouldBeVisible(base.gameObject) || Intercom.host.speaker == gameObject);
-					if (RadioInitializator.names.Contains(playerId))
+					if (component.radio.mySource != null)
 					{
-						int index = RadioInitializator.names.IndexOf(playerId);
-						if (!flag)
+						VoicePlayback component2 = component.radio.mySource.GetComponent<VoicePlayback>();
+						bool flag = component.radio.mySource.spatialBlend == 0f && component2.Priority != ChannelPriority.None && (component.radio.ShouldBeVisible(base.gameObject) || Intercom.host.speaker == gameObject);
+						if (RadioInitializator.names.Contains(playerId))
 						{
-							UnityEngine.Object.Destroy(RadioInitializator.spawns[index]);
-							RadioInitializator.spawns.RemoveAt(index);
-							RadioInitializator.names.RemoveAt(index);
+							int index = RadioInitializator.names.IndexOf(playerId);
+							if (!flag)
+							{
+								UnityEngine.Object.Destroy(RadioInitializator.spawns[index]);
+								RadioInitializator.spawns.RemoveAt(index);
+								RadioInitializator.names.RemoveAt(index);
+								return;
+							}
+							RadioInitializator.spawns[index].GetComponent<Image>().color = component.serverRoles.GetGradient()[0].Evaluate(component2.Amplitude * 3f);
+							RadioInitializator.spawns[index].GetComponent<Outline>().effectColor = component.serverRoles.GetGradient()[1].Evaluate(component2.Amplitude * 3f);
+						}
+						else if (flag)
+						{
+							GameObject gameObject2 = UnityEngine.Object.Instantiate<GameObject>(this.prefab, this.parent);
+							gameObject2.transform.localScale = Vector3.one;
+							gameObject2.GetComponentInChildren<Text>().text = component.nicknameSync.myNick;
+							RadioInitializator.spawns.Add(gameObject2);
+							RadioInitializator.names.Add(playerId);
 							return;
 						}
-						RadioInitializator.spawns[index].GetComponent<Image>().color = component.serverRoles.GetGradient()[0].Evaluate(component2.Amplitude * 3f);
-						RadioInitializator.spawns[index].GetComponent<Outline>().effectColor = component.serverRoles.GetGradient()[1].Evaluate(component2.Amplitude * 3f);
-					}
-					else if (flag)
-					{
-						GameObject gameObject2 = UnityEngine.Object.Instantiate<GameObject>(this.prefab, this.parent);
-						gameObject2.transform.localScale = Vector3.one;
-						gameObject2.GetComponentInChildren<Text>().text = component.nicknameSync.myNick;
-						RadioInitializator.spawns.Add(gameObject2);
-						RadioInitializator.names.Add(playerId);
-						return;
 					}
 				}
 			}

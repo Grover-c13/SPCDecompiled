@@ -4,6 +4,25 @@ using UnityEngine.Networking;
 
 public class AlphaWarheadNukesitePanel : NetworkBehaviour
 {
+	public bool Networkenabled
+	{
+		get
+		{
+			return this.enabled;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetEnabled(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.enabled, dirtyBit);
+		}
+	}
+
 	public AlphaWarheadNukesitePanel()
 	{
 	}
@@ -50,25 +69,6 @@ public class AlphaWarheadNukesitePanel : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public bool Networkenabled
-	{
-		get
-		{
-			return this.enabled;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetEnabled(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.enabled, dirtyBit);
-		}
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

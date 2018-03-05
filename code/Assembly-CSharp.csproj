@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{493A4CBB-F45F-4577-AE0B-37675C1CEFE6}</ProjectGuid>
+    <ProjectGuid>{116B9692-CC6F-416C-9AB1-1E814BAC68A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -98,7 +98,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="-PrivateImplementationDetails-.cs" />
     <Compile Include="AlphaWarheadController.cs" />
     <Compile Include="AlphaWarheadNukesitePanel.cs" />
     <Compile Include="AlphaWarheadOutsitePanel.cs" />

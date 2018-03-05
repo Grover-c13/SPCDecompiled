@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class DepthOfFieldModel : PostProcessingModel
 	{
-		public DepthOfFieldModel()
-		{
-		}
-
 		public DepthOfFieldModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public DepthOfFieldModel()
+		{
 		}
 
 		public override void Reset()
@@ -55,12 +55,12 @@ namespace UnityEngine.PostProcessing
 				}
 			}
 
-			[Tooltip("Distance to the point of focus.")]
 			[Min(0.1f)]
+			[Tooltip("Distance to the point of focus.")]
 			public float focusDistance;
 
-			[Tooltip("Ratio of aperture (known as f-stop or f-number). The smaller the value is, the shallower the depth of field is.")]
 			[Range(0.05f, 32f)]
+			[Tooltip("Ratio of aperture (known as f-stop or f-number). The smaller the value is, the shallower the depth of field is.")]
 			public float aperture;
 
 			[Range(1f, 300f)]

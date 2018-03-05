@@ -184,7 +184,7 @@ public class TutorialManager : MonoBehaviour
 
 	private void Tutorial2_GiveSFA()
 	{
-		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(22, 1E+08f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
+		GameObject.Find("Host").GetComponent<Inventory>().SetPickup(22, 9999f, GameObject.Find("ItemPos").transform.position, default(Quaternion), default(Quaternion));
 	}
 
 	private void Tutorial2_ResultText()

@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class GrainComponent : PostProcessingComponentRenderTexture<GrainModel>
 	{
-		public GrainComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && base.model.settings.intensity > 0f && SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGBHalf) && !this.context.interrupted;
 			}
+		}
+
+		public GrainComponent()
+		{
 		}
 
 		public override void OnDisable()

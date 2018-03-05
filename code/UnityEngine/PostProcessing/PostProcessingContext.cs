@@ -1,42 +1,10 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace UnityEngine.PostProcessing
 {
 	public class PostProcessingContext
 	{
-		public PostProcessingContext()
-		{
-		}
-
-		public bool interrupted
-		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<interrupted>k__BackingField;
-			}
-			[CompilerGenerated]
-			private set
-			{
-				this.<interrupted>k__BackingField = value;
-			}
-		}
-
-		public void Interrupt()
-		{
-			this.interrupted = true;
-		}
-
-		public PostProcessingContext Reset()
-		{
-			this.profile = null;
-			this.camera = null;
-			this.materialFactory = null;
-			this.renderTextureFactory = null;
-			this.interrupted = false;
-			return this;
-		}
+		public bool interrupted { get; private set; }
 
 		public bool isGBufferAvailable
 		{
@@ -78,6 +46,25 @@ namespace UnityEngine.PostProcessing
 			}
 		}
 
+		public PostProcessingContext()
+		{
+		}
+
+		public void Interrupt()
+		{
+			this.interrupted = true;
+		}
+
+		public PostProcessingContext Reset()
+		{
+			this.profile = null;
+			this.camera = null;
+			this.materialFactory = null;
+			this.renderTextureFactory = null;
+			this.interrupted = false;
+			return this;
+		}
+
 		public PostProcessingProfile profile;
 
 		public Camera camera;
@@ -85,8 +72,5 @@ namespace UnityEngine.PostProcessing
 		public MaterialFactory materialFactory;
 
 		public RenderTextureFactory renderTextureFactory;
-
-		[CompilerGenerated]
-		private bool <interrupted>k__BackingField;
 	}
 }

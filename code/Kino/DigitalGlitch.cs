@@ -3,15 +3,11 @@ using UnityEngine;
 
 namespace Kino
 {
+	[AddComponentMenu("Kino Image Effects/Digital Glitch")]
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Camera))]
-	[AddComponentMenu("Kino Image Effects/Digital Glitch")]
 	public class DigitalGlitch : MonoBehaviour
 	{
-		public DigitalGlitch()
-		{
-		}
-
 		public float intensity
 		{
 			get
@@ -22,6 +18,10 @@ namespace Kino
 			{
 				this._intensity = value;
 			}
+		}
+
+		public DigitalGlitch()
+		{
 		}
 
 		private static Color RandomColor()

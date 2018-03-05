@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class AmbientOcclusionModel : PostProcessingModel
 	{
-		public AmbientOcclusionModel()
-		{
-		}
-
 		public AmbientOcclusionModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public AmbientOcclusionModel()
+		{
 		}
 
 		public override void Reset()

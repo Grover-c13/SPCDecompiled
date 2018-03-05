@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class ChromaticAberrationModel : PostProcessingModel
 	{
-		public ChromaticAberrationModel()
-		{
-		}
-
 		public ChromaticAberrationModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public ChromaticAberrationModel()
+		{
 		}
 
 		public override void Reset()

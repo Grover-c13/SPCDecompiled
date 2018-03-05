@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class ChromaticAberrationComponent : PostProcessingComponentRenderTexture<ChromaticAberrationModel>
 	{
-		public ChromaticAberrationComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && base.model.settings.intensity > 0f && !this.context.interrupted;
 			}
+		}
+
+		public ChromaticAberrationComponent()
+		{
 		}
 
 		public override void OnDisable()

@@ -5,6 +5,14 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class ScreenSpaceReflectionComponent : PostProcessingComponentCommandBuffer<ScreenSpaceReflectionModel>
 	{
+		public override bool active
+		{
+			get
+			{
+				return base.model.enabled && this.context.isGBufferAvailable && !this.context.interrupted;
+			}
+		}
+
 		public ScreenSpaceReflectionComponent()
 		{
 		}
@@ -12,14 +20,6 @@ namespace UnityEngine.PostProcessing
 		public override DepthTextureMode GetCameraFlags()
 		{
 			return DepthTextureMode.Depth;
-		}
-
-		public override bool active
-		{
-			get
-			{
-				return base.model.enabled && this.context.isGBufferAvailable && !this.context.interrupted;
-			}
 		}
 
 		public override void OnEnable()

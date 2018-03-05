@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class GunShoot : MonoBehaviour
@@ -104,7 +102,4 @@ public class GunShoot : MonoBehaviour
 	private Animator anim;
 
 	private GunAim gunAim;
-
-	[CompilerGenerated]
-	private static Dictionary<string, int> <>f__switch$map0;
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Dissonance.Integrations.UNet_HLAPI;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -129,7 +126,7 @@ public class MicroHID_GFX : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdHurtPlayersInRange called on client.");
+			Debug.LogError("Command CmdHurtPlayersInRange called on client.");
 			return;
 		}
 		((MicroHID_GFX)obj).CmdHurtPlayersInRange(reader.ReadGameObject());
@@ -139,7 +136,7 @@ public class MicroHID_GFX : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdUse called on client.");
+			Debug.LogError("Command CmdUse called on client.");
 			return;
 		}
 		((MicroHID_GFX)obj).CmdUse();
@@ -149,7 +146,7 @@ public class MicroHID_GFX : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdHurtPlayersInRange called on server.");
+			Debug.LogError("Command function CmdHurtPlayersInRange called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -170,7 +167,7 @@ public class MicroHID_GFX : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdUse called on server.");
+			Debug.LogError("Command function CmdUse called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -190,7 +187,7 @@ public class MicroHID_GFX : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("RPC RpcSyncAnim called on server.");
+			Debug.LogError("RPC RpcSyncAnim called on server.");
 			return;
 		}
 		((MicroHID_GFX)obj).RpcSyncAnim();
@@ -200,7 +197,7 @@ public class MicroHID_GFX : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("RPC Function RpcSyncAnim called on client.");
+			Debug.LogError("RPC Function RpcSyncAnim called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -258,251 +255,4 @@ public class MicroHID_GFX : NetworkBehaviour
 	private static int kCmdCmdUse;
 
 	private static int kRpcRpcSyncAnim;
-
-	[CompilerGenerated]
-	private sealed class <PlayAnimation>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <PlayAnimation>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.$this.damageGiven = 0f;
-				this.$this.anim.SetTrigger("Shoot");
-				this.$this.shotSource.Play();
-				this.$locvar0 = this.$this.progress;
-				this.$locvar1 = 0;
-				while (this.$locvar1 < this.$locvar0.Length)
-				{
-					Light light = this.$locvar0[this.$locvar1];
-					light.intensity = 0f;
-					this.$locvar1++;
-				}
-				this.$this.GlowLight(0);
-				this.$current = new WaitForSeconds(2.2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			case 1u:
-				this.$this.GlowLight(1);
-				this.$current = new WaitForSeconds(2.2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			case 2u:
-				this.$this.GlowLight(2);
-				this.$current = new WaitForSeconds(2.2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 3;
-				}
-				return true;
-			case 3u:
-				this.$this.GlowLight(3);
-				this.$this.GlowLight(5);
-				this.$current = new WaitForSeconds(2.2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 4;
-				}
-				return true;
-			case 4u:
-				this.$this.GlowLight(4);
-				this.$current = new WaitForSeconds(0.6f);
-				if (!this.$disposing)
-				{
-					this.$PC = 5;
-				}
-				return true;
-			case 5u:
-				this.$this.teslaFX.Play();
-				this.<i>__1 = 0;
-				break;
-			case 6u:
-				this.<i>__1++;
-				break;
-			default:
-				return false;
-			}
-			if (this.<i>__1 < 20)
-			{
-				this.<players>__2 = this.$this.pmng.players;
-				this.$locvar2 = this.<players>__2;
-				this.$locvar3 = 0;
-				while (this.$locvar3 < this.$locvar2.Length)
-				{
-					GameObject gameObject = this.$locvar2[this.$locvar3];
-					RaycastHit raycastHit;
-					if (Vector3.Dot(this.$this.cam.transform.forward, (this.$this.cam.transform.position - gameObject.transform.position).normalized) < -0.92f && Physics.Raycast(this.$this.cam.transform.position, (gameObject.transform.position - this.$this.cam.transform.position).normalized, out raycastHit, this.$this.range) && raycastHit.transform.name == gameObject.name)
-					{
-						Hitmarker.Hit(2.3f);
-						this.$this.CallCmdHurtPlayersInRange(gameObject);
-					}
-					this.$locvar3++;
-				}
-				this.$current = new WaitForSeconds(0.25f);
-				if (!this.$disposing)
-				{
-					this.$PC = 6;
-				}
-				return true;
-			}
-			this.$this.onFire = false;
-			this.$locvar4 = this.$this.progress;
-			this.$locvar5 = 0;
-			while (this.$locvar5 < this.$locvar4.Length)
-			{
-				Light light2 = this.$locvar4[this.$locvar5];
-				light2.intensity = 0f;
-				this.$locvar5++;
-			}
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Light[] $locvar0;
-
-		internal int $locvar1;
-
-		internal int <i>__1;
-
-		internal GameObject[] <players>__2;
-
-		internal GameObject[] $locvar2;
-
-		internal int $locvar3;
-
-		internal Light[] $locvar4;
-
-		internal int $locvar5;
-
-		internal MicroHID_GFX $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <SetLightState>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <SetLightState>c__Iterator1()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				break;
-			case 1u:
-				break;
-			default:
-				return false;
-			}
-			if (this.light.intensity < this.targetIntensity)
-			{
-				this.light.intensity += Time.deltaTime * this.speed;
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Light light;
-
-		internal float targetIntensity;
-
-		internal float speed;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
 }

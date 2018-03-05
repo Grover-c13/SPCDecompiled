@@ -7,6 +7,25 @@ using UnityEngine.Networking;
 
 public class BanPlayer : NetworkBehaviour
 {
+	public string NetworkhardwareID
+	{
+		get
+		{
+			return this.hardwareID;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SyncHwId(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<string>(value, ref this.hardwareID, dirtyBit);
+		}
+	}
+
 	public BanPlayer()
 	{
 	}
@@ -92,25 +111,6 @@ public class BanPlayer : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public string NetworkhardwareID
-	{
-		get
-		{
-			return this.hardwareID;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SyncHwId(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<string>(value, ref this.hardwareID, dirtyBit);
-		}
 	}
 
 	protected static void InvokeCmdCmdSetHwId(NetworkBehaviour obj, NetworkReader reader)

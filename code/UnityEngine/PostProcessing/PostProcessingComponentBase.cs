@@ -4,6 +4,8 @@ namespace UnityEngine.PostProcessing
 {
 	public abstract class PostProcessingComponentBase
 	{
+		public abstract bool active { get; }
+
 		protected PostProcessingComponentBase()
 		{
 		}
@@ -12,8 +14,6 @@ namespace UnityEngine.PostProcessing
 		{
 			return DepthTextureMode.None;
 		}
-
-		public abstract bool active { get; }
 
 		public virtual void OnEnable()
 		{

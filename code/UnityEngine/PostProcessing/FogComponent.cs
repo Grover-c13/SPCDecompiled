@@ -5,16 +5,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class FogComponent : PostProcessingComponentCommandBuffer<FogModel>
 	{
-		public FogComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && this.context.isGBufferAvailable && RenderSettings.fog && !this.context.interrupted;
 			}
+		}
+
+		public FogComponent()
+		{
 		}
 
 		public override string GetName()

@@ -3,19 +3,6 @@ using UnityEngine.Networking;
 
 public class OneOhSixContainer : NetworkBehaviour
 {
-	public OneOhSixContainer()
-	{
-	}
-
-	public void SetState(bool b)
-	{
-		this.Networkused = b;
-	}
-
-	private void UNetVersion()
-	{
-	}
-
 	public bool Networkused
 	{
 		get
@@ -33,6 +20,19 @@ public class OneOhSixContainer : NetworkBehaviour
 			}
 			base.SetSyncVar<bool>(value, ref this.used, dirtyBit);
 		}
+	}
+
+	public OneOhSixContainer()
+	{
+	}
+
+	public void SetState(bool b)
+	{
+		this.Networkused = b;
+	}
+
+	private void UNetVersion()
+	{
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

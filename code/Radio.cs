@@ -6,13 +6,43 @@ using UnityEngine.Networking;
 
 public class Radio : NetworkBehaviour
 {
+	public int NetworkcurPreset
+	{
+		get
+		{
+			return this.curPreset;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetPreset(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.curPreset, dirtyBit);
+		}
+	}
+
+	public bool NetworkisTransmitting
+	{
+		get
+		{
+			return this.isTransmitting;
+		}
+		set
+		{
+			base.SetSyncVar<bool>(value, ref this.isTransmitting, 2u);
+		}
+	}
+
 	public Radio()
 	{
 	}
 
 	private void Start()
 	{
-		base.InvokeRepeating("UpdateClass", 0.3f, 0.3f);
 		this.ccm = base.GetComponent<CharacterClassManager>();
 		this.noiseSource = GameObject.Find("RadioNoiseSound").GetComponent<AudioSource>();
 		this.inv = base.GetComponent<Inventory>();
@@ -45,17 +75,24 @@ public class Radio : NetworkBehaviour
 
 	private void Update()
 	{
+		this.UpdateClass();
 		if (this.host == null)
 		{
 			this.host = GameObject.Find("Host");
 		}
 		if (this.inv.GetItemIndex() != -1 && this.inv.items[this.inv.GetItemIndex()].id == 12)
 		{
-			this.myRadio = this.inv.GetItemIndex();
+			this.radioUniq = this.inv.items[this.inv.GetItemIndex()].uniq;
 		}
-		else
+		this.myRadio = -1;
+		int num = 0;
+		foreach (Inventory.SyncItemInfo syncItemInfo in this.inv.items)
 		{
-			this.myRadio = -1;
+			if (syncItemInfo.uniq == this.radioUniq)
+			{
+				this.myRadio = num;
+			}
+			num++;
 		}
 		if (base.isLocalPlayer)
 		{
@@ -68,9 +105,9 @@ public class Radio : NetworkBehaviour
 				RadioDisplay.power = this.presets[this.curPreset].powerText;
 				RadioDisplay.label = this.presets[this.curPreset].label;
 			}
-			foreach (Inventory.SyncItemInfo syncItemInfo in this.inv.items)
+			foreach (Inventory.SyncItemInfo syncItemInfo2 in this.inv.items)
 			{
-				if (syncItemInfo.id == 12)
+				if (syncItemInfo2.id == 12)
 				{
 					break;
 				}
@@ -252,37 +289,6 @@ public class Radio : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public int NetworkcurPreset
-	{
-		get
-		{
-			return this.curPreset;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetPreset(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.curPreset, dirtyBit);
-		}
-	}
-
-	public bool NetworkisTransmitting
-	{
-		get
-		{
-			return this.isTransmitting;
-		}
-		set
-		{
-			base.SetSyncVar<bool>(value, ref this.isTransmitting, 2u);
-		}
 	}
 
 	protected static void InvokeCmdCmdUseRadio(NetworkBehaviour obj, NetworkReader reader)
@@ -526,6 +532,8 @@ public class Radio : NetworkBehaviour
 	public float noiseMultiplier;
 
 	private CharacterClassManager ccm;
+
+	private int radioUniq;
 
 	private static int kCmdCmdUseRadio = 1237871087;
 

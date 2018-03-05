@@ -6,6 +6,44 @@ using UnityEngine.UI;
 
 public class Inventory : NetworkBehaviour
 {
+	public int NetworkcurItem
+	{
+		get
+		{
+			return this.curItem;
+		}
+		set
+		{
+			uint dirtyBit = 2u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetCurItem(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.curItem, dirtyBit);
+		}
+	}
+
+	public int NetworkitemUniq
+	{
+		get
+		{
+			return this.itemUniq;
+		}
+		set
+		{
+			uint dirtyBit = 4u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetUniq(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.itemUniq, dirtyBit);
+		}
+	}
+
 	public Inventory()
 	{
 	}
@@ -225,44 +263,6 @@ public class Inventory : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public int NetworkcurItem
-	{
-		get
-		{
-			return this.curItem;
-		}
-		set
-		{
-			uint dirtyBit = 2u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetCurItem(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.curItem, dirtyBit);
-		}
-	}
-
-	public int NetworkitemUniq
-	{
-		get
-		{
-			return this.itemUniq;
-		}
-		set
-		{
-			uint dirtyBit = 4u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetUniq(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.itemUniq, dirtyBit);
-		}
 	}
 
 	protected static void InvokeSyncListitems(NetworkBehaviour obj, NetworkReader reader)

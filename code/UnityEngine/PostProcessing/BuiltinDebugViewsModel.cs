@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class BuiltinDebugViewsModel : PostProcessingModel
 	{
-		public BuiltinDebugViewsModel()
-		{
-		}
-
 		public BuiltinDebugViewsModel.Settings settings
 		{
 			get
@@ -27,6 +23,10 @@ namespace UnityEngine.PostProcessing
 			{
 				return !this.IsModeActive(BuiltinDebugViewsModel.Mode.None) && !this.IsModeActive(BuiltinDebugViewsModel.Mode.EyeAdaptation) && !this.IsModeActive(BuiltinDebugViewsModel.Mode.PreGradingLog) && !this.IsModeActive(BuiltinDebugViewsModel.Mode.LogLut) && !this.IsModeActive(BuiltinDebugViewsModel.Mode.UserLut);
 			}
+		}
+
+		public BuiltinDebugViewsModel()
+		{
 		}
 
 		public override void Reset()

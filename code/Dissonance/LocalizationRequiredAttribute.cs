@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
 	[AttributeUsage(AttributeTargets.All)]
 	internal sealed class LocalizationRequiredAttribute : Attribute
 	{
+		public bool Required { get; private set; }
+
 		public LocalizationRequiredAttribute() : this(true)
 		{
 		}
@@ -14,22 +15,5 @@ namespace Dissonance
 		{
 			this.Required = required;
 		}
-
-		public bool Required
-		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<Required>k__BackingField;
-			}
-			[CompilerGenerated]
-			private set
-			{
-				this.<Required>k__BackingField = value;
-			}
-		}
-
-		[CompilerGenerated]
-		private bool <Required>k__BackingField;
 	}
 }

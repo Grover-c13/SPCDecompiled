@@ -4,6 +4,44 @@ using UnityEngine.Networking;
 
 public class AlphaWarheadController : NetworkBehaviour
 {
+	public float NetworktimeToDetonation
+	{
+		get
+		{
+			return this.timeToDetonation;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetTime(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<float>(value, ref this.timeToDetonation, dirtyBit);
+		}
+	}
+
+	public bool NetworkdetonationInProgress
+	{
+		get
+		{
+			return this.detonationInProgress;
+		}
+		set
+		{
+			uint dirtyBit = 2u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetStatus(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.detonationInProgress, dirtyBit);
+		}
+	}
+
 	public AlphaWarheadController()
 	{
 	}
@@ -180,44 +218,6 @@ public class AlphaWarheadController : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public float NetworktimeToDetonation
-	{
-		get
-		{
-			return this.timeToDetonation;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetTime(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<float>(value, ref this.timeToDetonation, dirtyBit);
-		}
-	}
-
-	public bool NetworkdetonationInProgress
-	{
-		get
-		{
-			return this.detonationInProgress;
-		}
-		set
-		{
-			uint dirtyBit = 2u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetStatus(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.detonationInProgress, dirtyBit);
-		}
 	}
 
 	protected static void InvokeRpcRpcShake(NetworkBehaviour obj, NetworkReader reader)

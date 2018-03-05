@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class VignetteModel : PostProcessingModel
 	{
-		public VignetteModel()
-		{
-		}
-
 		public VignetteModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public VignetteModel()
+		{
 		}
 
 		public override void Reset()

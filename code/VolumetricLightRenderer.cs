@@ -1,48 +1,20 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Camera))]
 public class VolumetricLightRenderer : MonoBehaviour
 {
-	public VolumetricLightRenderer()
-	{
-	}
-
-	public static event Action<VolumetricLightRenderer, Matrix4x4> PreRenderEvent
-	{
-		add
-		{
-			Action<VolumetricLightRenderer, Matrix4x4> action = VolumetricLightRenderer.PreRenderEvent;
-			Action<VolumetricLightRenderer, Matrix4x4> action2;
-			do
-			{
-				action2 = action;
-				action = Interlocked.CompareExchange<Action<VolumetricLightRenderer, Matrix4x4>>(ref VolumetricLightRenderer.PreRenderEvent, (Action<VolumetricLightRenderer, Matrix4x4>)Delegate.Combine(action2, value), action);
-			}
-			while (action != action2);
-		}
-		remove
-		{
-			Action<VolumetricLightRenderer, Matrix4x4> action = VolumetricLightRenderer.PreRenderEvent;
-			Action<VolumetricLightRenderer, Matrix4x4> action2;
-			do
-			{
-				action2 = action;
-				action = Interlocked.CompareExchange<Action<VolumetricLightRenderer, Matrix4x4>>(ref VolumetricLightRenderer.PreRenderEvent, (Action<VolumetricLightRenderer, Matrix4x4>)Delegate.Remove(action2, value), action);
-			}
-			while (action != action2);
-		}
-	}
-
 	public CommandBuffer GlobalCommandBuffer
 	{
 		get
 		{
 			return this._preLightPass;
 		}
+	}
+
+	public VolumetricLightRenderer()
+	{
 	}
 
 	public static Material GetLightMaterial()
@@ -584,8 +556,7 @@ public class VolumetricLightRenderer : MonoBehaviour
 		return mesh;
 	}
 
-	[CompilerGenerated]
-	private static Action<VolumetricLightRenderer, Matrix4x4> PreRenderEvent;
+	public static event Action<VolumetricLightRenderer, Matrix4x4> PreRenderEvent;
 
 	private static Mesh _pointLightMesh;
 

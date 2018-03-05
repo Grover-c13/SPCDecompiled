@@ -6,6 +6,25 @@ using UnityEngine.UI;
 
 public class RoundStart : NetworkBehaviour
 {
+	public string Networkinfo
+	{
+		get
+		{
+			return this.info;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetInfo(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<string>(value, ref this.info, dirtyBit);
+		}
+	}
+
 	public RoundStart()
 	{
 	}
@@ -56,25 +75,6 @@ public class RoundStart : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public string Networkinfo
-	{
-		get
-		{
-			return this.info;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetInfo(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<string>(value, ref this.info, dirtyBit);
-		}
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

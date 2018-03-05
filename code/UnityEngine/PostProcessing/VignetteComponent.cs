@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class VignetteComponent : PostProcessingComponentRenderTexture<VignetteModel>
 	{
-		public VignetteComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && !this.context.interrupted;
 			}
+		}
+
+		public VignetteComponent()
+		{
 		}
 
 		public override void Prepare(Material uberMaterial)

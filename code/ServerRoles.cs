@@ -1,13 +1,29 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class ServerRoles : NetworkBehaviour
 {
+	public int NetworkmyRole
+	{
+		get
+		{
+			return this.myRole;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetRole(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.myRole, dirtyBit);
+		}
+	}
+
 	public ServerRoles()
 	{
 	}
@@ -84,30 +100,11 @@ public class ServerRoles : NetworkBehaviour
 	{
 	}
 
-	public int NetworkmyRole
-	{
-		get
-		{
-			return this.myRole;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetRole(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.myRole, dirtyBit);
-		}
-	}
-
 	protected static void InvokeCmdCmdRequestRole(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdRequestRole called on client.");
+			Debug.LogError("Command CmdRequestRole called on client.");
 			return;
 		}
 		((ServerRoles)obj).CmdRequestRole(reader.ReadString());
@@ -117,7 +114,7 @@ public class ServerRoles : NetworkBehaviour
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdRequestRole called on server.");
+			Debug.LogError("Command function CmdRequestRole called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -210,99 +207,5 @@ public class ServerRoles : NetworkBehaviour
 		Allways,
 		ConfigOnly,
 		Never
-	}
-
-	[CompilerGenerated]
-	private sealed class <RequestRoleFromServer>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <RequestRoleFromServer>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.<form>__0 = new WWWForm();
-				this.<form>__0.AddField("passcode", this.code);
-				if (!ServerStatic.isDedicated || this.code.Split(new char[]
-				{
-					':'
-				})[0] == ServerConsole.ip)
-				{
-					this.<www>__1 = new WWW("https://hubertmoszka.pl/roleverificator.php", this.<form>__0);
-					this.$current = this.<www>__1;
-					if (!this.$disposing)
-					{
-						this.$PC = 1;
-					}
-					return true;
-				}
-				break;
-			case 1u:
-				this.<role>__1 = 0;
-				if (string.IsNullOrEmpty(this.<www>__1.error) && int.TryParse(this.<www>__1.text, out this.<role>__1))
-				{
-					this.$this.SetRole(this.<role>__1);
-					this.$this.GetComponent<QueryProcessor>().CallCmdCheckPassword("override");
-				}
-				break;
-			default:
-				return false;
-			}
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal WWWForm <form>__0;
-
-		internal string code;
-
-		internal WWW <www>__1;
-
-		internal int <role>__1;
-
-		internal ServerRoles $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
 	}
 }

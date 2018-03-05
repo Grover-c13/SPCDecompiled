@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class EyeAdaptationComponent : PostProcessingComponentRenderTexture<EyeAdaptationModel>
 	{
-		public EyeAdaptationComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && SystemInfo.supportsComputeShaders && !this.context.interrupted;
 			}
+		}
+
+		public EyeAdaptationComponent()
+		{
 		}
 
 		public void ResetHistory()

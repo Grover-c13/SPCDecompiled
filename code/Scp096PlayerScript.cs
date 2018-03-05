@@ -1,13 +1,30 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Scp096PlayerScript : NetworkBehaviour
 {
+	public Scp096PlayerScript.RageState Networkenraged
+	{
+		get
+		{
+			return this.enraged;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetRage(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<Scp096PlayerScript.RageState>(value, ref this.enraged, dirtyBit);
+		}
+	}
+
 	public Scp096PlayerScript()
 	{
 	}
@@ -102,8 +119,8 @@ public class Scp096PlayerScript : NetworkBehaviour
 		}
 	}
 
-	[ServerCallback]
 	[DebuggerHidden]
+	[ServerCallback]
 	private IEnumerator ExecuteServersideCode_Looking()
 	{
 		if (!NetworkServer.active)
@@ -115,8 +132,8 @@ public class Scp096PlayerScript : NetworkBehaviour
 		return <ExecuteServersideCode_Looking>c__Iterator;
 	}
 
-	[ServerCallback]
 	[DebuggerHidden]
+	[ServerCallback]
 	private IEnumerator ExecuteServersideCode_RageHandler()
 	{
 		if (!NetworkServer.active)
@@ -176,25 +193,6 @@ public class Scp096PlayerScript : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public Scp096PlayerScript.RageState Networkenraged
-	{
-		get
-		{
-			return this.enraged;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetRage(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<Scp096PlayerScript.RageState>(value, ref this.enraged, dirtyBit);
-		}
 	}
 
 	protected static void InvokeCmdCmdHurtPlayer(NetworkBehaviour obj, NetworkReader reader)
@@ -318,207 +316,5 @@ public class Scp096PlayerScript : NetworkBehaviour
 		Panic,
 		Enraged,
 		Cooldown
-	}
-
-	[CompilerGenerated]
-	private sealed class <ExecuteServersideCode_Looking>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <ExecuteServersideCode_Looking>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				goto IL_249;
-			case 1u:
-				this.$locvar1++;
-				break;
-			case 2u:
-				goto IL_249;
-			default:
-				return false;
-			}
-			IL_212:
-			if (this.$locvar1 < this.$locvar0.Length)
-			{
-				this.<item>__2 = this.$locvar0[this.$locvar1];
-				if (this.<item>__2 != null && this.<item>__2.GetComponent<CharacterClassManager>().IsHuman())
-				{
-					Transform transform = this.<item>__2.GetComponent<Scp096PlayerScript>().camera.transform;
-					float num2 = this.$this.lookingTolerance.Evaluate(Vector3.Distance(transform.position, Scp096PlayerScript.instance.camera.transform.position));
-					RaycastHit raycastHit;
-					if (((double)num2 < 0.75 || Vector3.Dot(transform.forward, (transform.position - Scp096PlayerScript.instance.camera.transform.position).normalized) < -num2) && Physics.Raycast(transform.transform.position, (Scp096PlayerScript.instance.camera.transform.position - transform.position).normalized, out raycastHit, 20f, this.$this.layerMask) && raycastHit.collider.gameObject.layer == 24 && raycastHit.collider.GetComponentInParent<Scp096PlayerScript>() == Scp096PlayerScript.instance)
-					{
-						Scp096PlayerScript.instance.IncreaseRage(Time.fixedDeltaTime * this.$this.ragemultiplier_looking * (float)this.<plys>__1.Length);
-					}
-				}
-				this.$current = new WaitForFixedUpdate();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			IL_249:
-			if (!this.$this.isServer)
-			{
-				this.$PC = -1;
-			}
-			else
-			{
-				if (Scp096PlayerScript.instance != null && Scp096PlayerScript.instance.iAm096)
-				{
-					this.<plys>__1 = PlayerManager.singleton.players;
-					this.$locvar0 = this.<plys>__1;
-					this.$locvar1 = 0;
-					goto IL_212;
-				}
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			}
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal GameObject[] <plys>__1;
-
-		internal GameObject[] $locvar0;
-
-		internal int $locvar1;
-
-		internal GameObject <item>__2;
-
-		internal Scp096PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <ExecuteServersideCode_RageHandler>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <ExecuteServersideCode_RageHandler>c__Iterator1()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				break;
-			case 1u:
-				break;
-			default:
-				return false;
-			}
-			if (this.$this.isServer)
-			{
-				if (Scp096PlayerScript.instance != null && Scp096PlayerScript.instance.iAm096)
-				{
-					if (Scp096PlayerScript.instance.enraged == Scp096PlayerScript.RageState.Enraged)
-					{
-						Scp096PlayerScript.instance.DeductRage();
-					}
-					if (Scp096PlayerScript.instance.enraged == Scp096PlayerScript.RageState.Cooldown)
-					{
-						Scp096PlayerScript.instance.DeductCooldown();
-					}
-				}
-				this.$current = new WaitForFixedUpdate();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Scp096PlayerScript $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
 	}
 }

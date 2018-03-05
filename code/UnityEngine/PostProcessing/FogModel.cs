@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class FogModel : PostProcessingModel
 	{
-		public FogModel()
-		{
-		}
-
 		public FogModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public FogModel()
+		{
 		}
 
 		public override void Reset()

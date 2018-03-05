@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class BloomComponent : PostProcessingComponentRenderTexture<BloomModel>
 	{
-		public BloomComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && base.model.settings.bloom.intensity > 0f && !this.context.interrupted;
 			}
+		}
+
+		public BloomComponent()
+		{
 		}
 
 		public void Prepare(RenderTexture source, Material uberMaterial, Texture autoExposure)

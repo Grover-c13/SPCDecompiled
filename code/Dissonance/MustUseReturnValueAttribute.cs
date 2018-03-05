@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Dissonance
 {
 	[AttributeUsage(AttributeTargets.Method)]
 	internal sealed class MustUseReturnValueAttribute : Attribute
 	{
+		[CanBeNull]
+		public string Justification { get; private set; }
+
 		public MustUseReturnValueAttribute()
 		{
 		}
@@ -14,23 +16,5 @@ namespace Dissonance
 		{
 			this.Justification = justification;
 		}
-
-		[CanBeNull]
-		public string Justification
-		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<Justification>k__BackingField;
-			}
-			[CompilerGenerated]
-			private set
-			{
-				this.<Justification>k__BackingField = value;
-			}
-		}
-
-		[CompilerGenerated]
-		private string <Justification>k__BackingField;
 	}
 }

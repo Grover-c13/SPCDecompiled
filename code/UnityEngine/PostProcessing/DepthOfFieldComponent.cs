@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class DepthOfFieldComponent : PostProcessingComponentRenderTexture<DepthOfFieldModel>
 	{
-		public DepthOfFieldComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGBHalf) && SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RHalf) && !this.context.interrupted;
 			}
+		}
+
+		public DepthOfFieldComponent()
+		{
 		}
 
 		public override DepthTextureMode GetCameraFlags()

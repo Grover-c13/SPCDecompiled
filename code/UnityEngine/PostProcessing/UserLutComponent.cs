@@ -4,10 +4,6 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class UserLutComponent : PostProcessingComponentRenderTexture<UserLutModel>
 	{
-		public UserLutComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
@@ -15,6 +11,10 @@ namespace UnityEngine.PostProcessing
 				UserLutModel.Settings settings = base.model.settings;
 				return base.model.enabled && settings.lut != null && settings.contribution > 0f && settings.lut.height == (int)Mathf.Sqrt((float)settings.lut.width) && !this.context.interrupted;
 			}
+		}
+
+		public UserLutComponent()
+		{
 		}
 
 		public override void Prepare(Material uberMaterial)

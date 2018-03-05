@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public abstract class PostProcessingModel
 	{
-		protected PostProcessingModel()
-		{
-		}
-
 		public bool enabled
 		{
 			get
@@ -23,6 +19,10 @@ namespace UnityEngine.PostProcessing
 					this.OnValidate();
 				}
 			}
+		}
+
+		protected PostProcessingModel()
+		{
 		}
 
 		public abstract void Reset();

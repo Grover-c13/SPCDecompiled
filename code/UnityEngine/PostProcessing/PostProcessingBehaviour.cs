@@ -4,11 +4,11 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine.PostProcessing
 {
-	[DisallowMultipleComponent]
-	[ExecuteInEditMode]
 	[ImageEffectAllowedInSceneView]
-	[AddComponentMenu("Effects/Post-Processing Behaviour", -1)]
 	[RequireComponent(typeof(Camera))]
+	[AddComponentMenu("Effects/Post-Processing Behaviour", -1)]
+	[ExecuteInEditMode]
+	[DisallowMultipleComponent]
 	public class PostProcessingBehaviour : MonoBehaviour
 	{
 		public PostProcessingBehaviour()

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -80,97 +78,5 @@ public class HintManager : MonoBehaviour
 		public string keyName;
 
 		public float duration;
-	}
-
-	[CompilerGenerated]
-	private sealed class <ShowHints>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <ShowHints>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.<cr>__0 = this.$this.box.canvasRenderer;
-				break;
-			case 1u:
-				IL_A1:
-				if (this.<cr>__0.GetAlpha() <= 0f)
-				{
-					this.$current = new WaitForEndOfFrame();
-					if (!this.$disposing)
-					{
-						this.$PC = 2;
-					}
-				}
-				else
-				{
-					this.<cr>__0.SetAlpha(this.<cr>__0.GetAlpha() - Time.deltaTime * 5f);
-					this.<cr>__0.GetComponentInChildren<Text>().canvasRenderer.SetAlpha(this.<cr>__0.GetAlpha());
-					this.$current = new WaitForEndOfFrame();
-					if (!this.$disposing)
-					{
-						this.$PC = 1;
-					}
-				}
-				return true;
-			case 2u:
-				break;
-			default:
-				return false;
-			}
-			goto IL_A1;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal CanvasRenderer <cr>__0;
-
-		internal float <dur>__1;
-
-		internal float <v3>__2;
-
-		internal HintManager $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
 	}
 }

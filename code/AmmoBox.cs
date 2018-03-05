@@ -5,6 +5,25 @@ using UnityEngine.Networking;
 
 public class AmmoBox : NetworkBehaviour
 {
+	public string Networkamount
+	{
+		get
+		{
+			return this.amount;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetAmount(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<string>(value, ref this.amount, dirtyBit);
+		}
+	}
+
 	public AmmoBox()
 	{
 	}
@@ -147,25 +166,6 @@ public class AmmoBox : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public string Networkamount
-	{
-		get
-		{
-			return this.amount;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetAmount(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<string>(value, ref this.amount, dirtyBit);
-		}
 	}
 
 	protected static void InvokeCmdCmdDrop(NetworkBehaviour obj, NetworkReader reader)

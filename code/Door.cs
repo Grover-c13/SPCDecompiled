@@ -1,14 +1,50 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Door : NetworkBehaviour
 {
+	public bool NetworkisOpen
+	{
+		get
+		{
+			return this.isOpen;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetState(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.isOpen, dirtyBit);
+		}
+	}
+
+	public bool Networkdestroyed
+	{
+		get
+		{
+			return this.destroyed;
+		}
+		set
+		{
+			uint dirtyBit = 2u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.DestroyDoor(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.destroyed, dirtyBit);
+		}
+	}
+
 	public Door()
 	{
 	}
@@ -256,49 +292,11 @@ public class Door : NetworkBehaviour
 	{
 	}
 
-	public bool NetworkisOpen
-	{
-		get
-		{
-			return this.isOpen;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetState(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.isOpen, dirtyBit);
-		}
-	}
-
-	public bool Networkdestroyed
-	{
-		get
-		{
-			return this.destroyed;
-		}
-		set
-		{
-			uint dirtyBit = 2u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.DestroyDoor(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.destroyed, dirtyBit);
-		}
-	}
-
 	protected static void InvokeRpcRpcDoSound(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("RPC RpcDoSound called on server.");
+			Debug.LogError("RPC RpcDoSound called on server.");
 			return;
 		}
 		((Door)obj).RpcDoSound();
@@ -308,7 +306,7 @@ public class Door : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("RPC Function RpcDoSound called on client.");
+			Debug.LogError("RPC Function RpcDoSound called on client.");
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -442,301 +440,5 @@ public class Door : NetworkBehaviour
 
 		[Multiline]
 		public string info;
-	}
-
-	[CompilerGenerated]
-	private sealed class <UpdatePosition>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <UpdatePosition>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.$locvar0 = this.$this.parts;
-				this.$locvar1 = 0;
-				while (this.$locvar1 < this.$locvar0.Length)
-				{
-					Animator animator = this.$locvar0[this.$locvar1];
-					animator.SetBool("isOpen", this.$this.isOpen);
-					this.$locvar1++;
-				}
-				if (!(this.$this.sound_checkpointWarning != null) || !this.$this.isOpen)
-				{
-					goto IL_1FC;
-				}
-				this.$this.deniedInProgress = true;
-				this.$this.moving.moving = true;
-				this.$this.SetActiveStatus(2);
-				this.<t>__1 = 0f;
-				break;
-			case 1u:
-				if (this.$this.curCooldown < 0f)
-				{
-					this.$this.SetActiveStatus(1);
-				}
-				break;
-			case 2u:
-				this.$this.SetActiveStatus(0);
-				this.$this.moving.moving = false;
-				this.$this.deniedInProgress = false;
-				this.$this.SetState(false);
-				this.$this.soundsource.PlayOneShot(this.$this.sound_close[UnityEngine.Random.Range(0, this.$this.sound_close.Length)]);
-				goto IL_1FC;
-			default:
-				return false;
-			}
-			if (this.<t>__1 >= 5f)
-			{
-				this.$this.soundsource.PlayOneShot(this.$this.sound_checkpointWarning);
-				this.$this.SetActiveStatus(4);
-				this.$current = new WaitForSeconds(2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-			}
-			else
-			{
-				this.<t>__1 += 0.1f;
-				this.$current = new WaitForSeconds(0.1f);
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-			}
-			return true;
-			IL_1FC:
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Animator[] $locvar0;
-
-		internal int $locvar1;
-
-		internal float <t>__1;
-
-		internal Door $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <Start>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <Start>c__Iterator1()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.$this.SetActiveStatus(0);
-				this.<time>__0 = 0f;
-				break;
-			case 1u:
-				break;
-			default:
-				return false;
-			}
-			if (this.<time>__0 < 10f)
-			{
-				this.<time>__0 += Time.deltaTime;
-				if (this.$this.buffedStatus == this.$this.isOpen)
-				{
-					this.$current = new WaitForEndOfFrame();
-					if (!this.$disposing)
-					{
-						this.$PC = 1;
-					}
-					return true;
-				}
-				this.$this.buffedStatus = this.$this.isOpen;
-				this.$this.ForceCooldown(this.$this.cooldown);
-			}
-			this.$locvar0 = this.$this.GetComponentsInChildren(typeof(Renderer));
-			this.$locvar1 = 0;
-			while (this.$locvar1 < this.$locvar0.Length)
-			{
-				Renderer renderer = (Renderer)this.$locvar0[this.$locvar1];
-				if (renderer.tag == "DoorButton")
-				{
-					this.$this.buttons.Add(renderer.gameObject);
-				}
-				this.$locvar1++;
-			}
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal float <time>__0;
-
-		internal Component[] $locvar0;
-
-		internal int $locvar1;
-
-		internal Door $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
-
-	[CompilerGenerated]
-	private sealed class <Denied>c__Iterator2 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <Denied>c__Iterator2()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				if (this.$this.curCooldown < 0f && !this.$this.moving.moving && !this.$this.deniedInProgress)
-				{
-					this.$this.deniedInProgress = true;
-					this.$this.soundsource.PlayOneShot(this.$this.sound_denied);
-					this.$this.SetActiveStatus(3);
-					this.$current = new WaitForSeconds(1f);
-					if (!this.$disposing)
-					{
-						this.$PC = 1;
-					}
-					return true;
-				}
-				break;
-			case 1u:
-				this.$this.deniedInProgress = false;
-				break;
-			default:
-				return false;
-			}
-			this.$PC = -1;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal Door $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
 	}
 }

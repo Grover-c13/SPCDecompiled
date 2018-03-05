@@ -6,10 +6,6 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class SteamManager : MonoBehaviour
 {
-	public SteamManager()
-	{
-	}
-
 	private static SteamManager Instance
 	{
 		get
@@ -28,6 +24,10 @@ public class SteamManager : MonoBehaviour
 		{
 			return SteamManager.Instance.m_bInitialized;
 		}
+	}
+
+	public SteamManager()
+	{
 	}
 
 	private static void SteamAPIDebugTextHook(int nSeverity, StringBuilder pchDebugText)

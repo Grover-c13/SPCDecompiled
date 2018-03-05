@@ -5,42 +5,6 @@ using UnityEngine.Networking;
 
 public class Ragdoll : NetworkBehaviour
 {
-	public Ragdoll()
-	{
-	}
-
-	public void SetOwner(Ragdoll.Info s)
-	{
-		this.Networkowner = s;
-	}
-
-	private void Start()
-	{
-		base.Invoke("Unfr", 0.1f);
-	}
-
-	public void SetRecall(bool b)
-	{
-		this.NetworkallowRecall = b;
-	}
-
-	private void Unfr()
-	{
-		base.GetComponent<Rigidbody>().isKinematic = false;
-		foreach (Rigidbody rigidbody in base.GetComponentsInChildren<Rigidbody>())
-		{
-			rigidbody.isKinematic = false;
-		}
-		foreach (Collider collider in base.GetComponentsInChildren<Collider>())
-		{
-			collider.enabled = true;
-		}
-	}
-
-	private void UNetVersion()
-	{
-	}
-
 	public Ragdoll.Info Networkowner
 	{
 		get
@@ -77,6 +41,42 @@ public class Ragdoll : NetworkBehaviour
 			}
 			base.SetSyncVar<bool>(value, ref this.allowRecall, dirtyBit);
 		}
+	}
+
+	public Ragdoll()
+	{
+	}
+
+	public void SetOwner(Ragdoll.Info s)
+	{
+		this.Networkowner = s;
+	}
+
+	private void Start()
+	{
+		base.Invoke("Unfr", 0.1f);
+	}
+
+	public void SetRecall(bool b)
+	{
+		this.NetworkallowRecall = b;
+	}
+
+	private void Unfr()
+	{
+		base.GetComponent<Rigidbody>().isKinematic = false;
+		foreach (Rigidbody rigidbody in base.GetComponentsInChildren<Rigidbody>())
+		{
+			rigidbody.isKinematic = false;
+		}
+		foreach (Collider collider in base.GetComponentsInChildren<Collider>())
+		{
+			collider.enabled = true;
+		}
+	}
+
+	private void UNetVersion()
+	{
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

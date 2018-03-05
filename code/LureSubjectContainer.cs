@@ -4,6 +4,25 @@ using UnityEngine.Networking;
 
 public class LureSubjectContainer : NetworkBehaviour
 {
+	public bool NetworkallowContain
+	{
+		get
+		{
+			return this.allowContain;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetState(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.allowContain, dirtyBit);
+		}
+	}
+
 	public LureSubjectContainer()
 	{
 	}
@@ -55,25 +74,6 @@ public class LureSubjectContainer : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public bool NetworkallowContain
-	{
-		get
-		{
-			return this.allowContain;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetState(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.allowContain, dirtyBit);
-		}
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

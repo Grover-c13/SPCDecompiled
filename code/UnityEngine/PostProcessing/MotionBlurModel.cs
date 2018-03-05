@@ -5,10 +5,6 @@ namespace UnityEngine.PostProcessing
 	[Serializable]
 	public class MotionBlurModel : PostProcessingModel
 	{
-		public MotionBlurModel()
-		{
-		}
-
 		public MotionBlurModel.Settings settings
 		{
 			get
@@ -19,6 +15,10 @@ namespace UnityEngine.PostProcessing
 			{
 				this.m_Settings = value;
 			}
+		}
+
+		public MotionBlurModel()
+		{
 		}
 
 		public override void Reset()

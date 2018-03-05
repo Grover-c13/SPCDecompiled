@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using GameConsole;
 using Unity;
 using UnityEngine;
@@ -11,6 +9,82 @@ using UnityEngine.PostProcessing;
 
 public class CharacterClassManager : NetworkBehaviour
 {
+	public int NetworkntfUnit
+	{
+		get
+		{
+			return this.ntfUnit;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetUnit(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.ntfUnit, dirtyBit);
+		}
+	}
+
+	public int NetworkcurClass
+	{
+		get
+		{
+			return this.curClass;
+		}
+		set
+		{
+			uint dirtyBit = 2u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetClassID(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<int>(value, ref this.curClass, dirtyBit);
+		}
+	}
+
+	public Vector3 NetworkdeathPosition
+	{
+		get
+		{
+			return this.deathPosition;
+		}
+		set
+		{
+			uint dirtyBit = 4u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SyncDeathPos(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<Vector3>(value, ref this.deathPosition, dirtyBit);
+		}
+	}
+
+	public bool NetworkroundStarted
+	{
+		get
+		{
+			return this.roundStarted;
+		}
+		set
+		{
+			uint dirtyBit = 8u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetRoundStart(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVar<bool>(value, ref this.roundStarted, dirtyBit);
+		}
+	}
+
 	public CharacterClassManager()
 	{
 	}
@@ -220,13 +294,13 @@ public class CharacterClassManager : NetworkBehaviour
 		}
 	}
 
-	[Client]
 	[Command]
+	[Client]
 	public void CmdSuicide(PlayerStats.HitInfo hitInfo)
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogWarning("[Client] function 'System.Void CharacterClassManager::CmdSuicide(PlayerStats/HitInfo)' called on server");
+			Debug.LogWarning("[Client] function 'System.Void CharacterClassManager::CmdSuicide(PlayerStats/HitInfo)' called on server");
 			return;
 		}
 		hitInfo.amount = ((hitInfo.amount != 0f) ? hitInfo.amount : 999799f);
@@ -265,27 +339,25 @@ public class CharacterClassManager : NetworkBehaviour
 
 	public void RegisterEscape()
 	{
-		this.CallCmdRegisterEscape(base.gameObject);
+		this.CallCmdRegisterEscape();
 	}
 
 	[Command(channel = 2)]
-	private void CmdRegisterEscape(GameObject sender)
+	private void CmdRegisterEscape()
 	{
-		CharacterClassManager component = sender.GetComponent<CharacterClassManager>();
-		if (Vector3.Distance(sender.transform.position, base.GetComponent<Escape>().worldPosition) < (float)(base.GetComponent<Escape>().radius * 2))
+		CharacterClassManager component = base.GetComponent<CharacterClassManager>();
+		if (Vector3.Distance(base.transform.position, base.GetComponent<Escape>().worldPosition) < (float)(base.GetComponent<Escape>().radius * 2))
 		{
 			RoundSummary component2 = GameObject.Find("Host").GetComponent<RoundSummary>();
 			if (this.klasy[component.curClass].team == Team.CDP)
 			{
 				component2.summary.classD_escaped++;
-				this.SetClassID(8);
-				base.GetComponent<PlayerStats>().SetHPAmount(this.klasy[8].maxHP);
+				this.SetPlayersClass(8, base.gameObject);
 			}
 			if (this.klasy[component.curClass].team == Team.RSC)
 			{
 				component2.summary.scientists_escaped++;
-				this.SetClassID(4);
-				base.GetComponent<PlayerStats>().SetHPAmount(this.klasy[4].maxHP);
+				this.SetPlayersClass(4, base.gameObject);
 			}
 		}
 	}
@@ -444,12 +516,6 @@ public class CharacterClassManager : NetworkBehaviour
 			this.aliveTime = 0f;
 			this.ApplyProperties();
 		}
-		Inventory component = base.GetComponent<Inventory>();
-		component.items.Clear();
-		foreach (int id2 in this.klasy[this.curClass].startItems)
-		{
-			component.AddNewItem(id2, -4.65664672E+11f);
-		}
 	}
 
 	public void InstantiateRagdoll(int id)
@@ -566,6 +632,12 @@ public class CharacterClassManager : NetworkBehaviour
 		ply.GetComponent<CharacterClassManager>().SetClassID(classid);
 		ply.GetComponent<PlayerStats>().SetHPAmount(this.klasy[classid].maxHP);
 		ply.GetComponent<AmmoBox>().SetAmmoAmount();
+		Inventory component = ply.GetComponent<Inventory>();
+		component.items.Clear();
+		foreach (int id in this.klasy[Mathf.Clamp(classid, 0, this.klasy.Length - 1)].startItems)
+		{
+			component.AddNewItem(id, -4.65664672E+11f);
+		}
 	}
 
 	private int Find_Random_ID_Using_Defined_Team(Team team)
@@ -631,87 +703,11 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 	}
 
-	public int NetworkntfUnit
-	{
-		get
-		{
-			return this.ntfUnit;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetUnit(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.ntfUnit, dirtyBit);
-		}
-	}
-
-	public int NetworkcurClass
-	{
-		get
-		{
-			return this.curClass;
-		}
-		set
-		{
-			uint dirtyBit = 2u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetClassID(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<int>(value, ref this.curClass, dirtyBit);
-		}
-	}
-
-	public Vector3 NetworkdeathPosition
-	{
-		get
-		{
-			return this.deathPosition;
-		}
-		set
-		{
-			uint dirtyBit = 4u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SyncDeathPos(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<Vector3>(value, ref this.deathPosition, dirtyBit);
-		}
-	}
-
-	public bool NetworkroundStarted
-	{
-		get
-		{
-			return this.roundStarted;
-		}
-		set
-		{
-			uint dirtyBit = 8u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetRoundStart(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVar<bool>(value, ref this.roundStarted, dirtyBit);
-		}
-	}
-
 	protected static void InvokeCmdCmdSuicide(NetworkBehaviour obj, NetworkReader reader)
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdSuicide called on client.");
+			Debug.LogError("Command CmdSuicide called on client.");
 			return;
 		}
 		((CharacterClassManager)obj).CmdSuicide(GeneratedNetworkCode._ReadHitInfo_PlayerStats(reader));
@@ -721,17 +717,17 @@ public class CharacterClassManager : NetworkBehaviour
 	{
 		if (!NetworkServer.active)
 		{
-			UnityEngine.Debug.LogError("Command CmdRegisterEscape called on client.");
+			Debug.LogError("Command CmdRegisterEscape called on client.");
 			return;
 		}
-		((CharacterClassManager)obj).CmdRegisterEscape(reader.ReadGameObject());
+		((CharacterClassManager)obj).CmdRegisterEscape();
 	}
 
 	public void CallCmdSuicide(PlayerStats.HitInfo hitInfo)
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdSuicide called on server.");
+			Debug.LogError("Command function CmdSuicide called on server.");
 			return;
 		}
 		if (base.isServer)
@@ -748,16 +744,16 @@ public class CharacterClassManager : NetworkBehaviour
 		base.SendCommandInternal(networkWriter, 0, "CmdSuicide");
 	}
 
-	public void CallCmdRegisterEscape(GameObject sender)
+	public void CallCmdRegisterEscape()
 	{
 		if (!NetworkClient.active)
 		{
-			UnityEngine.Debug.LogError("Command function CmdRegisterEscape called on server.");
+			Debug.LogError("Command function CmdRegisterEscape called on server.");
 			return;
 		}
 		if (base.isServer)
 		{
-			this.CmdRegisterEscape(sender);
+			this.CmdRegisterEscape();
 			return;
 		}
 		NetworkWriter networkWriter = new NetworkWriter();
@@ -765,7 +761,6 @@ public class CharacterClassManager : NetworkBehaviour
 		networkWriter.Write((short)((ushort)5));
 		networkWriter.WritePackedUInt32((uint)CharacterClassManager.kCmdCmdRegisterEscape);
 		networkWriter.Write(base.GetComponent<NetworkIdentity>().netId);
-		networkWriter.Write(sender);
 		base.SendCommandInternal(networkWriter, 2, "CmdRegisterEscape");
 	}
 
@@ -921,240 +916,4 @@ public class CharacterClassManager : NetworkBehaviour
 	private static int kCmdCmdSuicide = -1051695024;
 
 	private static int kCmdCmdRegisterEscape;
-
-	[CompilerGenerated]
-	private sealed class <Init>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-	{
-		[DebuggerHidden]
-		public <Init>c__Iterator0()
-		{
-		}
-
-		public bool MoveNext()
-		{
-			uint num = (uint)this.$PC;
-			this.$PC = -1;
-			switch (num)
-			{
-			case 0u:
-				this.<host>__0 = null;
-				break;
-			case 1u:
-				break;
-			case 2u:
-				if (!this.$this.isServer)
-				{
-					goto IL_2F0;
-				}
-				if (ServerStatic.isDedicated)
-				{
-					ServerConsole.AddLog("Waiting for players..");
-				}
-				CursorManager.roundStarted = true;
-				this.<rs>__1 = RoundStart.singleton;
-				if (TutorialManager.status)
-				{
-					this.$this.ForceRoundStart();
-					goto IL_2AB;
-				}
-				this.<rs>__1.ShowButton();
-				this.<timeLeft>__2 = 20;
-				this.<maxPlayers>__2 = 1;
-				goto IL_291;
-			case 3u:
-				goto IL_291;
-			case 4u:
-				goto IL_2F0;
-			case 5u:
-				if (this.$this.curClass < 0)
-				{
-					this.$this.CallCmdSuicide(default(PlayerStats.HitInfo));
-					goto IL_34E;
-				}
-				goto IL_34E;
-			case 6u:
-				this.<iteration>__4 = 0;
-				goto Block_24;
-			case 7u:
-				goto IL_355;
-			default:
-				return false;
-			}
-			if (this.<host>__0 == null)
-			{
-				this.<host>__0 = GameObject.Find("Host");
-				this.$current = new WaitForEndOfFrame();
-				if (!this.$disposing)
-				{
-					this.$PC = 1;
-				}
-				return true;
-			}
-			while (this.$this.seed == 0)
-			{
-				this.$this.seed = this.<host>__0.GetComponent<RandomSeedSync>().seed;
-				UnityEngine.Object.FindObjectOfType<GameConsole.Console>().UpdateValue("seed", this.$this.seed.ToString());
-			}
-			if (this.$this.isLocalPlayer)
-			{
-				this.$current = new WaitForSeconds(2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 2;
-				}
-				return true;
-			}
-			this.$PC = -1;
-			return false;
-			IL_291:
-			if (this.<rs>__1.info != "started")
-			{
-				if (this.<maxPlayers>__2 > 1)
-				{
-					this.<timeLeft>__2--;
-				}
-				this.<count>__3 = PlayerManager.singleton.players.Length;
-				if (this.<count>__3 > this.<maxPlayers>__2)
-				{
-					this.<maxPlayers>__2 = this.<count>__3;
-					if (this.<timeLeft>__2 < 5)
-					{
-						this.<timeLeft>__2 = 5;
-					}
-					else if (this.<timeLeft>__2 < 10)
-					{
-						this.<timeLeft>__2 = 10;
-					}
-					else if (this.<timeLeft>__2 < 15)
-					{
-						this.<timeLeft>__2 = 15;
-					}
-					else
-					{
-						this.<timeLeft>__2 = 20;
-					}
-					if (this.<maxPlayers>__2 == NetworkManager.singleton.maxConnections)
-					{
-						this.<timeLeft>__2 = 0;
-					}
-				}
-				if (this.<timeLeft>__2 > 0)
-				{
-					this.$this.CmdUpdateStartText(this.<timeLeft>__2.ToString());
-				}
-				else
-				{
-					this.$this.ForceRoundStart();
-				}
-				this.$current = new WaitForSeconds(1f);
-				if (!this.$disposing)
-				{
-					this.$PC = 3;
-				}
-				return true;
-			}
-			IL_2AB:
-			CursorManager.roundStarted = false;
-			this.$this.CmdStartRound();
-			this.$this.SetRandomRoles();
-			goto IL_34E;
-			IL_2F0:
-			if (this.<host>__0.GetComponent<CharacterClassManager>().roundStarted)
-			{
-				this.$current = new WaitForSeconds(2f);
-				if (!this.$disposing)
-				{
-					this.$PC = 5;
-				}
-				return true;
-			}
-			this.$current = new WaitForEndOfFrame();
-			if (!this.$disposing)
-			{
-				this.$PC = 4;
-			}
-			return true;
-			IL_34E:
-			this.<iteration>__4 = 0;
-			IL_355:
-			this.<plys>__5 = PlayerManager.singleton.players;
-			if (this.<iteration>__4 >= this.<plys>__5.Length)
-			{
-				this.$current = new WaitForSeconds(3f);
-				if (!this.$disposing)
-				{
-					this.$PC = 6;
-				}
-				return true;
-			}
-			Block_24:
-			try
-			{
-				this.<plys>__5[this.<iteration>__4].GetComponent<CharacterClassManager>().InitSCPs();
-			}
-			catch
-			{
-			}
-			this.<iteration>__4++;
-			this.$current = new WaitForEndOfFrame();
-			if (!this.$disposing)
-			{
-				this.$PC = 7;
-			}
-			return true;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.$current;
-			}
-		}
-
-		[DebuggerHidden]
-		public void Dispose()
-		{
-			this.$disposing = true;
-			this.$PC = -1;
-		}
-
-		[DebuggerHidden]
-		public void Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		internal GameObject <host>__0;
-
-		internal RoundStart <rs>__1;
-
-		internal int <timeLeft>__2;
-
-		internal int <maxPlayers>__2;
-
-		internal int <count>__3;
-
-		internal int <iteration>__4;
-
-		internal GameObject[] <plys>__5;
-
-		internal CharacterClassManager $this;
-
-		internal object $current;
-
-		internal bool $disposing;
-
-		internal int $PC;
-	}
 }

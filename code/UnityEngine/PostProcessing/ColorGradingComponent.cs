@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class ColorGradingComponent : PostProcessingComponentRenderTexture<ColorGradingModel>
 	{
-		public ColorGradingComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && !this.context.interrupted;
 			}
+		}
+
+		public ColorGradingComponent()
+		{
 		}
 
 		private float StandardIlluminantY(float x)

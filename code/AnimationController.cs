@@ -5,6 +5,30 @@ using UnityEngine.Networking;
 
 public class AnimationController : NetworkBehaviour
 {
+	public int NetworkcurAnim
+	{
+		get
+		{
+			return this.curAnim;
+		}
+		set
+		{
+			base.SetSyncVar<int>(value, ref this.curAnim, 1u);
+		}
+	}
+
+	public Vector2 Networkspeed
+	{
+		get
+		{
+			return this.speed;
+		}
+		set
+		{
+			base.SetSyncVar<Vector2>(value, ref this.speed, 2u);
+		}
+	}
+
 	public AnimationController()
 	{
 	}
@@ -32,6 +56,10 @@ public class AnimationController : NetworkBehaviour
 
 	private Quaternion GetCameraRotation()
 	{
+		if (this.pms == null)
+		{
+			return Quaternion.Euler(Vector3.zero);
+		}
 		float num = this.pms.rotX;
 		num = ((num <= 270f) ? num : (num - 360f));
 		num /= 3f;
@@ -212,30 +240,6 @@ public class AnimationController : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public int NetworkcurAnim
-	{
-		get
-		{
-			return this.curAnim;
-		}
-		set
-		{
-			base.SetSyncVar<int>(value, ref this.curAnim, 1u);
-		}
-	}
-
-	public Vector2 Networkspeed
-	{
-		get
-		{
-			return this.speed;
-		}
-		set
-		{
-			base.SetSyncVar<Vector2>(value, ref this.speed, 2u);
-		}
 	}
 
 	protected static void InvokeCmdCmdSyncData(NetworkBehaviour obj, NetworkReader reader)

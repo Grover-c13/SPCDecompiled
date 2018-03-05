@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace RemoteAdmin
@@ -135,91 +133,6 @@ namespace RemoteAdmin
 			public QueryProcessor.PlayerInfo playerInfo;
 
 			private bool selected;
-		}
-
-		[CompilerGenerated]
-		private sealed class <Start>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
-		{
-			[DebuggerHidden]
-			public <Start>c__Iterator0()
-			{
-			}
-
-			public bool MoveNext()
-			{
-				uint num = (uint)this.$PC;
-				this.$PC = -1;
-				switch (num)
-				{
-				case 0u:
-					this.$this.component_ban = this.$this.GetComponent<Ban>();
-					break;
-				case 1u:
-					IL_6F:
-					if (!this.$this.GetComponent<Login>().loggedIn)
-					{
-						this.$current = new WaitForEndOfFrame();
-						if (!this.$disposing)
-						{
-							this.$PC = 2;
-						}
-					}
-					else
-					{
-						this.$this.Request();
-						this.$current = new WaitForSeconds(4f);
-						if (!this.$disposing)
-						{
-							this.$PC = 1;
-						}
-					}
-					return true;
-				case 2u:
-					break;
-				default:
-					return false;
-				}
-				goto IL_6F;
-			}
-
-			object IEnumerator<object>.Current
-			{
-				[DebuggerHidden]
-				get
-				{
-					return this.$current;
-				}
-			}
-
-			object IEnumerator.Current
-			{
-				[DebuggerHidden]
-				get
-				{
-					return this.$current;
-				}
-			}
-
-			[DebuggerHidden]
-			public void Dispose()
-			{
-				this.$disposing = true;
-				this.$PC = -1;
-			}
-
-			[DebuggerHidden]
-			public void Reset()
-			{
-				throw new NotSupportedException();
-			}
-
-			internal PlayersMonitor $this;
-
-			internal object $current;
-
-			internal bool $disposing;
-
-			internal int $PC;
 		}
 	}
 }

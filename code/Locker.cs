@@ -4,6 +4,18 @@ using UnityEngine.Networking;
 
 public class Locker : NetworkBehaviour
 {
+	public bool NetworkisTaken
+	{
+		get
+		{
+			return this.isTaken;
+		}
+		set
+		{
+			base.SetSyncVar<bool>(value, ref this.isTaken, 1u);
+		}
+	}
+
 	public Locker()
 	{
 	}
@@ -30,18 +42,6 @@ public class Locker : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public bool NetworkisTaken
-	{
-		get
-		{
-			return this.isTaken;
-		}
-		set
-		{
-			base.SetSyncVar<bool>(value, ref this.isTaken, 1u);
-		}
 	}
 
 	public override bool OnSerialize(NetworkWriter writer, bool forceAll)

@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace UnityEngine.PostProcessing
 {
 	[Serializable]
 	public class ColorGradingModel : PostProcessingModel
 	{
-		public ColorGradingModel()
-		{
-		}
-
 		public ColorGradingModel.Settings settings
 		{
 			get
@@ -23,32 +18,12 @@ namespace UnityEngine.PostProcessing
 			}
 		}
 
-		public bool isDirty
-		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<isDirty>k__BackingField;
-			}
-			[CompilerGenerated]
-			internal set
-			{
-				this.<isDirty>k__BackingField = value;
-			}
-		}
+		public bool isDirty { get; internal set; }
 
-		public RenderTexture bakedLut
+		public RenderTexture bakedLut { get; internal set; }
+
+		public ColorGradingModel()
 		{
-			[CompilerGenerated]
-			get
-			{
-				return this.<bakedLut>k__BackingField;
-			}
-			[CompilerGenerated]
-			internal set
-			{
-				this.<bakedLut>k__BackingField = value;
-			}
 		}
 
 		public override void Reset()
@@ -64,12 +39,6 @@ namespace UnityEngine.PostProcessing
 
 		[SerializeField]
 		private ColorGradingModel.Settings m_Settings = ColorGradingModel.Settings.defaultSettings;
-
-		[CompilerGenerated]
-		private bool <isDirty>k__BackingField;
-
-		[CompilerGenerated]
-		private RenderTexture <bakedLut>k__BackingField;
 
 		public enum Tonemapper
 		{
@@ -150,12 +119,12 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Sets the white balance to compensate for a green or magenta tint.")]
 			public float tint;
 
-			[Tooltip("Shift the hue of all colors.")]
 			[Range(-180f, 180f)]
+			[Tooltip("Shift the hue of all colors.")]
 			public float hueShift;
 
-			[Range(0f, 2f)]
 			[Tooltip("Pushes the intensity of all colors.")]
+			[Range(0f, 2f)]
 			public float saturation;
 
 			[Tooltip("Expands or shrinks the overall range of tonal values.")]

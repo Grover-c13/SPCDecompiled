@@ -6,10 +6,6 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class MotionBlurComponent : PostProcessingComponentCommandBuffer<MotionBlurModel>
 	{
-		public MotionBlurComponent()
-		{
-		}
-
 		public MotionBlurComponent.ReconstructionFilter reconstructionFilter
 		{
 			get
@@ -41,6 +37,10 @@ namespace UnityEngine.PostProcessing
 				MotionBlurModel.Settings settings = base.model.settings;
 				return base.model.enabled && ((settings.shutterAngle > 0f && this.reconstructionFilter.IsSupported()) || settings.frameBlending > 0f) && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLES2 && !this.context.interrupted;
 			}
+		}
+
+		public MotionBlurComponent()
+		{
 		}
 
 		public override string GetName()

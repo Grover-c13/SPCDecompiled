@@ -32,9 +32,10 @@ public class Outside : MonoBehaviour
 
 	private void SetOutside(bool b)
 	{
-		if (GameObject.Find("Directional light") != null)
+		GameObject gameObject = GameObject.Find("Directional light");
+		if (gameObject != null)
 		{
-			GameObject.Find("Directional light").GetComponent<Light>().enabled = b;
+			gameObject.GetComponent<Light>().enabled = b;
 		}
 		foreach (Camera camera in base.GetComponentsInChildren<Camera>(true))
 		{
@@ -46,7 +47,7 @@ public class Outside : MonoBehaviour
 		}
 		foreach (GlobalFog globalFog in base.GetComponentsInChildren<GlobalFog>(true))
 		{
-			globalFog.startDistance = (float)((!b) ? 0 : 50);
+			globalFog.startDistance = (float)((!b) ? 5 : 50);
 		}
 	}
 

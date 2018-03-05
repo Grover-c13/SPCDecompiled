@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[RequireComponent(typeof(Camera))]
-[ExecuteInEditMode]
 [AddComponentMenu("UBER/Deferred Params")]
 [DisallowMultipleComponent]
+[ExecuteInEditMode]
+[RequireComponent(typeof(Camera))]
 public class UBER_DeferredParams : MonoBehaviour
 {
 	public UBER_DeferredParams()

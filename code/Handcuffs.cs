@@ -6,6 +6,25 @@ using UnityEngine.UI;
 
 public class Handcuffs : NetworkBehaviour
 {
+	public GameObject NetworkcuffTarget
+	{
+		get
+		{
+			return this.cuffTarget;
+		}
+		set
+		{
+			uint dirtyBit = 1u;
+			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
+			{
+				base.syncVarHookGuard = true;
+				this.SetTarget(value);
+				base.syncVarHookGuard = false;
+			}
+			base.SetSyncVarGameObject(value, ref this.cuffTarget, dirtyBit, ref this.___cuffTargetNetId);
+		}
+	}
+
 	public Handcuffs()
 	{
 	}
@@ -173,25 +192,6 @@ public class Handcuffs : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public GameObject NetworkcuffTarget
-	{
-		get
-		{
-			return this.cuffTarget;
-		}
-		set
-		{
-			uint dirtyBit = 1u;
-			if (NetworkServer.localClientActive && !base.syncVarHookGuard)
-			{
-				base.syncVarHookGuard = true;
-				this.SetTarget(value);
-				base.syncVarHookGuard = false;
-			}
-			base.SetSyncVarGameObject(value, ref this.cuffTarget, dirtyBit, ref this.___cuffTargetNetId);
-		}
 	}
 
 	protected static void InvokeCmdCmdTarget(NetworkBehaviour obj, NetworkReader reader)

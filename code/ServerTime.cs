@@ -5,6 +5,18 @@ using UnityEngine.Networking;
 
 public class ServerTime : NetworkBehaviour
 {
+	public int NetworktimeFromStartup
+	{
+		get
+		{
+			return this.timeFromStartup;
+		}
+		set
+		{
+			base.SetSyncVar<int>(value, ref this.timeFromStartup, 1u);
+		}
+	}
+
 	public ServerTime()
 	{
 	}
@@ -58,18 +70,6 @@ public class ServerTime : NetworkBehaviour
 
 	private void UNetVersion()
 	{
-	}
-
-	public int NetworktimeFromStartup
-	{
-		get
-		{
-			return this.timeFromStartup;
-		}
-		set
-		{
-			base.SetSyncVar<int>(value, ref this.timeFromStartup, 1u);
-		}
 	}
 
 	protected static void InvokeCmdCmdSetTime(NetworkBehaviour obj, NetworkReader reader)

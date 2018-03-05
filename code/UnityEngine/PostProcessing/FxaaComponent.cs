@@ -4,16 +4,16 @@ namespace UnityEngine.PostProcessing
 {
 	public sealed class FxaaComponent : PostProcessingComponentRenderTexture<AntialiasingModel>
 	{
-		public FxaaComponent()
-		{
-		}
-
 		public override bool active
 		{
 			get
 			{
 				return base.model.enabled && base.model.settings.method == AntialiasingModel.Method.Fxaa && !this.context.interrupted;
 			}
+		}
+
+		public FxaaComponent()
+		{
 		}
 
 		public void Render(RenderTexture source, RenderTexture destination)
