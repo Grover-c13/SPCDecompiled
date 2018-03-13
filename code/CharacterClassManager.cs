@@ -294,8 +294,8 @@ public class CharacterClassManager : NetworkBehaviour
 		}
 	}
 
-	[Command]
 	[Client]
+	[Command]
 	public void CmdSuicide(PlayerStats.HitInfo hitInfo)
 	{
 		if (!NetworkClient.active)

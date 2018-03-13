@@ -5,10 +5,10 @@ using UnityEngine.Rendering;
 namespace UnityEngine.PostProcessing
 {
 	[ImageEffectAllowedInSceneView]
-	[RequireComponent(typeof(Camera))]
 	[AddComponentMenu("Effects/Post-Processing Behaviour", -1)]
-	[ExecuteInEditMode]
+	[RequireComponent(typeof(Camera))]
 	[DisallowMultipleComponent]
+	[ExecuteInEditMode]
 	public class PostProcessingBehaviour : MonoBehaviour
 	{
 		public PostProcessingBehaviour()

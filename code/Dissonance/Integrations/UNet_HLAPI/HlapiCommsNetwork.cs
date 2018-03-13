@@ -17,9 +17,7 @@ namespace Dissonance.Integrations.UNet_HLAPI
 
 		protected override HlapiServer CreateServer(Unit details)
 		{
-			HlapiServer hlapiServer = new HlapiServer(this);
-			HlapiServer._instance = hlapiServer;
-			return hlapiServer;
+			return new HlapiServer(this);
 		}
 
 		protected override HlapiClient CreateClient(Unit details)
@@ -31,7 +29,7 @@ namespace Dissonance.Integrations.UNet_HLAPI
 		{
 			if (base.IsInitialized)
 			{
-				bool flag = NetworkManager.singleton.isNetworkActive && (NetworkServer.active || NetworkClient.active) && (!NetworkClient.active || (NetworkManager.singleton.client != null && NetworkManager.singleton.client.connection != null));
+				bool flag = NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && (NetworkServer.active || NetworkClient.active) && (!NetworkClient.active || (NetworkManager.singleton.client != null && NetworkManager.singleton.client.connection != null));
 				if (flag)
 				{
 					bool active = NetworkServer.active;
@@ -55,6 +53,7 @@ namespace Dissonance.Integrations.UNet_HLAPI
 				else if (base.Mode != NetworkMode.None)
 				{
 					base.Stop();
+					this._loopbackQueue.Clear();
 				}
 				for (int i = 0; i < this._loopbackQueue.Count; i++)
 				{

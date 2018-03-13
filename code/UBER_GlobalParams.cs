@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-[ExecuteInEditMode]
 [AddComponentMenu("UBER/Global Params")]
+[ExecuteInEditMode]
 public class UBER_GlobalParams : MonoBehaviour
 {
 	public UBER_GlobalParams()
@@ -349,12 +349,12 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Header("Global Snow")]
 	public float SnowLevel = 1f;
 
-	[Range(0f, 1f)]
 	[Tooltip("You can control global frost")]
+	[Range(0f, 1f)]
 	public float Frost = 1f;
 
-	[Tooltip("Global snow dissolve value")]
 	[Range(0f, 4f)]
+	[Tooltip("Global snow dissolve value")]
 	public float SnowDissolve = 2f;
 
 	[Range(0.001f, 0.2f)]
@@ -367,9 +367,9 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Tooltip("Global snow glitter color/spec boost")]
 	public Color SnowGlitterColor = new Color(0.8f, 0.8f, 0.8f, 0.2f);
 
-	[Range(0f, 4f)]
 	[HideInInspector]
 	[Header("Global Snow - cover state")]
+	[Range(0f, 4f)]
 	public float SnowDissolveCover = 2f;
 
 	[Range(0.001f, 0.2f)]
@@ -385,8 +385,8 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Tooltip("Global snow glitter color/spec boost")]
 	public Color SnowGlitterColorCover = new Color(0.8f, 0.8f, 0.8f, 0.2f);
 
-	[Range(0f, 4f)]
 	[HideInInspector]
+	[Range(0f, 4f)]
 	[Header("Global Snow - melt state")]
 	public float SnowDissolveMelt = 0.3f;
 
@@ -395,12 +395,12 @@ public class UBER_GlobalParams : MonoBehaviour
 	[Tooltip("Global snow dissolve value")]
 	public float SnowBumpMicroMelt = 0.02f;
 
-	[HideInInspector]
 	[Tooltip("Global snow spec (RGB) & Gloss (A)")]
+	[HideInInspector]
 	public Color SnowSpecGlossMelt = new Color(0.15f, 0.15f, 0.15f, 0.6f);
 
-	[Tooltip("Global snow glitter color/spec boost")]
 	[HideInInspector]
+	[Tooltip("Global snow glitter color/spec boost")]
 	public Color SnowGlitterColorMelt = new Color(0.1f, 0.1f, 0.1f, 0.03f);
 
 	[Header("Rainfall/snowfall controller")]

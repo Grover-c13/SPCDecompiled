@@ -72,7 +72,7 @@ public class Scp096PlayerScript : NetworkBehaviour
 
 	private void Animator()
 	{
-		if (!base.isLocalPlayer && this.animationController.animator != null)
+		if (!base.isLocalPlayer && this.animationController.animator != null && this.iAm096)
 		{
 			this.animationController.animator.SetBool("Rage", this.enraged == Scp096PlayerScript.RageState.Enraged || this.enraged == Scp096PlayerScript.RageState.Panic);
 		}
@@ -119,8 +119,8 @@ public class Scp096PlayerScript : NetworkBehaviour
 		}
 	}
 
-	[DebuggerHidden]
 	[ServerCallback]
+	[DebuggerHidden]
 	private IEnumerator ExecuteServersideCode_Looking()
 	{
 		if (!NetworkServer.active)
@@ -132,8 +132,8 @@ public class Scp096PlayerScript : NetworkBehaviour
 		return <ExecuteServersideCode_Looking>c__Iterator;
 	}
 
-	[DebuggerHidden]
 	[ServerCallback]
+	[DebuggerHidden]
 	private IEnumerator ExecuteServersideCode_RageHandler()
 	{
 		if (!NetworkServer.active)
@@ -286,8 +286,8 @@ public class Scp096PlayerScript : NetworkBehaviour
 
 	public SoundtrackManager.Track[] tracks;
 
-	[SyncVar(hook = "SetRage")]
 	[Space]
+	[SyncVar(hook = "SetRage")]
 	public Scp096PlayerScript.RageState enraged;
 
 	public float rageProgress;

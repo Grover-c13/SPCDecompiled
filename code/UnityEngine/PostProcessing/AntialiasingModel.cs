@@ -201,8 +201,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("The diameter (in texels) inside which jitter samples are spread. Smaller values result in crisper but more aliased output, while larger values result in more stable but blurrier output.")]
 			public float jitterSpread;
 
-			[Tooltip("Controls the amount of sharpening applied to the color buffer.")]
 			[Range(0f, 3f)]
+			[Tooltip("Controls the amount of sharpening applied to the color buffer.")]
 			public float sharpen;
 
 			[Range(0f, 0.99f)]

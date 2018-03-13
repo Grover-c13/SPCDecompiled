@@ -167,12 +167,12 @@ public class NGSS_Directional : MonoBehaviour
 
 	private bool PCSS_SWITCH = true;
 
-	[Range(0f, 0.02f)]
 	[Tooltip("Overall softness for both PCF and PCSS shadows.\nRecommended value: 0.01.")]
+	[Range(0f, 0.02f)]
 	public float PCSS_GLOBAL_SOFTNESS = 0.01f;
 
-	[Tooltip("PCSS softness when shadows is close to caster.\nRecommended value: 0.05.")]
 	[Range(0f, 1f)]
+	[Tooltip("PCSS softness when shadows is close to caster.\nRecommended value: 0.05.")]
 	public float PCSS_FILTER_DIR_MIN = 0.05f;
 
 	[Range(0f, 0.5f)]

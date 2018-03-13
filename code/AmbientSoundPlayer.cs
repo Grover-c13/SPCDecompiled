@@ -57,7 +57,10 @@ public class AmbientSoundPlayer : NetworkBehaviour
 	[Command(channel = 1)]
 	private void CmdPlaySound(int id)
 	{
-		this.CallRpcPlaySound(id);
+		if (base.isServer)
+		{
+			this.CallRpcPlaySound(id);
+		}
 	}
 
 	[ClientRpc(channel = 1)]

@@ -70,8 +70,8 @@ namespace UnityEngine.PostProcessing
 			[Tooltip("Half resolution SSRR is much faster, but less accurate.")]
 			public ScreenSpaceReflectionModel.SSRResolution reflectionQuality;
 
-			[Range(0.1f, 300f)]
 			[Tooltip("Maximum reflection distance in world units.")]
+			[Range(0.1f, 300f)]
 			public float maxDistance;
 
 			[Range(16f, 1024f)]

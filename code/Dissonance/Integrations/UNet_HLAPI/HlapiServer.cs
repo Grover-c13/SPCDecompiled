@@ -53,24 +53,6 @@ namespace Dissonance.Integrations.UNet_HLAPI
 		{
 		}
 
-		public static void OnServerDisconnect(NetworkConnection connection)
-		{
-			if (HlapiServer._instance != null)
-			{
-				HlapiServer._instance.OnServerDisconnect(new HlapiConn(connection));
-			}
-		}
-
-		private void OnServerDisconnect(HlapiConn conn)
-		{
-			int num = this._addedConnections.IndexOf(conn.Connection);
-			if (num >= 0)
-			{
-				this._addedConnections.RemoveAt(num);
-				base.ClientDisconnected(conn);
-			}
-		}
-
 		public override ServerState Update()
 		{
 			for (int i = this._addedConnections.Count - 1; i >= 0; i--)
@@ -125,8 +107,6 @@ namespace Dissonance.Integrations.UNet_HLAPI
 		private readonly byte[] _receiveBuffer = new byte[1024];
 
 		private readonly List<NetworkConnection> _addedConnections = new List<NetworkConnection>();
-
-		public static HlapiServer _instance;
 
 		[CompilerGenerated]
 		private static NetworkMessageDelegate <>f__mg$cache0;

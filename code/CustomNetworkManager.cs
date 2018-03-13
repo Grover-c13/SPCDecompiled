@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-using Dissonance.Integrations.UNet_HLAPI;
 using GameConsole;
 using Steamworks;
 using UnityEngine;
@@ -46,7 +45,6 @@ public class CustomNetworkManager : NetworkManager
 
 	public override void OnServerDisconnect(NetworkConnection conn)
 	{
-		HlapiServer.OnServerDisconnect(conn);
 		base.OnServerDisconnect(conn);
 	}
 

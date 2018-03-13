@@ -165,6 +165,53 @@ public class QueryProcessor : NetworkBehaviour
 				}
 			}
 		}
+		else if (q.StartsWith("GIVE"))
+		{
+			while (q.Contains(" "))
+			{
+				q = q.Replace(" ", string.Empty);
+			}
+			string text5 = q.Remove(0, 5);
+			text5 = text5.Remove(text5.IndexOf(";)"));
+			string text6 = q.Remove(0, q.IndexOf('{') + 1);
+			text6 = text6.Remove(text6.IndexOf('}'));
+			int id = int.Parse(text6);
+			this.CallTargetReturnValue(target, new string[]
+			{
+				"GIVE SUCCESS"
+			});
+			MonoBehaviour.print(q);
+			foreach (NetworkConnection networkConnection4 in NetworkServer.connections)
+			{
+				foreach (string text7 in text5.Split(new char[]
+				{
+					';'
+				}))
+				{
+					MonoBehaviour.print(string.Concat(new string[]
+					{
+						"[",
+						networkConnection4.address,
+						"] = [",
+						text7,
+						"]"
+					}));
+					if (text7 == networkConnection4.address)
+					{
+						GameObject gameObject3 = GameConsole.Console.FindConnectedRoot(networkConnection4);
+						if (gameObject3 != null)
+						{
+							MonoBehaviour.print("Added");
+							gameObject3.GetComponent<Inventory>().AddNewItem(id, -4.65664672E+11f);
+						}
+						else
+						{
+							MonoBehaviour.print("NotFound");
+						}
+					}
+				}
+			}
+		}
 	}
 
 	[TargetRpc(channel = 7)]

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{116B9692-CC6F-416C-9AB1-1E814BAC68A1}</ProjectGuid>
+    <ProjectGuid>{FBD33D7C-78FE-463C-AB7A-86CA51B74091}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -304,6 +304,8 @@
     <Compile Include="RemoteAdmin\Ban.cs" />
     <Compile Include="RemoteAdmin\Chooser.cs" />
     <Compile Include="RemoteAdmin\Forceclass.cs" />
+    <Compile Include="RemoteAdmin\GiveItem.cs" />
+    <Compile Include="RemoteAdmin\ItemDownloader.cs" />
     <Compile Include="RemoteAdmin\Login.cs" />
     <Compile Include="RemoteAdmin\PasswordHolder.cs" />
     <Compile Include="RemoteAdmin\PlayerInspector.cs" />

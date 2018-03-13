@@ -127,8 +127,8 @@ namespace UnityEngine.PostProcessing
 			[Range(0f, 2f)]
 			public float saturation;
 
-			[Tooltip("Expands or shrinks the overall range of tonal values.")]
 			[Range(0f, 2f)]
+			[Tooltip("Expands or shrinks the overall range of tonal values.")]
 			public float contrast;
 		}
 
